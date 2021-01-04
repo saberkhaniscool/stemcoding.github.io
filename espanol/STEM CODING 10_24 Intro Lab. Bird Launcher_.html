@@ -1,0 +1,231 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+<H1>Lanzador de pájaros!</H1>
+
+<p>Si has finalizado la actividad de aterrizaje lunar del Apolo, puedes continuar con este laboratorio donde configuraremos el juego para disparar un proyectil con forma de pájaro.
+
+  <p>Desde una perspectiva física, el lanzador de pájaros es esencialmente el mismo que el aterrizaje lunar del Apolo, excepto que no hay propulsión de cohetes. Más adelante en este ejercicio será útil recordar las ecuaciones para x (t) y y (t) de un proyectil que se lanza al aire en t = 0</p>
+<p>$$x(t ) = x_0 + v_{0x} t$$</p>
+<p>$$y(t) = y_0 + v_{0y} t + \frac{1}{2} g t^2$$</p>
+<p>donde $g = -9.8$ en lugar de $-1.63$ porque estaremos en la tierra en lugar de en la luna. Recuerde que no hay aceleración en la dirección x, por lo que la ecuación para $x(t)$ s un poco más simple que la ecuación para $y(t)$</p>
+
+
+<p><H3>Paso 0. Habrá una versión modificada del código de aterrizaje lunar del Apolo en un editor</H3>
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/RJa82iYV7" target="_blank">Haga clic aquí para abrir una versión modificada del código Apollo
+</a>
+
+  <p><H4><mark>Muy importante: ¡Inicie sesión en su cuenta! Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></H4>
+
+<p>Presione reproducir allí para ejecutar el código. Verá algo como esto:
+
+  <div align="center">
+    <p><img src="birdlauncher_unfinished.png">
+  </div>
+
+<p>By the end of this activity your goal is to have green check marks next to all the objectives like this:
+
+    <div align="center">
+<p><img src="birdlauncher_finished.png">
+  </div>
+
+<p>¡Los pasos a continuación lo ayudarán a lograr todos estos objetivos!
+
+
+<p><H3>Paso 1. Mira el código</H3>
+
+<p>Este código ha sido modificado en un par de formas del código de aterrizaje lunar del Apolo. Aquí está:
+
+<pre>
+function draw(){
+
+    // Update velocity
+    vx += ax*dt;
+    vy += ay*dt;
+
+    // Update location
+    x += vx*dt;
+    y += vy*dt;
+
+    // Check if arrow keys are pressed
+    if (keyIsDown(LEFT_ARROW)) {
+        v0x += -1.0;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        v0x += 1.0;
+    }
+    if (keyIsDown(UP_ARROW)) {
+        v0y += 1.0;
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+        v0y += -1.0;
+    }
+
+    Fnety = mass*g;
+    ay = Fnety/mass;
+
+    // Draw axes and other stuff
+    // This will clear the screen and re-draw it
+    display();
+
+    drawBird(x,y,vx,vy,ax,ay);
+    drawForce(x,y,0,mass*g);
+
+    if (y < 0) {
+      drawText('Game Over!',width/3,height/2);
+      exit();
+    }
+
+    // Add more graphics here before the end of draw()
+
+
+} // end draw()   NO AGREGUE NADA DESPUÉS DE ESTA LÍNEA!!!
+</pre>
+
+<p><b><mark>¿El código aquí le recuerda otras actividades? ¿Cuáles son las similitudes o diferencias?</mark></b>
+
+<p><H3>Paso 1. Cambiar el punto de partida</h3>
+
+<p>Después de hacer <b><mark>clic en Duplicar,</mark></b> en lugar de que el punto de inicio esté en el medio de la pantalla, configúrelo para que comience en la parte inferior izquierda.
+
+<p>Cambia esto:
+
+<pre>
+x = 375;
+y = 250;
+</pre>
+
+<p>A esto:
+
+<pre>
+x = 100;
+y = 25;
+</pre>
+
+<p>El objeto debería empezar ahora cerca de la esquina inferior de la pantalla. Verifique que esto funcione.
+
+<p><H3>Paso 2: configura el juego para que lances el pájaro cuando presionas la barra espaciadora</H3>
+
+<p><H3>Paso 2a. Establecer g = 0 al comienzo del código</H3>
+
+<p>Necesitamos apagar la gravedad para poder volver a encenderla más tarde. Entonces, el primer paso es establecer g = 0 cerca del comienzo del código donde se inicializan todas las variables.
+
+<p>En este punto, <a href="birdlauncher_v1/index.html">su programa debería comportarse así</a>
+
+<p>Observe que puede presionar las teclas de flecha para cambiar la velocidad de lanzamiento, pero el pájaro no puede moverse todavía porque la gravedad está desactivada y no hay nada en el código que haga que el pájaro se mueva a la velocidad de lanzamiento.
+
+<p><H3>Paso 2b. Agrega código para lanzar el pájaro</H3>
+
+<p>Aquí hay un código que puede usar para lanzar el pájaro:
+
+<pre>
+    if (keyIsPressed & key == ' ') { // spacebar
+        g = -9.8;
+        vx = v0x;
+        vy = v0y;
+    }
+</pre>
+
+<button class="btn" data-clipboard-text="    if (keyIsPressed & key == ' ') { // spacebar
+        g = -9.8;
+        vx = v0x;
+        vy = v0y;
+    }">
+    Copiar código al portapapeles
+</button>
+
+<p>Una vez que hagas esto, <a href="birdlauncher_v2/index.html">el juego debería comportarse así</a>.
+
+<p><b><mark>¿Qué notas sobre vx y vy? ¿Se comportan de manera diferente después de lanzar el pájaro?</mark></b>
+
+<p><H3>Paso 3: muestra la trayectoria esperada</H3>
+
+<p>Debería poder calcular la trayectoria del ave a partir de la ecuación cinemática. En este paso, calculará esta trayectoria y la dibujará en la pantalla usando drawPoint (xdraw, ydraw);
+
+<p>En algún lugar después de display (); agregue este código:
+
+<pre>
+x0 = 100;
+y0 = 25;
+
+  Npoints=1000;
+  for(i=1;i<=Npoints;i+=1)
+  {
+  t = (i-1)*dt;
+  xdraw = x0 + <mark>?????</mark>;
+  ydraw = y0 + <mark>?????</mark>;
+  drawPoint(xdraw,ydraw);
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="x0 = 100;
+y0 = 25;
+
+  Npoints=1000;
+  for(i=1;i<=Npoints;i+=1)
+  {
+  t = (i-1)*dt;
+  xdraw = x0 + ?????;
+  ydraw = y0 + ?????;
+  drawPoint(xdraw,ydraw);
+  }">
+    Copiar código al portapapeles
+</button>
+
+<p>Complete el ???? con los términos que dan la trayectoria correcta.  ¡Las dos ecuaciones al comienzo de este ejercicio deberían ser de gran ayuda! El principal problema es cómo poner esto en el código y qué usar para $v_{0x}$ y $v_{0y}$.
+
+<p><b>Consejo #1:</b> Expresiones como t ^ 2 no funcionarán en este caso (o en la mayoría de los otros lenguajes de programación). En su lugar, use t * t para $t^2$
+
+<p><b>Consejo #2:</b> No use vx o vy aquí porque esas variables cambiarán después de que se inicie el objeto. En su lugar, use v0x y v0y
+
+<p><b>Consejo #3:</b> La fórmula de la trayectoria incluye la gravedad terrestre. Por razones de código, use -9.8 en lugar de g porque g es inicialmente cero.
+
+<p>Una vez que haya descubierto esto <a href="birdlauncher_v3/index.html">el programa debería comportarse así</a>
+
+<p><H3><mark>En este punto, debería tener todas las marcas de verificación verdes para los objetivos. ¡Hurra!</mark></H3>
+
+<p><H3> Desafío: configura el código para que la barra espaciadora solo funcione la primera vez</H3>
+
+<p>Puede notar que el pájaro solo sigue la trayectoria parabólica si toca la barra espaciadora tan brevemente como pueda. Configura el juego para que presionar la barra espaciadora solo funcione la primera vez.
+
+<p>Una vez que haya realizado este cambio, <a href="birdlauncher_v4/index.html">el juego debería comportarse así</a>
+
+<p><h3><mark>¡Cómo obtener crédito completo en este laboratorio de programación!</mark></h3>
+
+<p><b>1.Asegúrese de que el pájaro vuele por el aire como lo haría un proyectil (Pasos 1-2)</b>
+
+<p><b>2.Asegúrese de que la trayectoria dibujada (línea de puntos) siga la trayectoria del pájaro (Paso 3)</b>
+
+<p>No necesita ser perfecto, pero debería estar bastante cerca (<a href="birdlauncher_v3/index.html">me gusta esto</a>).
+
+<p><b>3. El desafío es realmente opcional</b>
+
+<p>Si desea crédito adicional, descubra cómo hacer que la barra espaciadora solo funcione la primera vez, como se explica en el desafío. Si no necesita crédito adicional, puede omitir esto si lo desea.
+
+
+
+</body>
+</html>

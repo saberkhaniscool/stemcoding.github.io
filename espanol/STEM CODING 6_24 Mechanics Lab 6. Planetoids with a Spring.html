@@ -1,0 +1,202 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "all" } }
+});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<h1>Laboratorio de mecánica 6. Planetoides con resorte</h1>
+<div class='panel panel-default'>
+<div class='panel-heading'>
+<h2>
+  Instrucciones
+</h2>
+</div>
+<div class='panel-body'>
+<h2><a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/mechanics/6spring/springpre.html" target="_blank">Por favor, complete esta encuesta previa antes de comenzar este ejercicio.</a></h2>
+<p>Piense en el ejercicio de impulso. El pequeño barco puede chocar con una "mancha" y pegarse a ella. Ahora imagina que esta mancha está unida a un resorte. ¿No sería interesante si la nave pudiera chocar con la mancha y luego el resorte empujara y tirara de ambos? Esto es lo que haremos en este ejercicio.</p>
+<p>Este resorte se adjuntará al blob y hará el lado izquierdo de la pantalla como se muestra a continuación.</p>
+<p><img src="http://www.asc.ohio-state.edu/orban.14/physics_coding/spring_files/spring_screenshot.png" width="746" height="481" /></p>
+<h3><strong>Paso 0. Lea / piense en las fuerzas de los resortes.</strong></h3>
+<p>Hasta ahora, la única fuerza que hemos considerado es $F_{\rm thrust}$ que es una fuerza constante en cualquier dirección que apunte el barco. (También consideramos la gravedad en el ejercicio de descenso lunar, pero para simplificar esto se trató como una aceleración constante en lugar de una fuerza constante). La fuerza de un resorte es un tipo de fuerza muy diferente. Cuanto más se comprime el resorte, más empuja hacia atrás y cuanto más se estira el resorte, mayor es la fuerza para intentar tirar de él hacia la posición de reposo. La fórmula que corresponde a esto se da aquí:</p>
+<p>$$F_{\rm spring} = -k (x - L_{\rm relaxed})$$</p>
+<p>La idea es que si  $x = L_{\rm relaxed}$ la fuerza es cero. Cuando $x &lt; L_{\rm relaxed}$ entonces la fuerza del resorte es <strong>positiva</strong> de modo que empuja el objeto a un valor $x mayor. Y si $x &gt; L_{\rm relaxed}$ entonces la fuerza del resorte es <strong>negativa</strong>  y el objeto se tira a un valor $x$ más bajo.</p>
+
+<p>En el código que pronto desarrollará, debe usar<code> Lrelaxed</code>&nbsp;para representar $L_{\rm relaxed}$ y <code>Fspring</code>&nbsp;para $F_{\rm spring}$ y <span style="background-color: #ffff00;"><strong>usar x_blob para x porque es la mancha que está unida al resorte,</strong></span>no el cohete (que tiene una posición x en el código).</p>
+<h3><strong>Paso 1. Abra una versión modificada del código de impulso.</strong></h3>
+<p>Esta versión tendrá un resorte dibujado y otros ajustes menores.
+
+<!--
+<a target="_blank" href="https://editor.p5js.org/ChrisOrban/sketches/HkafJW9DQ">Click here to open the code in an editor</a>.
+<a target="_blank" href="https://editor.p5js.org/ChrisOrban/sketches/-poX_siIh">Click here to open the code in an editor</a>
+-->
+<a target="_blank" href="https://editor.p5js.org/ChrisOrban/sketches/opFG-7xZp">Haga clic aquí para abrir el código en el editor.</a>
+
+<p><strong><span style="background-color: #ffff00;">¡Tenga en cuenta que este ejercicio seguirá siendo unidimensional por simplicidad! ¡Lo siento!</span></strong></p>
+<h3><strong>Paso 2. Haz que la gota y la nave oscilan después de que la nave choca con la gota</strong></h3>
+
+<p>Nuestro primer objetivo será hacer que la nave y la burbuja oscilan juntas. Más tarde podemos pensar en dejar que la gota oscile correctamente sin la nave.
+
+<p>Presione la flecha hacia arriba para volar la nave hacia la burbuja. Notarás que la nave y la burbuja se mueven hacia la izquierda y finalmente abandonan la pantalla.
+
+<p>Hay tres cosas que debemos hacer para que esta parte funcione:
+
+<p>1. Agregue una línea al código que se traduzca  $F_{\rm spring} = -k (x - L_{\rm relaxed})$ a codigo
+
+<p>2. Agregue una línea de código a la sección de velocidad de actualización para asegurarse de que estamos actualizando <code>vx_blob</code> con <code>deltaVx_blob</code> de la misma manera que estamos actualizando <code>vx</code> con <code>deltaVx</code>
+
+<p>3. Agregue una línea al código que usa <code>Fspring</code> para calcular el cambio en la velocidad del blob (<code>deltaVx_blob</code>)
+
+<p><b>Consejo #1</b> ¡Recuerde que el BLOB está unido al resorte, no al barco! Además, es importante si está utilizando la posición de la mancha o la posición del barco cuando calcula la fuerza del resorte.
+
+<p><b>Consejo #2</b> Recuerde que cada paso de tiempo el cambio en la velocidad del blob (<code>deltaVx_blob</code>) es la aceleración del blob multiplicado por el paso de tiempo (<code>dt</code>)
+
+<p><b>Consejo #3</b> La aceleración de la mancha es solo <code>Fspring</code> dividido por la masa. Debido a que la mancha y el barco están unidos, asegúrese de dividir por la SUMA de la masa de la mancha y la masa del barco.
+
+<p>Si realiza estos cambios, <a href="http://www.asc.ohio-state.edu/orban.14/stemcoding/milestones/spring/spring_v1/index.html">su código debería comportarse así</a>
+
+<p><H3>Paso 3. Haz que la gota oscile SIN la nave conectada</H3>
+
+<p><H4>Paso 3a. Dale a la mancha una velocidad inicial</H4>
+
+<p>Existe una manera fácil de hacer que la gota oscila SIN que la nave choque con ella. Vaya al principio del código y establezca <code>vx_blob</code> en algún valor, por ejemplo:
+
+<pre>
+vx_blob = -10;
+</pre>
+
+<p>Si realiza este cambio, debería ver que la burbuja oscila hacia adelante y hacia atrás. <a href="http://www.asc.ohio-state.edu/orban.14/stemcoding/milestones/spring/spring_v2/index.html">Ojalá veas algo como este ejemplo</a>
+
+<p><H4>Paso 3b. Asegúrese de que deltaVx_blob sea correcto SOLO para el blob oscilante</H4>
+
+<p>Es posible que el código que usó para hacer que el blob oscile correctamente cuando se conectó el barco no funcione en este paso cuando intente que el blob oscile correctamente por sí solo. Puede que no funcione porque cuando la nave está unida a la mancha, la aceleración es Fspring dividida por la masa total de la mancha y la nave combinados. Pero si es solo la mancha oscilando, entonces solo importa la masa de la mancha (porque la nave ni siquiera está conectada).
+
+<p>Piense en este consejo con respecto a la masa de la mancha y la masa del barco en este caso. Modifique su código e intente obtener una marca de verificación donde diga "Asegúrese de que la gota oscile correctamente SIN el barco adjunto"
+
+<p><H3>Paso 4. ¡Ponlo todo junto!</H3>
+
+<p>Ahora que puede hacer que el blob oscile correctamente por sí mismo o con el barco conectado, modifique el código para que la oscilación sea correcta tanto si el barco está conectado como si no.
+
+<p>Pon vx_blob = 0; like this:
+
+<pre>
+vx_blob = 0;
+</pre>
+
+<p>Luego presiona la flecha hacia arriba para hacer volar la nave hacia la burbuja y comenzar a oscilar. Luego, gira la nave y vuela para que la gota oscila sin la nave. ¿Puede modificar el código de tal manera que obtenga ambas marcas de verificación?
+
+<p><a href="http://www.asc.ohio-state.edu/orban.14/stemcoding/milestones/spring/spring_v3/index.html">Así es como debería comportarse el programa</a>
+
+<p><H4><mark>Nota: ¡Probablemente no podrá ver la diferencia entre el comportamiento correcto y el incorrecto solo a simple vista!</mark></H4>
+
+<p>Si no puede resolverlo, aún puede pasar a las siguientes secciones donde mediremos las oscilaciones para ver si coincide con lo que esperamos. Puede encontrar que trabajar en las siguientes secciones es útil para, en última instancia, hacer que todo funcione así.
+
+
+  <!--
+<p>We are going to add a spring force to the blob. If the position of the blob (<code>x_blob</code>) is not equal to the relaxed length (<code>Lrelaxed</code>) the force will cause the blob to accelerate.</p>
+<p>To add the spring force, change the code in the following ways:</p>
+<ul>
+<!--
+<li>Near the beginning of spring.js add a variable deltaVx_blob and set it equal to zero.&nbsp; This is the change in velocity of the blob.</li>
+<li>Somewhere in&nbsp;<code>draw();</code> add a line of code to calculate <code>Fspring</code> that depends of the position of the blob, <code>k</code> constant and the relaxed length of the spring (<code>Lrelaxed</code>)</li>
+<li>Make sure that the "Update velocities" section updates the velocity of both the ship (vx) <strong>and</strong> the blob (vx_blob)</li>
+<li>Use $F = ma$ and $\Delta v_x = a_x \Delta t$ to calculate the change in velocity of the blob&nbsp;(<code>deltaVx_blob</code>).</li>
+</ul>
+-->
+
+<!--
+<h4><a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/spring_files/v1/index.html">If you are able to make all these changes your code should behave like this.</a></h4>
+-->
+
+<h3><strong>Paso 5. ¡Piense en el movimiento!</strong></h3>
+<p><video controls="controls" width="640" height="480">
+<source src="http://www.asc.ohio-state.edu/orban.14/physics_coding/spring_files/spring_final_version.mp4" type="video/mp4" /></video></p>
+<p>¿Cuándo es la velocidad máxima? ¿Cuándo es la fuerza mayor? ¿Cuándo es la aceleración más grande?</p>
+
+<h3><strong>Paso 6. ¡Analiza el movimiento!</strong></h3>
+<p>Modifiquemos el código para medir cuánto tarda la gota en pasar de la posición relajada a la posición completamente estirada o comprimida y volver. La forma más sencilla de hacer esto es medir la cantidad de tiempo que tarda la gota en volver a  $x = L_{\rm relaxed}$. Esto resulta ser más complicado de lo que parece. Siga las instrucciones a continuación. Si puede pensar en una forma diferente de hacer esto, ¡no dude en probarlo!</p>
+<p><strong>Paso 6.a.</strong> En algún lugar después de <code>display();</code> Agrega esto:</p>
+<pre>tcounter += dt; &#x000A;drawText('counter time = ',0.7*width,0.8*height);&#x000A;drawText(tcounter,0.75*width,0.75*height);
+
+// if the position of the blob is near the relaxed position&#x000A;if ((abs(x_blob - Lrelaxed) &lt; abs(vx_blob)*dt) &amp; (tcounter &gt; dt)) {&#x000A;tlasttime = tcounter;&#x000A;tcounter = 0; //Reset the clock&#x000A;} &#x000A;&#x000A;drawText('half cycle time = ',0.7*width,0.65*height);&#x000A;drawText(tlasttime,0.75*width,0.6*height);
+</pre>
+
+<button class="btn" data-clipboard-text="tcounter += dt;
+drawText('counter time = ',0.7*width,0.8*height);
+drawText(tcounter,0.75*width,0.75*height);
+
+// if the position of the blob is near the relaxed position
+if ((abs(x_blob - Lrelaxed) < abs(vx_blob)*dt) & (tcounter > dt)) {
+tlasttime = tcounter;
+tcounter = 0; //Reset the clock
+}
+
+drawText('half cycle time = ',0.7*width,0.65*height);
+drawText(tlasttime,0.75*width,0.6*height);
+">
+    Copiar código al portapapeles
+</button>
+
+<p>Cuando <code>x_blob</code> está cerca del valor de <code>Lrelaxed</code> y <code>tcounter</code> es mucho mayor que un paso de tiempo, entonces el valor de <code>tcounter</code> gets copied to <code>tlasttime</code>. Luego, el "reloj" se pone a cero con <code>tcounter = 0</code>.</p>
+
+<!--
+<h4><a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/spring_files/v2/index.html">If you modify your code correctly your program should behave like this.</a></h4>
+-->
+
+<h4><a target="_blank" href="http://www.asc.ohio-state.edu/orban.14/stemcoding/milestones/spring/spring_v4/index.html">Si agrega esto a su código, su programa debería comportarse así.</a></h4>
+
+<p><strong>Paso 6.b. Mide el "tiempo de medio ciclo" cuando el barco está conectado al blob</strong></p>
+<p>Vuela la nave hacia la burbuja y luego, sin disparar los propulsores, observa cómo la nave se mueve hacia adelante y hacia atrás unas cuantas veces por la fuerza del resorte. Anote cuál es el "tiempo de medio ciclo" típico.</p>
+
+<p><strong>Paso 6.c. Mide el "tiempo de medio ciclo" cuando el barco NO está unido al blob</strong></p>
+
+<p>Establecer <code>vx_blob = -10;</code> al principio y dejar que la gota oscile SIN la nave adjunta. ¿Qué obtienes por el "tiempo de medio ciclo"?
+
+<p><b><mark>¿El tiempo de medio ciclo depende de si el barco está atado o no? ¿Debería?</mark></b>
+
+<h3><strong>Paso 7. Calcule el "tiempo de medio ciclo" esperado a partir de lo que sabe acerca de los resortes oscilantes.</strong></h3>
+<p>¿A qué equivale el "tiempo de medio ciclo"? ¿La velocidad angular? ¿frecuencia? ¿período? Use lo que sabe sobre el período de un objeto unido a un resorte sin fricción para calcular lo que esperaría que el "tiempo de medio ciclo" se basará en la masa de los objetos y la constante del resorte. Debería poder estimar esto con bastante precisión. (Sugerencia: la velocidad angular de un resorte sin fricción es $\omega = \sqrt{k/m}$.)</em></p>  Compare los números que obtiene con lo que midió en el Paso 6.
+
+<p><H3>Paso 8. ¡Aumente la amplitud de las oscilaciones! ¡Vea lo que sucede con el tiempo de medio ciclo!</H3></p>
+<p><span style="background-color: #ffff00;"><strong>Hay dos formas de aumentar la amplitud de las oscilaciones:</strong></span> (1) puedes disparar los propulsores mientras el barco está conectado, o (2) puedes darle al barco diferentes velocidades iniciales antes de que choque contra la burbuja (ex.&nbsp; vx = -10, vx = -20, vx = -30...) ¿El tiempo de medio ciclo es el mismo o diferente? Asegúrese de observar las oscilaciones durante algunos ciclos antes de decidirse. ¿Te sorprende la respuesta?</p>
+
+<h3><strong>(Desafío, parte 1) Paso 9a. ¡Agregue amortiguación al sistema de resorte!</strong></h3>
+<p>Agregue una fuerza de arrastre (también conocida como amortiguación) al sistema de resorte. Hay más de un tipo de fuerza de amortiguación que puede usar, pero la más simple es $F_{\rm drag} = - b v$ donde b es una constante.</p>
+<ul>
+<li>Cerca del comienzo de su programa, agregue una variable <code>b</code> y establézcase en 0.1</li>
+<li>Modifique $F_{\rm spring}$ para que incluya un término $-bv$ adicional. Normalmente, la amortiguación no se considera una "fuerza de resorte", pero esta es la forma más sencilla de añadir amortiguación al programa.</li>
+</ul>
+<p>¡Pruébelo! Aproximadamente, ¿cuántos ciclos se necesitan para que el movimiento disminuya hasta detenerse? Los sistemas subamortiguados pasan por múltiples oscilaciones antes de detenerse. Haga <code>b</code> mucho más grande hasta que la amortiguación sea tan grande que el sistema disminuya la velocidad hasta detenerse <em>sin</em> oscilar. Los sistemas sobreamortiguados reducen la velocidad hasta detenerse <em>sin</em> pasar por múltiples oscilaciones. ¿Qué valor de <code>b</code> debería utilizar para simular un sistema críticamente amortiguado? </p>
+
+<h3><strong>(Reto, parte 2) Paso 9b. Calcular y medir el tiempo de medio ciclo para el sistema amortiguado</strong></h3>
+<p>Utilice los valores predeterminados para la masa del barco, la masa de la mancha y la constante del resorte y establezca la constante de amortiguación <code>b = 2.0</code>¿Qué mides ahora para el tiempo de medio ciclo? Debería poder hacer un cálculo que explique por qué obtiene el número que obtiene. (Sugerencia: la frecuencia angular de un sistema de resorte amortiguado es&nbsp;$\omega = \sqrt{k/m - (b/2 m)^2}$).</p>
+<h2><a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/mechanics/6spring/springpost.html" target="_blank">¡Responda esta encuesta después de completar el ejercicio!</a></h2>
+<h3><span style="background-color: #ffff00;">Cosas que debe hacer para obtener todo el crédito por este laboratorio de programación:</span></h3>
+<p><strong>1. Envíe su archivo spring.js después de realizar todos los cambios solicitados en los pasos 1-4 y (si decide hacerlo) los pasos de desafío 7a y 7b</strong></p>
+<p><strong>2. Medición y cálculo del tiempo de medio ciclo</strong></p>
+<p>En carmen hay un cuadro de comentarios cuando envías el código. Asegúrese de escribir el tiempo de medio ciclo que midió en la parte 4, <span style="background-color: #ffff00;">y describe el cálculo que hiciste en la parte 5 para explicar por qué el tiempo de medio ciclo resultó ser el número que hizo.</span> El número que calcula y el número que mide deben ser muy similares. Si los números están muy lejos, probablemente no obtendrá el crédito completo.</p>
+<p><strong>3. Indique si el tiempo de medio ciclo depende de la amplitud</strong></p>
+<p>Vuela hacia la burbuja y luego usa tus propulsores para aumentar la amplitud del movimiento. Luego, deje de encender los propulsores y mida el tiempo de medio ciclo. ¿Cambia o no?</p>
+<p><strong>Vuela hacia la burbuja y luego usa tus propulsores para aumentar la amplitud del movimiento. Luego, deje de encender los propulsores y mida el tiempo de medio ciclo. ¿Cambia o no?</strong></p>

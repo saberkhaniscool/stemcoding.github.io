@@ -1,0 +1,83 @@
+<HTML>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<H1>Lab 2. Particle Accelerator (with potential)</H1>
+
+<p>Este laboratorio de programación es una continuación del laboratorio de programación de <a href="accelerator.html">aceleradores</a> donde un <a href="accelerator/accelerator.html">protón se acelera desde el campo eléctrico entre dos placas cargadas.</a>. La única diferencia entre el laboratorio de programación anterior y este laboratorio de programación es que vamos a pensar en la <b><i>diferencia de potencial</i></b> entre las dos placas cargadas.
+
+<p>La situación es exactamente la misma que antes. Un protón (masa = 1.0, carga = +1) se acelera entre dos placas con un campo eléctrico con una fuerza de +5. Como antes, la unidad del campo eléctrico <b><i>no</i></b> son los Newtons por Coulomb habituales. En cambio, el campo eléctrico se define de modo que un campo de 1.0 acelerará un protón a $1 \, \rm m/s^2$. Realmente no es más complicado que eso, pero <a href="units.html">puede leer la discusión de las unidades si</a>
+
+<p><b>139 / 5000
+Translation results
+Paso. 1. </b> Mira esta bonita animación de un <a href="accelerator/accelerator.html"> protón que se acelera a través de dos placas cargadas</a>
+
+<p> Pensando en el problema en términos de fuerzas, las ecuaciones relevantes son:
+
+$$v_{xf} = v_{xi} + a_x \Delta t$$
+
+$$v_{xf}^2 = v_{xi}^2 + 2 a_x \Delta x$$
+
+$$F_x = q E = m a_x$$
+
+<p>y debe quedar claro a partir de la animación que la velocidad x inicial ($v_ {xi} $) no es cero.
+
+<p>Pensando en el problema en términos de diferencia de potencial, las ecuaciones relevantes son:
+
+$$\Delta V = E d$$
+
+$$\Delta KE = q \Delta V$$
+
+$$KE = \frac{1}{2} m v_x^2$$
+
+$$\Delta KE = KE_f - KE_i$$
+
+<p>donde $d$ es la distancia entre las placas. Debe quedar claro a partir de la animación que la energía cinética inicial no es cero (porque $v_{xi}$ no es cero).
+
+<p><mark><b>El propósito de este laboratorio de programación es mostrar que la forma de pensar en la diferencia de potencial sobre el problema es tan útil como pensar en el problema en términos de fuerzas, y tal vez incluso más útil, si la energía es lo que nos importa.</b></mark>
+
+<p><b>Paso 2. Abra el código acelerador en un editor.</b>
+
+<p><a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/SJXOX6YyM" target="_blank">Haga clic en este enlace para abrir el código del acelerador en un editor p5.js</a>
+
+<p><b><mark>¡Importante! Cree una cuenta con el editor o inicie sesión en una cuenta existente. Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></b>
+
+<p>También puede usar su código del ejercicio anterior siempre que cambie la carga de la partícula a +1 y la masa de la partícula a 1.0
+
+<p><b> Paso 3. </b> La velocidad final al final de la animación es de 55,5 metros por segundo. La velocidad inicial fue de 10 metros por segundo y la aceleración se produce a más de 300 metros. <b> Vuelve al laboratorio de programación anterior y recuerda cómo pudiste explicar por qué la velocidad final es de 55,5 metros por segundo. </b> En el último laboratorio de programación pensamos en el problema en términos de fuerzas. Escriba la ecuación que explica los 55,5 metros por segundo en lo que entrega para esta práctica de laboratorio.
+
+<p><b>Paso 4. </b> La diferencia de potencial entre las placas es $\Delta V = E d$ donde $E$ is 5 y $d$ es 300 metros. Por tanto, la diferencia de potencial es $\Delta V = E d = 1500$. Elija un valor diferente para $E$, y elija un valor diferente para $d$ cambiando las variables <code>x_plate_left</code> y <code>x_plate_right</code>. Asegúrese de que los nuevos valores de $d$ se multipliquen $\Delta V = 1500$ y asegúrese de que $d < 750$ o de lo contrario una de las placas estará fuera de la pantalla. Compruebe si se alcanza aproximadamente la misma velocidad final (55,5 metros por segundo). (La velocidad final debe ser la misma porque la diferencia de potencial es la misma. Esta es una de las razones por las que la diferencia de potencial es un concepto tan útil). <b>Cuando entregue este laboratorio, asegúrese de que su código tenga los valores de $E$ y $d$ que eligió y anote el valor medido de la velocidad para confirmar que esto funcionó.</b>
+
+<p> <b> Paso 5. </b> Con sus nuevos valores para $E$ y $d$, verifique qué sucede si la carga de la partícula se duplica. Establezca <code> q = 2.0 </code> en lugar de <code> 1.0 </code>. ¿La carga de la partícula afecta la velocidad final? ¿por qué o por qué no? ¿Obtienes la misma velocidad final con los valores originales de $E$ y $d$? ¿Es más rápido o más lento?
+
+<p> <b> Paso 6. </b> Con sus nuevos valores para $E$ y $d$, verifique qué sucede si la masa de la partícula es <code> 2.0 </code> en lugar de <code > 1.0 </code> y cambie la carga de la partícula de nuevo a 1.0. Como se mencionó en el último laboratorio de programación, esto es como cambiar la partícula de un protón a un deuterón. Predice la velocidad final y comprueba si tus expectativas son correctas. <b> <mark> Haga este cálculo de dos maneras: (1) pensando en el problema en términos de fuerzas, como en el laboratorio de programación anterior, y (2) pensando en el problema en términos de la diferencia de potencial. </mark> </b> Debería poder demostrar que ambos enfoques dan esencialmente la misma respuesta.
+
+
+<p><h3><mark>¡Cómo obtener el crédito completo por este laboratorio de programación!</mark></h3>
+
+<p> En la <b> sección de comentarios del dropbox sobre carmen </b>, debe responder las preguntas que se hacen en este laboratorio de programación:
+
+<p><b>1. Escriba la ecuación que dio 55,5 metros por segundo del laboratorio de programación anterior (Paso 3)</b>
+
+<p>Siéntase libre de mirar hacia atrás en el último laboratorio de programación y simplemente coloque esta misma ecuación aquí
+
+<p><b>2. Elija nuevos valores para $E$ y $d$ (Paso 4a)</b>
+
+<p>Asegúrese de que el código que envíe contenga los nuevos valores para $E$ y $d$. Estos deben multiplicarse a $\Delta V = Ed = 1500$ y asegurarse de que $d < 750$ o de lo contrario una de las placas estará fuera de la pantalla.
+
+<p><b>3. Indique si obtiene aproximadamente la misma velocidad final con los nuevos valores de $E$ y $d$ (Paso 4b)</b>
+
+<p>Esta es solo una pregunta de sí o no. La respuesta debería ser sí (como se mencionó en el paso 4) o de lo contrario ha hecho algo mal.
+
+<p><b>4. Di si el aumento de la carga de la partícula aumenta la velocidad final (Paso 5)</b>
+
+<p>Esta es solo una pregunta de sí / no. Asegúrese de cambiar E y d antes de probar esto.
+
+<p><b>5. Cambie la masa y muestre tres formas diferentes de calcular la velocidad final (Paso 6)</b>
+
+<p>Puede calcular la velocidad final usando el tiempo medido en que la partícula se acelera (como en el laboratorio anterior), o usando la distancia conocida entre las placas (como en el laboratorio anterior), o usando el cambio en el potencial (que es nuevo en este laboratorio). Calcula la velocidad final usando los tres métodos. Escriba las ecuaciones lo mejor que pueda en los comentarios. No se limite a mostrar el resultado. Debería obtener aproximadamente la misma respuesta.

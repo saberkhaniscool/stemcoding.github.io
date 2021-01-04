@@ -1,0 +1,553 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<H1>Aterrizaje lunar del Apolo</H1>
+
+<p>Si ha terminado de jugar con <a href="https://www.asc.ohio-state.edu/orban.14/physics_coding/acceleratetheblob.html">Accelerate the blob</a> puede continuar con este laboratorio donde <b>we will now add gravity to the game!</b> ahora agregaremos gravedad al juego. El objetivo es hacer que la pequeña gota aterrice suavemente en el suelo. Solo por diversión, usaremos la gravedad de la luna en lugar de la gravedad de la tierra. El resultado será muy parecido al aterrizaje lunar del Apolo.
+
+<p><H3>Paso 0. Habrá una versión modificada de Accelerate the blob en un editor</H3>
+
+<!--
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/6iwEh1APx" target="_blank">Click on this link to open up a modified version of accelerate the blob in an editor</a>
+-->
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/tSbtQVQYz" target="_blank">Haga clic en este enlace para abrir una versión modificada de acelerar el blob en un editor</a>
+
+<p><H4><mark>Muy importante: ¡Inicie sesión en su cuenta! Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></H4>
+
+<p>Presione reproducir allí para ejecutar el código. Debería verse similar al final del ejercicio de aceleración del blob.
+
+  <div align="center">
+<p><img src="apollo_initial.png">
+  </div>
+
+<p>Al final de esta actividad, su objetivo es tener marcas de verificación verdes junto a todos los objetivos como este:
+
+  <div align="center">
+<p><img src="apollo_finished.png">
+  </div>
+
+<p>Los pasos a continuación lo ayudarán a lograr todos estos objetivos
+
+<p><H3>Paso 1. Mira el código</H3>
+
+<P>Hay algunas diferencias importantes entre este código y la aceleración del código de blob que debe mirar antes de comenzar esta actividad. La más importante es que las teclas de flecha ahora controlan la fuerza aplicada en lugar de controlar la aceleración. Imagina que las teclas de flecha controlan los propulsores de una nave espacial que se encuentra en el espacio profundo (sin gravedad ... aún, eso viene en el Paso 2).
+
+<p>Aquí está el código:
+
+<pre>
+function draw(){
+
+    // Update velocity
+    vx += ax*dt;
+    vy += ay*dt;
+
+    // Update location
+    x += vx*dt;
+    y += vy*dt;
+
+    // Force from rocket thrust is zero unless keys are pressed
+    Fx = 0;
+    Fy = 0;
+
+    // Thrust the ship depending on what key is pressed
+    if (keyIsDown(LEFT_ARROW)) {
+        Fx = -15;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        Fx = 15;
+    }
+    if (keyIsDown(UP_ARROW)) {
+	Fy = 15;
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+	Fy = -15;
+    }
+
+    // Draw axes and other stuff
+    // This will clear the screen and re-draw it
+    display();
+
+    Fnetx = Fx;
+    ax = Fnetx/mass;
+
+    Fnety = Fy;
+    ay = Fnety/mass;
+
+    drawLander(x,y,vx,vy,ax,ay);
+    drawForce(x,y,Fx,0);
+    drawForce(x,y,0,Fy);
+
+    // Add more graphics here before the end of draw()
+
+} // end draw()   NO AÑADA CÓDIGO DESPUÉS DE ESTA LÍNEA !!!!
+</pre>
+
+
+
+<p><b><mark>Cosa en la que pensar # 1: ¿Compare esto para acelerar el blob? ¿Cuáles son las diferencias?</mark></b>
+
+<p><b><mark>Cosa en la que pensar # 2: ¿Por qué el código usa ax = Fnetx / mass y ay = Fnety / mass en lugar de ax = Fx / mass y ay = Fy / mass?</mark></b>
+
+<p><H3>Paso 2. Agrega gravedad a la versión modificada de acelerar la mancha</h3>
+
+<p><H4>Paso 2a. Agregue la constante g al comienzo del código</H4>
+
+<p>¡Después de hacer <b><mark>clic en duplicar!</mark></b> Edite el comienzo del código para agregar la constante gravitacional de la luna. La gravedad de la luna es 1/6 de la de la tierra, por lo que g = -9.8/6 = -1.63 m/s<sup>2</sup>
+
+<p>Agregue esta línea cerca del comienzo de su código:
+
+<pre>
+g = -1.63;
+</pre>
+
+<button class="btn" data-clipboard-text="g = -1.63;">
+    Copiar código al portapapeles
+</button>
+
+<p><H4>Paso 2b. Cambie Fnety para incluir el peso del barco.</H4>
+
+<p>Para agregar gravedad al código <b>NO PODEMOS</b> simplemente establecer ay = g. Esto haría que la nave acelera hacia el suelo como queramos (¡siéntete libre de probarlo!), pero esta aproximación <b>NO</b> nos permitirá disparar los propulsores para ralentizar nuestro descenso. Vamos a tener que hacer algo un poco más inteligente que eso.
+
+<p>La forma inteligente (y correcta) de agregar gravedad al código es recordar estos tres hechos:
+
+<p><b>1. la gravedad es una fuerza
+
+<p>2. La fuerza de gravedad es el peso
+
+<p>3. La fuerza neta es la suma de todas las fuerzas </b>
+
+<p>Esto significa que necesitamos reemplazar este código <code>Fnety = Fy;</code> con algo más:
+
+<pre>
+W = <mark>?????</mark>; // what goes here?
+Fnety = Fy + W;
+</pre>
+
+<button class="btn" data-clipboard-text="W = ?????; // what goes here?
+Fnety = Fy + W;">
+    Copiar código al portapapeles
+</button>
+
+<p><b><mark>Tu trabajo es averiguar qué ???? ¡debiera ser!</mark></b>
+
+<p>Si realiza estos cambios correctamente, <a href="apollo_v1/index.html">su programa debería comportarse así</a>
+
+<p><H3>Paso 3. Agrega un juego</H3>
+
+<p>Modifique su código para que sea posible estrellarse en el suelo (que está en y = 0). Dado que arriba es positivo y abajo es negativo, agregue una instrucción if que verifique si y < 0 como se ve a continuación.
+
+<p>En algún lugar <b>después</b> de display(); agregue este código:
+
+<pre>
+  if (y < 0) {
+  drawText('Houston we have a problem!',width/3,height/2);
+  exit();
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="if (y < 0) {
+  drawText('Houston we have a problem!',width/3,height/2);
+  exit();
+  }">
+    Copiar código al portapapeles
+</button>
+
+<p>¡Pruébalo! <a href="apollo_v2/index.html"> Tu programa debería comportarse así</a>
+
+<p><H3>Paso 4. Agregue una forma de detectar si ha aterrizado de manera segura</H3>
+
+<p>Aquí hay un código que puede usar para detectar si ha aterrizado de manera segura en el suelo.
+
+<p>En algún lugar <b>después</b> de display(); agregue este código:
+
+<pre>
+  if ( abs(y - 20)  < 0.1) {
+    drawText('The Eagle has landed!',width/3,height/2);
+    ax = 0;
+    ay = 0;
+    vx = 0;
+    vy = 0;
+    exit();
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="  if ( abs(y - 20)  < 0.1) {
+    drawText('The Eagle has landed!',width/3,height/2);
+    ax = 0;
+    ay = 0;
+    vx = 0;
+    vy = 0;
+    exit();
+  }">
+    Copiar código al portapapeles
+</button>
+
+<p>Si agrega esto a su código correctamente <a href="apollo_v3/index.html">su programa debería comportarse así</a>
+
+<p><H3>Paso 5. ¡Agrega un temporizador!</H3>
+
+<p>Agreguemos un código para realizar un seguimiento de cuánto tiempo ha transcurrido. Al comienzo del código donde se inicializan todas las variables agregue esta línea:
+
+<pre>
+t = 0;
+</pre>
+
+<p>En algún lugar después de la función display () agregue estas líneas:
+<pre>
+t += dt;
+drawText("time = ",0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);
+</pre>
+
+<button class="btn" data-clipboard-text="t += dt;
+drawText('time = ',0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);">
+    Copiar código al portapapeles
+</button>
+
+<p>Ahora ejecuta el código y deja que el barco caiga al suelo. ¿Cuánto tiempo se tarda?
+
+<p><H3>Paso 6. Utilice sus conocimientos de física para comprobar si el tiempo de caída libre es correcto</H3>
+
+<p>Siempre es un buen ejercicio comprobar que su código le está dando la misma respuesta que espera. Analice algunos números para ver si el tiempo de caída libre es correcto. Probablemente querrá usar esta ecuación:
+
+$$y(t) = y_0 + v_{0y}t + \frac{1}{2} g t^2$$
+
+<p>donde $y_0$ es la altura inicial $v_{0y}$ es la rapidez inicial y $g$ es la aceleración gravitacional.
+
+<p><b>Descargo de responsabilidad #1:</b> ¡No olvide que el barco está aterrizando en la luna! ¡Utilice g = -1,63 en lugar de g = -9,8!
+
+<p><b>Descargo de responsabilidad #2:</b> a menos que haya modificado el código, el barco comenzará desde y = 250 y tocará el suelo en y = 0
+
+
+<p><H3>Paso 7. Calcule el error fraccional</H3>
+
+<p>Una vez que haya calculado el tiempo de caída libre, compárelo con el tiempo de caída libre que midió con el programa calculando el error fraccionario:
+
+$$ \% = 100 \cdot \frac{|{\rm meas} - {\rm true}|}{\rm true}   $$
+
+<p>Asegúrese de tratar el tiempo de caída libre de la simulación como medida, no como el valor "verdadero" que proviene de las ecuaciones. ¡Estamos tratando de verificar si hay algún error en nuestro código!
+
+<p><H3>Paso 8. Dale al barco una velocidad inicial aleatoria</H3>
+
+<p>En los alunizajes reales del Apolo, el módulo de aterrizaje no partió del reposo. Habría habido una velocidad inicial tanto horizontal como verticalmente. Podemos incluir esto en nuestro código (y hacerlo un poco más divertido) iniciando la nave con una velocidad aleatoria.
+
+<p>Cerca del comienzo del código, reemplace vx = 0; y vy = 0; con este:
+
+<pre>
+vx = random(-20,20);
+vy = random(-20,20);
+</pre>
+
+<button class="btn" data-clipboard-text="vx = random(-20,20);
+vy = random(-20,20);">
+    Copiar código al portapapeles
+</button>
+
+<p>Si agrega esto a su código, <a href="apollo_v5/index.html">su programa debería comportarse así</a>
+
+<p><H3><mark>En este punto, su código debería tener todas las marcas de verificación verdes. ¡Hurra!</mark></H3>
+
+<p><H3>Desafíos</H3>
+
+<p><H4>Desafío #1. Desafío SpaceX</H4>
+
+<p>Solo por diversión, cambie g de nuevo a -9,8 (en lugar de -1,63) para que el cohete intente aterrizar en la tierra en lugar de en la luna. <b>Puede aumentar el valor de Fx y Fy (en otras palabras, el empuje) si es necesario.</b> Esta situación es a la que tiene que enfrentarse SpaceX cuando aterrizan sus cohetes en una plataforma de aterrizaje. ¿Puedes aterrizar en el barco incluso en esta situación?
+
+<p><H4>Desafío #2. Mantenga un registro de su combustible</H4>
+
+<p>Hay un límite de combustible que puedes llevar en un barco para intentar aterrizar en la luna. Es famoso que durante el primer alunizaje, la nave casi se quedó sin combustible para aterrizar.
+
+<p>Elija un número para la cantidad de segundos de combustible que tiene su nave (¿30 segundos?) Y reste de ese número cada vez que presione los propulsores. Configura tu código para que cuando te quedes sin combustible los propulsores no funcionen más.
+
+
+<p><H4>Desafío #3. Mostrar propulsores</H4>
+
+<p>El programa sería un poco más divertido si pudieras ver los propulsores disparando cuando presionas las teclas de flecha.
+
+<p>La forma más sencilla de hacer esto es hacer que aparezca un triángulo cuando se presionan diferentes teclas de flecha. En este código hay una función de triángulo que puede usar que funciona así:
+
+<p>drawTriangle(x1,y1,x2,y2,x3,y3,rgbcolors);
+
+<p>Puedes ver en lo anterior que hay tres puntos (x1, y1), (x2, y2) y (x3, y3) que están conectados entre sí para crear el triángulo.
+
+<p>Hay algunos pasos para que esto se vea como fuego cuando presionas la flecha hacia arriba
+
+<p><b>1. Mueva display () antes de las declaraciones if</b>
+
+<p>Cualquier gráfico que escriba en la pantalla será borrado por la función display (), así que mueva display () antes para evitar ese problema
+
+<p><b>2. Desactive los hitos /objetivos</b>
+
+<p>Unfortunately, moving the display() function will make some of the milestones stop working. If this bothers you, just turn off the milestones by adding this line to the beginning of your code where the variables are set to their initial values:
+
+<pre>
+showmilestones = false;
+</pre>
+
+<button class="btn" data-clipboard-text="showmilestones = false;">
+    Copiar código al portapapeles
+</button>
+
+<p><b>3. Agregue drawTriangle a la instrucción if para la flecha hacia arriba </b>
+
+<p>Continúe y agregue este código a la declaración if para la flecha hacia arriba:
+
+<pre>
+drawTriangle(x-10,y-20,x+10,y-20,x,y-40,color(255,0,0));
+</pre>
+
+<button class="btn" data-clipboard-text="drawTriangle(x-10,y-20,x+10,y-20,x,y-40,color(255,0,0));">
+    Copiar código al portapapeles
+</button>
+
+<p>Entonces, toda la sección de declaración if se ve así:
+
+<pre>
+    // Draw axes and other stuff
+    // This will clear the screen and re-draw it
+    display();
+
+    // Thrust the ship depending on what key is pressed
+    if (keyIsDown(LEFT_ARROW)) {
+        Fx = -15;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        Fx = 15;
+    }
+    if (keyIsDown(UP_ARROW)) {
+        Fy = 15;
+        drawTriangle(x-10,y-20,x+10,y-20,x,y-40,color(255,0,0));
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+    	Fy = -15;
+    }
+</pre>
+
+<p>Observe que movimos la función display () para que esté antes de las declaraciones if en lugar de después.
+
+<p>Utilice <a href="https://www.google.com/search?client=firefox-b-1-d&ei=Vcc5XbHXC4K0tAaTs7uYDA&q=color+picker&oq=color+picker&gs_l=psy-ab.3..35i39j0i20i263j0l8.2440.4260..4429...0.0..0.109.916.11j1......0....1..gws-wiz.......0i71j0i10j0i131i20i263j0i67j0i131.kxUqFrmP9P4&ved=0ahUKEwjx1c6OrtDjAhUCGs0KHZPZDsMQ4dUDCAo&uact=5">color picker</a> para cambiar el color del empuje de rojo puro (255,0,0) a algo más realista como amarillo o naranja (o <a href="https://www.youtube.com/watch?v=Nyn2gOimRfM">blue!</a>). Incluso puedes usar dos funciones de drawTriangle para dibujar una llama azul sobre una llama naranja, etc.
+
+<p><H4>Desafío #4. Piloto automático lunar</H4>
+
+<p>En las misiones Apolo, uno de los astronautas siempre tenía que pilotar la nave para aterrizar en la luna (razón por la cual muchos de los primeros astronautas eran pilotos de prueba). La tecnología informática no estaba lo suficientemente avanzada en ese momento como para que el barco aterrizara.
+
+<p>Establezca la gravedad en lunar (g = -1.67) e intente configurar el código para disparar los propulsores de tal manera que baje la nave con la suficiente suavidad como para obtener el mensaje "¡Águila ha aterrizado!" mensaje en lugar de "Houston tenemos un problema". Para hacerlo más fácil, vuelva a establecer la velocidad inicial en vx = 0; y vy = 0;
+
+<p><H4>Desafío #5. Piloto automático de SpaceX</H4>
+
+<p>Establece la gravedad en la tierra (g = -9,8), dale a la nave una velocidad inicial aleatoria e intenta que tu piloto automático aterrice la nave en la tierra. ¡Así es como lo hace spaceX! Todo sucede demasiado rápido para que un piloto humano pueda derribar el cohete de manera segura. Siéntase libre de aumentar el empuje (Fx y Fy) si es necesario. ¡Buena suerte!
+
+<p><h3><mark>¡Cómo obtener todo el crédito en este laboratorio de programación!</mark></h3>
+
+<p><b>1. Describe las diferencias entre el código de inicio que se usa aquí y el código de acelerar la actividad de blob.</b>
+
+<p><b>2.Asegúrate de poder aterrizar y estrellar el barco.</b>
+
+<p>Como se describe en los pasos 3 y 4
+
+<p><b>3.Asegúrate de que tu cálculo del tiempo de caída libre concuerde con la simulación.</b>
+
+<p>En los pasos 6 y 7, utilizará sus conocimientos de física para calcular cuál debería ser el tiempo de caída libre y compararlo con el tiempo de caída libre de la simulación. Por una variedad de razones, no esperamos que las simulaciones por computadora sean perfectamente precisas, pero en este caso los dos números deberían coincidir en aproximadamente el 1%
+
+<p><b>4.Asegúrate de agregar una velocidad inicial aleatoria al código</b>
+
+<p>Esto es solo para hacer que el programa sea más interesante, pero es obligatorio. ¡Que te diviertas!
+
+<p><b>5. Los desafíos son realmente opcionales</b>
+
+<p>Siéntete libre de probar los desafíos (que son bastante divertidos). Pero si no puede llegar a ellos, está bien.
+
+  <!--
+
+<p>Right <b>before</b> the <code>display();</code> function, add this line:
+
+<pre>
+deltaVy += -g*dt;
+</pre>
+
+<button class="btn" data-clipboard-text="deltaVy += -g*dt;">
+    Copy code to clipboard
+</button>
+
+<p>Note that gravity points in the $-y$ direction, so we need a minus sign in the above code to make sure down is negative (and since $g > 0$).
+
+<p>You've added gravity to our simple planetoids game! Now run the program by clicking <img src="https://processing.org/reference/environment/images/play.gif">. <a href="lunardescent_v1/lunardescent.html">The program should behave like this</a>.
+
+<p><h3>Step 2. Add the Game Over!</H3>
+
+<p>Edit your code so that it's game over if the ship falls through the bottom of the page. Since down is positive, this happens if the y value becomes larger than the height of the screen.
+
+<p>Right <b>after</b> display(); add this line:
+
+<pre>
+  if (y < 0) {
+  drawText('Game Over!',width/2,height/2);
+  noLoop();
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="if (y < 0) {
+  drawText('Game Over!',width/2,height/2);
+  noLoop();
+  }">
+    Copy code to clipboard
+</button>
+
+<p>Great, now there is a way to lose the game! <a href="lunardescent_v2/lunardescent.html">The program should now behave like this</a>.
+
+<p><H3>Step 3. Add a way to win the game!</H3>
+
+<p>We need to add a way for the ship to land on the surface of the moon.
+
+<p>Add this code right after the display(); function to draw a line at the bottom of the page:
+
+<pre>
+drawLine(0,0,width,0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawLine(0,0,width,0);">
+    Copy code to clipboard
+</button>
+
+<p>If you play the game now there should be a black line on the bottom of the screen. You should test it to see if this worked.
+
+<p>Now we need a way for the ship to sit in the surface of the moon. In real life, the surface of the moon would provide a normal force to hold up the ship. We could try to code up the normal force, but a simpler thing to do would be to make it so that if the ship gets <b>very</b> close to the bottom then the acceleration and velocity will be zero in both the x and y direction. The ship will just sit there forever.
+
+<p>Add these line right <b>before</b> the game over in draw()
+
+
+
+<button class="btn" data-clipboard-text="
+ if ( abs(y - 0.03*height)  < 0.1) {
+  deltaVx = 0;
+  deltaVy = 0;
+  vx = 0;
+  vy = 0;
+  theta = 3.141/2;
+  }
+">
+    Copy code to clipboard
+</button>
+
+<p>Among other things, the above code will change the angle of the ship from 0 to $\pi/2$ radians. If you convert from radians this would be 90 degrees.
+
+<p>Note that the accelerations are set to zero, the velocities are set to zero and the angle of the rocket points straight up.
+
+<p>If you've coded up everything correctly, <a href="lunardescent_v3/lunardescent.html">the end result should behave like this</a>.
+
+
+<p><H3>Step 4. Change the initial angle!</H3>
+
+<p>There are a number of different options to customize the game. You can change the initial direction of the ship from horizontal to vertical by changing one line of your code.
+
+<p>Near the beginning of your code change this line:
+
+<pre>
+theta = 0;
+</pre>
+to this:
+<pre>
+theta = 3.141/2;
+</pre>
+
+<p>The above code will change the angle of the ship from 0 to $\pi/2$ radians. If you convert from radians this would be 90 degrees.
+
+<!--
+<p>You may also want to have the ship start out higher up so it has further to fall. You can do this by changing initial y position in the <code>setup()</code> function. Change this from
+<pre>
+y = height/2;
+</pre>
+to
+<pre>
+y = height;
+</pre>
+
+<p>There are plenty of other ways to modify the game. Maybe have a limited amount of fuel, or a limited amount of time. Perhaps add mountains. Projectiles? Enable reverse thrusters? Perhaps display the numerical value of the velocity and height on screen. Something else?
+
+
+<p><b>Step 5. Add a timer!</b>
+
+<p>Let's add some code to keep track of how much time has elapsed. At the beginning of the code where all the variables are initialized add this line:
+
+<pre>
+t = 0;
+</pre>
+
+<p>Somewhere after the display() function add these lines:
+
+<pre>
+t += dt;
+drawText("time = ",0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);
+</pre>
+
+<button class="btn" data-clipboard-text="t += dt;
+drawText('time = ',0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);">
+    Copy code to clipboard
+</button>
+
+<p>Now run the code and let the ship fall to the ground. How long does it take?
+
+<p><b>Step 6. Use your physics knowledge to check if the free fall time is correct</b>
+
+<p>It is always a good exercise to check that your code is giving you the same answer that you expect. Crunch some numbers to see if the free fall time is correct. You'll probably want to use this equation:
+
+$$y(t) = y_i + v_{yi}t - \frac{1}{2} g t^2$$
+
+<p>where $y_i$ is the initial height, $v_{yi}$ is the initial speed and $g$ is graivitational acceleration.
+
+<p><b>Disclaimer #1:</b> Don't forget that the ship is landing on the moon! Use g = 1.63 instead of g = 9.8!
+
+<p><b>Disclaimer #2:</b> Unless you modified the code, the ship will start from y = 250 and hit the ground at y = 0
+
+<p><H4>Challenges: SpaceX landing!</H4>
+
+<p><b>Challenge #1.</b> Just for fun, change g back to 9.8 (instead of 1.67) so that the rocket is trying to land on earth instead of the moon. You can increase the value of Fthrust if you need to. This situation is what SpaceX has to deal with when they land their rockets on a landing pad. Can you land the ship even in this situation?
+
+<p><b>Challenge #2.</b> Add a random velocity to the ship (which is similar to how SpaceX has a rough estimate of the rocket velocity but it might be a bit off from the true velocity). <a href="random_advice.html">Here is some advice on how to do this</a>
+
+<p><b>Challenge #3.</b> Can you modify the code so that the rocket fires the thrusters automatically so that it lands by itself without any human guidance? This is what the computers on the spaceX rockets have to do.
+
+<p><h3><mark>How to get full credit on this programming lab!!!</mark></h3>
+
+<p><b>1. Make sure you can lose the game and win the game</b>
+
+<p>As described in steps 2 and 3
+
+<p><b>2. Make sure to change the initial angle</b>
+
+<p>Make sure to change the initial angle to 3.141/2 as described in step 4.
+
+<p><b>3. Make sure your calculation for the free fall time agrees with the simulation</b>
+
+<p>In step 6 you will use your physics knowledge to calculate what the free fall time should be and compare it to the free fall time from the simulation. For a variety of reasons, we don't expect computer simulations to be perfectly accurate but in this case the two numbers should agree to better than 1%
+-->
+
+</body>
+</html>

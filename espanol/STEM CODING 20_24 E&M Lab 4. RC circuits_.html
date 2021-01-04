@@ -1,0 +1,125 @@
+<HTML>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<H1>Lab 3. RC circuits</H1>
+
+<p>Este laboratorio de programación es diferente a los anteriores en que involucra circuitos. Específicamente, involucra circuitos con una batería, un capacitor y una o dos resistencias como el circuito que ve a continuación.
+
+<p><img src="RCdisconnected.png">
+
+<p><b>Paso 1. Considere el circuito.</b> ¡Piensa en este circuito! ¿Qué sucede cuando el interruptor del medio está conectado a la batería? ¿Qué sucede cuando está conectado a la resistencia?
+
+<p><b>Paso 2. Pruebe una demostración del conmutador.</b> <a href="RCcircuit_v1/RCcircuit.html">Aquí hay una demostración de lo que sucede cuando el interruptor se mueve a la batería y de nuevo a la resistencia.</a> ¡Pruébalo! Mueva el interruptor a la batería presionando la flecha izquierda en el teclado. Mueva el interruptor de regreso a la resistencia presionando la flecha derecha. Observe lo que sucede con la carga del condensador y la corriente a través de la resistencia. Siéntase libre de mover el interruptor hacia adelante y hacia atrás. Presione la barra espaciadora para restablecer el gráfico en la parte inferior derecha.
+
+<p><b>Paso 3. Considere el condensador.</b> En la <a href="RCcircuit_v1/RCcircuit.html">demostración,</a> ¿por qué la carga del condensador salta instantáneamente a su valor máximo cada vez que conecta la batería? ¿Cambiaría la carga del condensador tan rápidamente en la vida real?<b><mark>Responda estas preguntas en 2-3 oraciones en lo que entregue.</mark></b>
+
+<p><b>Paso 4. Abra el código en un editor.</b>
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/Hy8RjLhWV" target="_blank">Haga clic en este enlace para abrir el código en un editor.</a>
+
+<p><b><mark>¡Importante! Cree una cuenta con el editor o inicie sesión en una cuenta existente. Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></b>
+
+<p>Considere el siguiente código de la <a href="RCcircuit_v1/RCcircuit.html">demostración:</a>:
+
+<pre>
+  if ( battery_is_connected == true) {
+    I = 0;
+    Vcap = Vbatt;
+    Q = C*Vcap;
+  } else { // battery is not connected
+    I = Vcap/R1;
+    Q += -I*dt;
+    Vcap = Q/C;
+  }
+</pre>
+
+<p>Tenga en cuenta que la corriente (<code>I</code>) en este caso es la corriente a través de <b><i>la resistencia</i></b>. La corriente a través de la resistencia es cero cuando el interruptor está conectado a la batería. Pero cuando se mueve el interruptor para conectar el condensador y la resistencia, <b><i>habrá </i></b> una corriente a través de la resistencia. El único problema es que cada unidad de carga que deja el capacitor para viajar a través de la resistencia disminuirá la carga en el capacitor. Por eso hay un signo menos en esta línea de código: <code>Q += -I*dt;</code> Esto hace que el condensador sea como una batería pero con un voltaje que disminuye constantemente. Esto se debe a que el voltaje en el capcitor es Q / C y si el capacitor pierde carga, el voltaje en él disminuirá hasta que Q sea básicamente cero.
+
+<p><b>Paso 5. Agregar una resistencia</b> Hagamos que el circuito sea más realista como el circuito que se dibuja a continuación:
+
+<p><img src="RCdisconnected_v2.png">
+
+<p>Ahora cambie el código que carga la imagen del circuito. Esto sucede en la función de <code>preload</code> cerca del comienzo del programa. Simplemente cambie <code>RC.png</code> a <code>RC_v2.png</code> para que la función de precarga se vea así:
+
+
+<pre>
+function preload() {
+  img = createImg("https://www.asc.ohio-state.edu/orban.14/RC_v2.png");
+}
+</pre>
+
+<p>Ejecute el código solo para asegurarse de que aparezcan las nuevas imágenes.
+
+<p>Probablemente haya notado que R2 se establece en cero cerca del comienzo del código:
+
+<pre>
+R1 = 5; // Ohms
+R2 = 0;
+</pre>
+
+<p>Necesitamos establecer R2 en algún valor que no sea cero cerca del comienzo del código donde se inicializan las variables. Un buen valor para usar es R2 = 3
+
+<pre>
+R1 = 5; // Ohms
+R2 = 3;
+</pre>
+
+<p>Continúe y realice este cambio antes de pasar al siguiente paso.
+
+<p><b>Paso 6. Modificar la declaración ‘if’</b> Ahora queremos modificar la instrucción if de la que hablamos en el paso 4. Cambie su instrucción if para que se parezca al código siguiente. Tu trabajo será rellenar el <mark>???.</mark>
+
+<pre>
+  if ( battery_is_connected == true) {
+    I = <mark>???</mark>; // current in R2, determined by Vcap, Vbatt and R2
+    Q += I*dt; // charging up
+    Vcap = Q/C;
+  } else {  // battery is not connected
+    I = Vcap/R1; // current in R1
+    Q += -I*dt; // discharging
+    Vcap = Q/C;
+  }
+</pre>
+
+<p><b><mark>Averigua qué debería haber en el ??? en el código de arriba!</mark></b> Si hace esto correctamente, <a href="RCcircuit_v2/RCcircuit.html">su código debería comportarse así</a>
+
+<p><b>Comentarios:</b>
+
+<p><b>¡Tenga en cuenta que este código se ejecutará una y otra vez!</b> Cantidades como<code>Q</code> y <code>I</code> yo cambiarán con cada iteración.
+
+<p>El código de cuando la batería está conectada ha cambiado sustancialmente. Mientras que antes, <code>Vcap</code> es igual al potencial de la batería (<code>Vbatt</code>), ahora el código se parece más al código de la declaración else, excepto que <b>no</b> hay un signo menos en esta línea de código: <code>Q += I*dt;</code>. El condensador se está cargando, en lugar de descargarse.
+
+<p>Se supone que el código para cuando la batería está conectada es así: (1) (1) La corriente en <code>R1</code> se determina a partir del potencial de la batería y el potencial a través del capacitor. (2) La corriente coloca más carga en el condensador. (3) El potencial a través del capacitor aumenta debido al aumento de carga. ¡Repetir!
+
+<p><b>Paso 7. Pruebe diferentes variables.</b> Como sabrá, el tiempo de caída característico de un circuito RC en descarga está dado por τ=RC. Un ejemplo familiar es cuando desconecta un enrutador inalámbrico para restablecerlo, se supone que debe esperar unos 30 segundos antes de volver a enchufarlo. Puede pensar que tan pronto como desconecte la fuente de alimentación, la carga de los condensadores del dispositivo se disipará rápidamente, pero lo que sucede es muy parecido al circuito que se muestra aquí. Aunque la batería no está conectada cuando se gira el interruptor hacia la derecha, la carga no se disipa inmediatamente. <b><mark>Aumente una o ambas la capacitancia del capacitor y la resistencia de R1. Ejecute el programa para confirmar que la carga tarda más en disiparse como se esperaba.</mark></b>
+
+<p><b>Paso 8. Seamos cuantitativos</b> Utilizar <code>print("Q = ",Q);</code> y <code>print("I = ",I);</code> para verificar si su código está dando los valores correctos para la carga <b> máxima </b> en el capacitor cuando el interruptor está conectado a la batería. ¡Siempre es importante verificar los resultados de las simulaciones de su computadora para ver si le da la respuesta que espera! El código para <code> print ("Q =", Q); </code> y <code> print ("I =", I); </code> ya está en el código, pero está comentado. Todo lo que necesita hacer es eliminar el <code> // </code> para que funcione. <b> <mark> ¡Escriba su cálculo para la carga máxima en el capacitor y anote lo que se midió! </mark> </b>
+
+<p><b>Simplemente cómico: Paso 9 </b> ¿No sería interesante agregar un inductor al circuito?<a href="https://editor.p5js.org/ChrisOrban/sketches/B19Dkt3bV" target="_blank"> Play around with this RLC circuit!</a> Does the code make sense? How do the values of R, L and C affect the result? <a href="RLCcircuit/index.html">Here is a link if you just want to run the code in the browser without seeing the code</a>
+
+<p><H3><mark>¡Cómo obtener el crédito completo por este laboratorio de programación!</mark></H3>
+
+<p><b>1. Comente la demostración (paso 3)</b>
+
+<p>¿Por qué la carga del condensador salta instantáneamente a su valor máximo cada vez que se conecta la batería? ¿Pasaría esto en la vida real? ¿Por qué?
+
+<p><b>2. Modifique su código como se describe en el Paso 5 </b>
+
+<p>Simplemente siga las instrucciones del Paso 5. Aquí no hay conjeturas.
+
+<p><b>3. Modifique correctamente la instrucción if para calcular la corriente en R2 (Paso 6)</b>
+
+<p>Los comentarios pueden ayudarlo a hacer esto. Piense en ello como un problema de tarea. ¿Cuál es la corriente en R1 en función de <code>Vbat</code>, <code>Vcap</code> y <code>R2</code>?
+
+<p><b>4. Elija valores mayores para C y R1 y compruebe que el condensador tarda más en descargarse (paso 7)</b>
+
+<p>Escriba los valores de C y R1 que eligió y diga algo como "Sí, realmente tomó más tiempo" en lo que entrega. También puede cambiar R2 si tiene curiosidad. ¿Esto afecta el tiempo de descarga?
+
+<p><b>5. Verifique los valores de Qmax (Paso 8)</b>
+
+<p>El valor exacto de la carga en el condensador está escrito en la parte inferior izquierda de la pantalla. Escriba su cálculo de cuál debería ser la carga máxima en el capacitor y compárelo con el resultado del programa.

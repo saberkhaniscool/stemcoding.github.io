@@ -1,0 +1,766 @@
+
+<HTML>
+<head>
+<title>Escape Velocity / Newtonian Black Holes</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<H1>
+
+  <!--
+  Planetoids pre-survey!
+<p>
+<mark><a href="assessments/planetoids/planetoidsquiz_pre.html">PLEASE TAKE THE PLANETOIDS PRE-SURVEY!!!!!!! Look at how big the font is for this link!!! Looks important! Please click here to take the Planetoids pre-survey!</a></mark>
+</h1>
+-->
+
+<H1>Velocidad de escape / Agujeros negros newtonianos</H1>
+
+
+<p>¡Ojalá hayas completado el <a href="../../physics_coding/gravity/gravity.html">Slingshot con Gravity!</a> actividad de codificación. Esa actividad explora el comportamiento de objetos como planetas o cometas que interactúan con un objeto masivo como el sol. Una parte interesante de esa actividad es mostrar que la fuerza gravitacional entre dos objetos es inversamente proporcional a la distancia al cuadrado. Descubrimos que esto debe ser cierto:
+
+  $$F_{grav} = \frac{G M m }{r^2}$$
+
+<p>y tenemos esta fórmula en lugar de algo proporcional a $1/r^n$ orque se observa que los planetas tienen órbitas elípticas y, como muestra la actividad de codificación, sólo obtienes órbitas elípticas si $n = 2$.
+
+<p>En esta actividad vamos a seguir usando esta fórmula y vamos a explorar algunas de sus consecuencias. En particular, queremos saber qué tan rápido tienes que escapar del campo gravitacional de la Tierra. También vamos a pensar en la conservación de la energía y lo que significa que un objeto esté "ligado" gravitacionalmente por una órbita masiva o no. ¡Todos estos son temas que no abordamos en <a href="../../physics_coding/gravity/gravity.html">Slingshot with Gravity!</a> actividad.
+
+<p><b>Paso 0. Mira esta versión modificada del Slingshot with Gravity code</b>
+
+  <p><a href="https://editor.p5js.org/ChrisOrban/sketches/pPex7l8Ls" target="_blank">Haga clic aquí para abrir una versión modificada de Slingshot con código de gravedad</a>
+
+<p><a href="escape_v0/index.html">Here is a link to just run the code if that's all you want to do</a>
+
+  <p><H3>Paso 1. Consulte las nuevas funciones de este código</H3>
+
+<p><b>Paso 1a. Haga clic y arrastre para alejar el objeto de la tierra</b>
+
+<p>A diferencia del Slingshot con código de gravedad, este programa se alejará si el objeto se mueve fuera del campo de visión. Para hacer esto, haga clic y arrastre para establecer el vector de velocidad y vea qué sucede. Ayuda tener un buen vector de velocidad larga para que el objeto se mueva rápido. La velocidad es proporcional a la longitud del vector velocidad.
+
+<p><b>Paso 1b. Fíjate que puedes morir si te topas con la Tierra.</b>
+
+<p>Otra característica de este código es que si el objeto choca contra la tierra, verá un mensaje que dice "¡Estás muerto!" y el programa terminará. Haga clic y arrastre para establecer un vector de velocidad hacia la tierra y mostrar que esto sucede.
+
+<p><b>Paso 1c. Tenga en cuenta que en lugar de <code>x_sun</code> y <code>y_sun</code> el código tiene <code>x_massive</code> e <code>y_massive</code></b>
+
+<p>Realmente no estamos pensando en el sol y los planetas como si estuviéramos en el tirachinas con actividad de gravedad. Entonces, en lugar de usar x_sun y y_sun, solo usaremos las variables x_massive e y_massive para indicar la posición del objeto masivo. Al menos inicialmente, este objeto masivo será la tierra. Posteriormente lo cambiaremos por un agujero negro. Lo importante es que es mucho más masivo que el objeto que lo orbita.
+
+<p><b>Paso 1d. Note que la imagen de la tierra es famosa</b>
+
+<p>Usamos una famosa imagen de la Tierra desde el espacio llamada "La canica azul" <a href="https://en.wikipedia.org/wiki/The_Blue_Marble" target="_blank">"The Blue Marble"</a>. Esta imagen fue una de las primeras fotos de toda la tierra y muchos atribuyen a esta foto el lanzamiento del movimiento ambiental moderno en la década de 1970.
+
+<p><H3>Paso 2. Configure el código para que el objeto se lance desde la superficie de la tierra.</H3>
+
+<p>Puede controlar la posición inicial del objeto cambiando este código:
+
+<pre>
+x = 525;
+y = 250;
+</pre>
+
+<p>a esto:
+
+<pre>
+x = x_massive + planet_radius;
+y = y_massive;
+</pre>
+
+<button class="btn" data-clipboard-text="x = x_massive + planet_radius;
+y = y_massive;">
+    Copiar código al portapapeles
+</button>
+
+<p>¿Qué pasa cuando haces este cambio? ¿El objeto todavía órbita o mueres?
+
+<p><H3>Paso 3. Cambia la velocidad inicial del objeto.</H3>
+
+<p><b>Paso 3a. ¿Tener una velocidad en la dirección + x en lugar de la dirección + y ayuda al objeto a ponerse en órbita?</b>
+
+<p>Cambia esto:
+
+<pre>
+vx = 0;
+vy = 30;
+</pre>
+
+a esto:
+
+<pre>
+vx = 30;
+vy = 0;
+</pre>
+
+<p>¿Qué pasa ahora? ¿Esto permite que el objeto se mueva lejos?
+
+<p><b>Paso 3b. Aumente la velocidad hasta que el objeto se escape del campo gravitacional terrestre.</b>
+
+<p>Queremos saber qué tan rápido debe escapar el objeto del campo gravitacional de la Tierra, como si estuviéramos en un viaje por carretera interplanetario.
+
+<p><b>Nota:</b> Esto NO es lo mismo que la velocidad requerida para orbitar la Tierra. Si el objeto está escapando del campo gravitacional, esto significa que se está alejando cada vez más, como una sonda espacial lanzada desde la Tierra que se dirige a alguna otra parte del sistema solar, en lugar de un satélite lanzado para orbitar la Tierra indefinidamente.
+
+<p>Modifique el programa para aumentar la velocidad inicial cada vez más hasta que esto suceda. Pruebe esto con la velocidad inicial en la dirección + x y en la dirección + y. Aproximadamente, ¿qué número obtiene cuando <a href="escape_v1/index.html">el objeto tiene suficiente velocidad para escapar como lo hace en este ejemplo?
+</a>
+
+<p><b>Descargo de responsabilidad #1</b> es importante que encuentre la velocidad más pequeña que aún permite que el objeto escape.<b>¡No haga que la velocidad sea mayor de lo que debería ser!</b> Vamos a volver a esto más adelante.
+
+<p><b>Descargo de responsabilidad #2:</B> es importante esperar para ver si el objeto cae de nuevo a la tierra. Esto puede llevar un poco de tiempo. Observe la dinámica durante al menos 20 segundos.
+
+<p><H3>Paso 4. Conservación de energía</H3>
+
+<p><b>Paso 4a. Piense en la conservación de energía</b>
+
+<p>Usaremos la conservación de energía para encontrar una expresión de cuál debería ser esta velocidad inicial mínima de escape. La energía cinética más la energía potencial de un objeto que se mueve en un campo gravitacional debe sumar una constante:
+
+  $$ KE(t) + PE(t) = E_{\rm tot} $$
+
+<p>Como siempre, $ KE = (1/2) m v^2 $, and because we are dealing with a gravitational field we use $ PE = - G M m / r $.
+
+  $$ \frac{1}{2} m v^2 - \frac{G M m}{r} = E_{\rm tot} $$
+
+<p><b>Paso 4b. Piense si $E_{\rm tot}$ is >, < oigual a cero</b>
+
+<p>Dependiendo de la situación, $E_{\rm tot}$ puede ser positivo, negativo o cero. Imagina tres escenarios diferentes: (1) el objeto se lanza tan rápido que se mueve muy lejos del planeta (como encontraste en el paso 3b), (2) el objeto se lanza pero choca contra la Tierra y (3) el objeto se lanza y no choca contra la tierra, pero tampoco se aleja mucho. El objeto simplemente orbita una y otra vez. Para cada una de estas tres situaciones, ¿es positivo,  negativo o cero? Usa la ecuación de conservación de energía para explicar por qué.
+
+<p><b>Consejo:</b> recuerde que $m > 0$, $G > 0$, $r > 0$ y $v^2 > 0$. Lo único negativo es el signo menos en el medio.
+
+<p><H3>Paso 5: velocidad de escape</H3>
+
+<p>Resulta que si el objeto se lanza muy rápido y se aleja del planeta, entonces $E_{\rm tot} > 0$, pero si el objeto se lanza mucho más lentamente, $E_{\rm tot} < 0$ y el objeto está en algún tipo de órbita. Entonces, si $E_{\rm tot} = 0$ esto significa que el objeto apenas tiene la velocidad suficiente para escapar del sistema.
+
+<p>Utilice $E_{\rm tot} = 0$ para encontrar una fórmula para v cuando esto sea cierto. Esta v se llama "velocidad de escape". <b>¿Cómo se compara este resultado con el número que obtuvo para la velocidad en el Paso 3b?b>
+
+<p><H3>Paso 6: Error fraccional</H3>
+
+<p>Tome el número que calculó para la velocidad de escape del Paso 5 y compárelo cuantitativamente con lo que encontró en el programa. Trate el cálculo como "verdadero" y el programa como "medido". Esto es importante porque el programa divide el tiempo en pequeños pasos, por lo que no esperamos que los resultados sean siempre precisos (¡en general NUNCA asuma que la computadora siempre tiene la razón!)
+
+<P>Aquí está la fórmula del error fraccionario:
+
+$$ {\rm fractional \, error}\, (\%) = 100 \cdot \frac{|v_{\rm meas} - v_{\rm true}|}{v_{\rm true}} $$
+
+<p>Debería obtener un error fraccionario inferior al 10%. Si esto no sucede, tal vez regrese al Paso 3b y vea si puede reducir un poco esa velocidad inicial y aún así encontrar que el objeto se mueve muy lejos.
+
+
+<p><H3>SPaso 7. ¡Finalmente la parte del agujero negro!</H3>
+
+<p>Ok, en lugar de la Tierra, tengamos un agujero negro con la misma masa que la Tierra (imagina que un experimento de un científico loco salió terriblemente mal).
+
+<p>Reemplazar esto:
+
+<pre>
+drawPlanet(x_massive,y_massive,planet_radius,0,0,0,0);
+ </pre>
+
+<p>Con este:
+
+<pre>
+drawBlackHole(x_massive,y_massive,0,0,0,0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawBlackHole(x_massive,y_massive,0,0,0,0);">
+    Copiar código al portapapeles
+</button>
+
+<p><H3>Paso 8. ¡No tan rápido! ¡La velocidad inicial no puede ser más rápida que la velocidad de la luz!</H3>
+
+<p>Supongamos que no podemos lanzar nuestro objeto más rápido que la velocidad de la luz. En los siguientes subpasos, nos aseguraremos de que el objeto no pueda moverse más rápido que la velocidad de la luz.
+
+<p><b>Paso 8a. Establecer el valor de c al comienzo del código</b>
+
+<p>El primer paso para asegurarse de que los objetos no se muevan más rápido que la velocidad de la luz es colocar una variable cerca del comienzo del código que especifique la velocidad de la luz. Vamos a establecer  <code>c = 50;</code> en nuestro código. Si esto parece un poco extraño, tenga en cuenta que asumimos que la constante gravitacional es <code>G = 100;</code> y no $G = 6.67 \cdot 10^{-11}$. Solo estamos tratando de que el comportamiento esencial se desarrolle en nuestra pequeña pantalla en una escala de tiempo que no sea ridículamente lenta o rápida. Resulta que <code>c = 50;</code> ¡Está en esta zona de Ricitos de Oro que no es ni demasiado rápida para que la veamos ni demasiado lenta para que tengamos la paciencia de mirar!
+
+<p>¡Continúe y agregue esto cerca del comienzo del código, <b>y antes de la parte donde estableció vx y vy!</b>
+
+<pre>
+  c = 50;
+</pre>
+<button class="btn" data-clipboard-text="c = 50;">
+    Copiar código al portapapeles
+</button>
+
+<p>Así que la velocidad inicial debería verse así:
+
+
+<pre>
+c = 50;
+
+vx = 0; // or whatever value you have
+vy = 30; // or whatever value you have
+</pre>
+
+
+<p><b>Paso 8b. Limite la velocidad del objeto a c</b>
+
+<p>Necesitamos agregar una o más declaraciones que verifiquen si el objeto se mueve más rápido que la velocidad de la luz y si se mueve más rápido, la declaración if deberá arreglar esto. <b>¡Esto va a ser más complicado de lo que parece!</b> Aquí hay un grupo de cuatro declaraciones if que principalmente solucionan este problema:
+
+<pre>
+  if ( vx > c ) {
+       vx = c;
+  }
+  if ( vx < -c ) {
+       vx = -c;
+  }
+  if ( vy > c ) {
+       vy = c;
+  }
+  if ( vy < -c ) {
+       vy = -c;
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="if ( vx > c ) {
+       vx = c;
+  }
+  if ( vx < -c ) {
+       vx = -c;
+  }
+  if (vy > c ) {
+       vy = c;
+  }
+  if (vy < -c ) {
+       vy = -c;
+  }">
+    Copiar código al portapapeles
+</button>
+
+<p><a href="escape_v2/index.html">Después de poner esto en su código, el programa debería comportarse así</a>
+
+<p>Usaremos esto en lo que sigue, pero <b>¿notas algún problema potencial o real con este código?</b> ¡Hay mas de uno! ¿En qué situaciones fallaría este código o produciría un comportamiento no deseado? (Sugerencia: la velocidad y la rapidez están relacionadas con esta fórmula, $ {\rm speed} = \sqrt{v_x^2 + v_y^2} $).
+
+<p><b>Paso 9. ¿Dónde está el límite entre consolidado y no consolidado?</b>
+
+<p>Anteriormente aumentamos la velocidad hasta que el objeto claramente no estaba "ligado" gravitacionalmente al planeta. Ahora vamos a mantener la velocidad igual a c en la dirección + x o + y, pero vamos a cambiar la posición inicial para ver si el objeto está atado o no.
+
+<p><b>Paso 9a. Establezca la velocidad inicial en c </b>
+
+<p>Cambia esto:
+
+<pre>
+c = 50;
+
+vx = 0; // or whatever value you have
+vy = 30; // or whatever value you have
+</pre>
+
+<p>
+a esto :
+
+<pre>
+c = 50;
+
+vx = 0;
+vy = c;
+</pre>
+
+<p><b>Paso 9b. Cambie la posición inicial hasta que el objeto pueda escapar muy lejos</b>
+
+<p>En el paso 2, cambia la posición inicial del objeto a esto:
+
+<pre>
+x = x_massive + planet_radius;
+y = y_massive;
+</pre>
+
+<p>Reemplaza <code>planet_radius</code> con su valor numérico (que resulta ser 50) por lo que terminas con esto:
+
+
+<pre>
+x = x_massive + 50.0;
+y = y_massive;
+</pre>
+
+<p>Pruebe esto y observe que el objeto todavía está ligado al agujero negro.  <b>¡Aumente 50.0 a números mayores hasta que el objeto se suelte!</b>
+
+<p><a href="escape_v3/index.html">Si aumenta este valor lo suficiente, eventualmente el objeto se desviará muy lejos sin signos de regresar como en este ejemplo</a>
+
+<p>¿Qué valor obtienes? ¿Depende de si asume <code>vy = c;</code> y <code>vx = 0;</code> o obtiene el mismo resultado de <code>vx = c;</code> y <code>vy = 0;</code> ?
+
+<p><b>Paso 10. ¿Depende de la masa del objeto?</b>
+
+<p>Hasta ahora hemos estado discutiendo el comportamiento de un objeto de masa distinta de cero que está experimentando una fuerza gravitacional de la Tierra o un agujero negro. En el caso de los agujeros negros, estamos realmente más interesados ​​en cómo se comporta la luz cerca de un agujero negro. Una propiedad clave de las partículas ligeras es que no tienen masa. Entonces, ¿nuestro programa modela la luz cerca de un agujero negro?
+
+<p><b>Disminuya la masa del objeto en el programa (el valor predeterminado es <code>mass = 3.0;</code>) pero no lo ponga a cero.</b> ¿Por qué es importante NO poner la masa a cero aunque eso es lo que nos interesa? (Pista: es una razón de código)
+
+<p>¿La masa del objeto afecta el resultado? Si no es así, nuestro programa nos dice algo sobre cómo se comportaría la luz.
+
+<p><b>Paso 11. Utilice la conservación de energía para explicar el número que obtuvo en el Paso 9</b>
+
+<p>Aquí nuevamente está la ecuación para la conservación de energía:
+
+$$ \frac{1}{2} m v^2 - \frac{G M m}{r} = E_{\rm tot} $$
+
+<p>Suponga que el objeto se mueve a la velocidad de la luz (entonces $v^2 = c^2$) y use esto para resolver para $r$ si el objeto está justo por encima del umbral para no estar unido ($E_{\rm tot} = 0$).
+
+<p>¿Qué obtienes por r? ¿Cómo se compara con el número que encontró en el paso 9? ¿Qué es el error fraccionario?
+
+<p><B>Paso 12. Dibuja este radio en la pantalla</b>
+
+<p>Continúe y dibuje un círculo en la pantalla con el radio que encontró en el Paso 11. Puede usar esta función:
+
+<pre>
+drawCircle(x_massive,y_massive,0.0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawCircle(x_massive,y_massive,0.0);">
+    Copiar código al portapapeles
+</button>
+
+<p><b>¡Asegúrese de reemplazar “0.0” con el número que se le ocurrió en el Paso 11! </b> <a href="escape_v4/index.html">Cuando haya terminado, su código debería comportarse así.</a>
+
+<p>Verifique que los objetos en movimiento a la velocidad de la luz que comienzan justo dentro de este círculo estén atrapados en órbita, mientras que los objetos que comienzan justo fuera de él pueden viajar a distancias muy lejanas.
+
+<p><b>Paso 13. Piense en lo que esto significa</b>
+
+<p>Imagínese que estamos observando este sistema desde muy lejos. Si una partícula de luz atravesara este círculo, ¿la veríamos alguna vez en nuestros telescopios?
+
+<p><b>Nota:</b> La radio que encontró a menudo se llama radio de Schwarzschild. Con otro nombre es el "Horizonte de sucesos" del agujero negro, que es una especie de punto sin retorno.
+
+<p><b>Paso 14. Agujero negro newtoniano</b>
+
+<p>Nuestro programa es ahora una descripción de un agujero negro "newtoniano". Todavía queda bastante trabajo por hacer para convertir nuestro código en algo que modele un agujero negro de manera más realista (incluidos los efectos relativistas). ¿Qué tipo de efectos quedan por agregar? (Pista: la película Interstellar te ayudará a descubrir una de las cosas que no hemos incluido).
+
+<p><b>Desafío: conseguir el ángulo de lanzamiento correcto manteniendo la velocidad = c </B>
+
+<p>En el paso 8b. le dimos un código para limitar la velocidad del objeto a la velocidad de la luz, pero dijimos que había algunos problemas con este código. Uno de los problemas es que si arrastra la flecha de velocidad de modo que exceda la velocidad de la luz en una dirección (digamos x) pero no está excediendo la velocidad de la luz en la otra dirección (digamos y) entonces cuando esas declaraciones if sean correctas la velocidad, puede cambiar accidentalmente el ángulo en el que desea que se mueva el objeto (siga adelante, pruebe esto y vea si lo nota).
+
+<p>Queremos deshacernos de esas declaraciones “if” y reemplazarlas con algo que conserve el ángulo de lanzamiento que especificó el usuario. A continuación, se muestra un código para que se parte del camino:
+
+<pre>
+   // if object is moving faster than speed of light
+   if (sqrt(vx*vx + vy*vy) > c) {
+      vel_angle = atan2(vy,vx);
+      vx = <mark>????</mark>   // what goes here?
+      vy = <mark>????</mark>   // what goes here?
+   }
+</pre>
+
+<button class="btn" data-clipboard-text="   // if object is moving faster than speed of light
+   if (sqrt(vx*vx + vy*vy) > c) {
+      vel_angle = atan2(vy,vx);
+      vx = ????   // what goes here?
+      vy = ????   // what goes here?
+   }">
+    Copiar código al portapapeles
+</button>
+
+<p>Pon esto en tu código y averigua "¿qué va aquí?" <a href="escape_v5/index.html">Al final, su código debería comportarse así.</a>
+<!--
+
+<p><b>Challenge #2: Let the black hole or planet move!</b>
+
+<p>For simplicity we have kept the planet and the black hole stationary. In real life there would be some movement. For example, the moon in its orbit does tug on the earth and cause it to move in response, and if a neutron star or black hole is orbiting another black hole, both objects would be moving in response to each other, not just one.
+
+<p>How would you modify the code to allow this to happen?
+-->
+  <!--
+<p><b>Step 8b. Limit the speed of the object to c</b>
+
+<p>We've mostly been talking about the initial <i>velocity</i>. Velocity is a "vector quantity" which means that it has a direction. Speed does not have a direction. It is just a distance traveled per unit time in whatever direction you are traveling. Velocity is related to speed like this:
+
+  $$ {\rm speed} = \sqrt{v_x^2 + v_y^2} $$
+
+<p>So let's add something to our code that checks to see if the speed is larger than the speed of light:
+
+<pre>
+  if ( sqrt(vx*vx + vy*vy) > c) {
+    //  too fast!!
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="  if ( sqrt(vx*vx + vy*vy) > c) {
+    //  too fast!!
+  }">
+    Copy code to clipboard
+</button>
+
+<p><b>Step 8c. Think about how to make the object move slower but without changing the direction</b>
+
+<p>We need to put something inside of that if statement that will slow the object down to the speed of light. <b>This is going to be more tricky than it sounds!</b>
+
+-->
+
+<!--
+
+<p>where $M$ is the mass of one object (usually the larger object), $m$ is the mass of another object (usually the smaller object), $r$ is the distance between the centers of those objects, and $G$ is a constant related to the strength of the gravitational force (not to be confused with $g = 9.8 \, \rm{m/s}^2$ which is a lowercase $g$)
+
+<p>When we are on the surface of the earth, even if we climb to the top of a mountain, the distance between us and the center of the earth changes by an amount that is small compared to radius of the earth itself. As a result, a gravity measurement on the top of that mountain would give something very close to 9.8 $\rm{m/s}^2$.
+
+<p>This being the case, you might wonder how we even figured out that the force of gravity gets weaker according to the square of the distance between objects (like in the equation for $F_{grav}$ above).  This coding activity will help explain how we arrived at that knowledge.
+
+<p><b>Disclaimer:</b><mark><b> You need to have finished <a href="../acceleratetheblob.html">Accelerate the Blob</a> to work on this exercise!</b></mark>. It is also good if you have finished the <a href="../planetoids.html">Planetoids</a> coding activity. You may also want to check out the code for <a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/B1YtNTb2-">Force the Blob</a> which is like accelerate the blob but with the arrow keys controlling the force instead of the acceleration.
+
+<p><H3>Step 1. The first step to understanding gravity is to understand no gravity </H3>
+
+<p><H4><a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/SkhqcMKVG"  target="_blank">Click here to open up the code for the zero-gravity slingshot</a></H4>
+
+<p><a href="slingshot_v0/index.html">If for some reason the link doesn't work you can click here to use the interactive</a>
+
+<p>Play around with it. Click and drag the mouse to launch the object in various directions!
+
+<p><H3>Step 2. Look at the code</H3>
+
+<p>Here is the draw function for the zero-gravity (a.k.a. zero force) slingshot interactive:
+
+<pre>
+function draw(){
+    // Update velocities
+    vx += deltaVx;
+    vy += deltaVy;
+
+    // Update location
+    x += vx*dt;
+    y += vy*dt;
+
+    // velocity is unchanged if there are no forces
+    deltaVx = 0;
+    deltaVy = 0;
+
+    // This will clear the screen and re-draw it
+    display();
+
+    // Add more graphics here before the end of draw()
+    drawBlob(x,y,vx,vy,0,0);
+
+} // end draw()
+</pre>
+
+<p>As you know, the draw function is always where we put the physics of the problem. We put the graphics in subroutines like <code>display();</code> and <code>drawBlob</code>.
+
+<p>Where is the physics here? What is the physics? Are there any forces? Acceleration? How does this compare to the <a href="../planetoids.html">Planetoids code</a>? Or the code from <a href="../acceleratetheblob.html">Accelerate the blob</a>?
+
+<p><H3>Step 3. Look closely at the interactive</H3>
+
+<p><a href="slingshot_v0/index.html">Play around with the zero-gravity slingshot interactive</a> Look closely at the path of the object. <b><mark>Is there any way to make the trajectory curved just by clicking and dragging the mouse?</mark></b>
+
+<p>Complete this sentence:
+
+<p><b>An object in motion will continue moving in a  __________  if there are no forces acting on it</b>
+
+<p><H3>Step 4. Just add gravity in six easy sub-steps!</H3>
+
+<p>We are going to model an object (comet, planet, asteroid, etc.) in the solar system which means that we are going to need a sun. Once we have a sun we can add gravity.
+
+<p><b>Step 4a. Add the position of the sun</b>
+
+<p>Before we can add the sun we need to <b><mark>add variables to the beginning of the code</mark></b> that specify where the sun will be. It turns out the middle of the sketch is at (350,250) so we'll put the sun there:
+
+<pre>
+x_sun = 375;
+y_sun = 250;
+</pre>
+
+<button class="btn" data-clipboard-text="x_sun = 375;
+y_sun = 250;">
+    Copy code to clipboard
+</button>
+
+<p><b><mark>Add this to the beginning of the code!</mark></b> Don't put it in the draw function or it won't work!
+
+<p><b>Step 4b. Add a yellow circle for the sun</b>
+
+<p>Next add the <code>drawSun</code> command to put a silly yellow circle at the center of the sketch.
+
+<p><b><mark>Put this after the <code>display();</code> function</b></mark> but before the end of the <code>draw()</code> function:
+
+<pre>
+drawSun(x_sun,y_sun,0,0,0,0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawSun(x_sun,y_sun,0,0,0,0);">
+    Copy code to clipboard
+</button>
+
+<p>At this point <a href="slingshot_v1/index.html">your code should behave like this</a>
+
+<p><b>Step 4c. Add variables for the mass of the sun and the gravitational constant</b>
+
+<p>Now add variables for the mass of the sun and the strength of the gravitational force to near the beginning of the program (anywhere before the draw function)
+
+<pre>
+M = 1000;
+G = 100;
+</pre>
+
+<button class="btn" data-clipboard-text="M = 1000;
+G = 100;
+">
+    Copy code to clipboard
+</button>
+
+<p>You may have noticed that these are not the correct values for the mass of the sun or the strength of gravity in real life, and that is true. If you'd rather use the correct values and wait a year for the simulation to let the earth move around the sun you are welcome to do that (actully don't do that -- a year is too long to wait for a simulation to finish!).
+
+<p><b>Step 4d. Calculate the distance and the angle between the object and the sun</b>
+
+<p>In order to calculate the strength of the gravitational force we need to know the distance between the object at ($x,y$) and the sun at ($x_{\rm sun}, y_{\rm sun}$). Here is an image of how to think about this:
+
+<center>
+<p><img width=827 height=625  src="triangle_final.png">
+</center>
+
+<p>If you imagine that the line between the sun at ($x_{\rm sun},y_{\rm sun}$) and the object at ($x,y$) is the hypotenuse of a right triangle you would conclude that distance between them is this:
+
+$$r = \sqrt{(x - x_{\rm sun})^2 + (y - y_{\rm sun})^2}$$
+
+<p>In computer world we have to write this in a funny way because <code>^2</code> does not actually take the square of the number. Here is how this expression looks in computer world:
+
+<pre>
+r = sqrt((x - x_sun)*(x - x_sun) + (y - y_sun)*(y - y_sun));
+</pre>
+
+<p><button class="btn" data-clipboard-text="r = sqrt((x - x_sun)*(x - x_sun) + (y - y_sun)*(y - y_sun));
+">
+    Copy code to clipboard
+</button>
+
+<p>We also need to figure out the angle that the line between the objects makes with the $x$ axis. We can figure this out with an inverse tangent:
+
+$$\theta = \tan^{-1} \left( \frac{y - y_{\rm sun} }{x - x_{\rm sun}}\right)$$
+
+<p>This works great except that it might give the wrong answer when $y - y_{\rm sun} < 0$ and $x - x_{\rm sun} < 0$, in which case the object would be below and to the left of the sun (instead of above and to the right as in the figure above). To account for this we use the <code>atan2</code> function which looks like this:
+
+<pre>
+theta = atan2(y - y_sun, x - x_sun);
+</pre>
+
+<p><button class="btn" data-clipboard-text="theta = atan2(y - y_sun, x - x_sun);
+">
+    Copy code to clipboard
+</button>
+
+
+<p>As you can see there are two arguments to this function. If $y - y_{\rm sun} > 0$ and $x - x_{\rm sun} > 0$ the code above will give the same result as <code>theta = atan((y - y_sun)/(x - x_sun));</code> but in general you will want to use the <code>atan2</code> function.
+
+<p><b><mark>Paste this code in the middle of the draw function but before the <code>display</code> function!</mark></b>
+
+<p><b>Step 4e. Calculate the magnitude and components of the gravitational force</b>
+
+<p>As mentioned earlier, the magnitude of the gravitational force is this:
+
+$$F_{grav} = \frac{G M m}{r^2}$$
+
+<p>We need to put this into the code. Here is the right way to put this into the code:
+
+<pre>
+    Fgrav = G*M*mass/(r*r);
+</pre>
+
+<p><button class="btn" data-clipboard-text="Fgrav = G*M*mass/(r*r);
+">
+    Copy code to clipboard
+</button>
+
+<p>Notice that we have used <code>r*r</code> instead of <code>r^2</code> because, for reasons known only to computer scientists, <code>^2</code> doesn't actually square anything like you might expect.
+
+<p>Now we have to figure out the components of the force <a href="https://www.youtube.com/watch?v=GpuyWy-OP9Q">like we had to for the planetoids game</a>  Here is a diagram that should help:
+
+<center>
+<p><img width=827 height=625  src="force_final.png">
+</center>
+
+<p>The interesting thing about this diagram is that it looks a lot like <a href="https://www.youtube.com/watch?v=GpuyWy-OP9Q">the diagram we drew for the ship in Planetoids</a> if the ship was at the location of the sun and pointing at an angle $\theta$ above the $x$ axis. In that case we had this for the components:
+
+$$F_x = F_{\rm thrust} \cos \theta $$
+$$F_y = F_{\rm thrust} \sin \theta $$
+
+<p>where $F_{\rm thrust}$ is the magnitude of the force. Here we have a similar situation except that the force is acting on the object out at ($x,y$) and the force is pushing in the direction <b><i>opposite</i></b> to the line at an angle $\theta$ with the $x$ axis (which is a lot like the reverse thrusters in Planetoids which apply a force opposite to the direction the ship is pointing -- we just added minus signs to the components to reverse the direction of the thrust).
+
+<p>If you combine these ideas together you get this for the components of the force on the object:
+
+$$F_x = -F_{\rm grav} \cos \theta$$
+$$F_y = -F_{\rm grav} \sin \theta$$
+
+<p>In computer world this is just:
+
+<pre>
+Fx = -Fgrav*cos(theta);
+Fy = -Fgrav*sin(theta);
+</pre>
+
+<p><button class="btn" data-clipboard-text="Fx = -Fgrav*cos(theta);
+Fy = -Fgrav*sin(theta);
+">
+    Copy code to clipboard
+</button>
+
+<p>It's nice that something looks the same in computer world as it does in math world!
+
+<p>Make sure to put the lines of code in this step <b><mark>after</mark></b> the expression for <code>r</code> and <code>theta</code> from Step 4d.
+
+<p><b>Step 4f. Calculate the acceleration and change in velocity</b>
+
+<p>Last part of step 4! Now that we know the force we can figure out the acceleration in the x and y directions:
+
+$$a_x = \frac{F_x}{m}$$
+$$a_y = \frac{F_y}{m}$$
+
+<p>With this we can calculate how much the velocities in the x and y directions ($v_x, v_y$) have changed during the time interval ($\Delta t$ <code>= dt</code>)
+
+$$\Delta v_x = a_x \Delta t$$
+$$\Delta v_y = a_y \Delta t$$
+
+<p>We can combine these together with this code:
+
+<pre>
+  deltaVx = (Fx/mass)*dt; // = ax*dt;
+  deltaVy = (Fy/mass)*dt; // = ay*dt;
+</pre>
+
+<p><button class="btn" data-clipboard-text="  deltaVx = (Fx/mass)*dt; // = ax*dt;
+  deltaVy = (Fy/mass)*dt; // = ay*dt;">
+    Copy code to clipboard
+</button>
+
+
+<p>The <code>// = ax*dt;</code> is just a comment that does not affect the operation of the code. You can copy the code by clicking this button:
+
+
+<p>Paste this into the code <b><i>after</i></b> the code from Step 4e. Once you do this <a href="slingshot_v2/index.html">your code should behave like this</a>
+
+<p><b>Optional:</b> If you wish you can safely delete these lines of code:
+
+<pre>
+    // velocity is unchanged if there are no forces
+    deltaVx = 0;
+    deltaVy = 0;
+</pre>
+
+<p>These lines of code are unneccessary now because <code>deltaVx</code> and <code>deltaVy</code> are determined from the force of gravity. You can leave them in or you can delete them. It shouldn't make a difference to the operation of the program.
+
+<p><h3>Step 6. Add force vector to the object!</h3>
+
+<p>Now that you have gravity in your code, you can show the force vector by changing the <code>drawBlob(x,y,vx,vy,0,0);</code> command to this:
+
+<pre>
+drawBlob(x,y,vx,vy,Fx,Fy);
+</pre>
+
+<p>Once you do this <a href="slingshot_v3/index.html">your code should behave like this</a>
+
+<p><h3>(Optional) Step 7. An Equal and Opposite force!</h3>
+
+<p>The Earth (or Jupiter or any object in the solar system) does exert a force on the sun, it's just that the sun is so massive that it barely moves in response. To show the force on the sun from the object, you can modify the code that displays the sun to this:
+
+<pre>
+drawSun(x_sun,y_sun,0,0,-Fx,-Fy);
+</pre>
+
+<p><button class="btn" data-clipboard-text="drawSun(x_sun,y_sun,0,0,-Fx,-Fy);">
+    Copy code to clipboard
+</button>
+
+<p>You can appreciate that the minus signs there means that the force is the same as the force that the sun exerts on the object, but in the opposite direction. The above is how a computer thinks about Newton's third law of motion. If you make this change <a href="slingshot_v4/index.html">your code should behave like this</a>
+
+<p>Later if you want to include the motion of the sun there is a challenge to do this. For now let's just assume that it doesn't move and focus on the motion of the object.
+
+<p><H3>Step 7. Play with the code!</H3>
+
+<p>Play around with the code, launching the object at different angles and different speeds. <b><mark>Play around, but try to avoid letting the object get too close to the sun!</mark></b>
+
+<p>Here is the question: <b><mark>Does the trajectory of the object typically follow the same path orbit after orbit?</mark></b> Or does it take a different path each time? Again, try to avoid getting the object too close to the sun. A little warning will pop up if you get too close.
+
+
+<p><H3>Step 8. Change the force of gravity!</H3>
+
+<p>Around the time that Sir Issac Newton started his work, it was generally known that the planets followed elliptical orbits (thanks to Kepler's observations) but if there was a force of gravity, people weren't sure how its strength depended on the distance between objects.
+
+<p>Let's imagine a different law of gravity:
+
+$$F_{\rm grav} = \frac{G M m}{r^n}$$
+
+<p>where $n$ is some power. We all know that the correct answer is $n = 2$ but <b><mark>what happens when $n$ is some other value like $n = 1.5$ or $n = 2.5$?</b></mark>
+
+<p>Let's add a variable to the beginning of the code:
+
+<pre>
+npower = 2.0;
+</pre>
+
+<p>Then let's change the force law to this:
+
+<pre>
+Fgrav = G*M*mass/pow(r,npower);
+</pre>
+
+<p><button class="btn" data-clipboard-text="Fgrav = G*M*mass/pow(r,npower);
+">
+    Copy code to clipboard
+</button>
+
+<p>What happens now? Do the trajectories follow a closed path or do they make all kinds of interesting shapes?
+
+<p><b>Advice:</B> You can use the slingshot to launch the object in various  directions or velocities or you can just set <code>vx = 0;</code> and <code>vy = 20;</code> and change <code>npower</code> from 1.5 to 2.5 to see the effect of changing the power.
+
+
+
+<p><H3>Summary:</H3>
+
+<p>In the 1600s Sir Issac Newton invented calculus in order to prove that the elliptical orbits of the planets could be explained by a force that becomes weaker according to $1/r^2$. The complicated but elegant result that would fill a few blackboards with equations is one of the most heroic moments in math and physics.
+
+<p>If Newton had a computer he never would have needed to invent calculus! He could have thought about the geometry and trigonometry of the problem and let the computer figure out that you only get ellipical orbits when $n = 2$. This is the great part about computers! You don't have to be Sir Issac Newton to figure out useful things.
+
+<p><H3>Present-day research:</H3>
+
+<p>Researchers today still try to test whether the $1/r^2$ force of gravity remains valid on both very small and very large scales. If it turns out that gravity does not obey $1/r^2$ on some scale this is a sign that there are multiple dimensions beyond the three spatial dimensions that we are familiar with (which could tell us something really exciting about string theory or cosmology!). The men and women who perform this research do things very similar to the coding activity you just did. They perform simulations of what would happen if the force of gravity were different and they compare it to a simulation where the force of gravity is the usual $1/r^2$. Maybe someday this will be the research that you do!
+
+<p><h3>Optional challenge: Let the sun move!</h3>
+
+<p>Add variables for the velocity of the sun (<code>vx_sun</code>, <code>vy_sun</code>) and the change in velocity of the sun (<code>deltaVx_sun</code>, <code>deltaVy_sun</code>). Modify the code so that there is a velocity update and a location update for the sun. Model this after the velocity update and location update for the object and model the code that determines <code>deltaVx_sun</code> and <code>deltaVy_sun</code> after the part of the code that determines those values from the force of gravity on the object.
+
+-->
+
+<!--
+<p><h3><mark>How to get full credit on this assignment!!!</mark></h3>
+
+<p><b>0. Take the pre-survey</b>
+
+<p>Make sure you take the <a href="assessments/planetoids/planetoidsquiz_pre.html">pre-survey at the beginning of the activity</a> in order to tell us about yourself and whether you'd like your responses to be used in the research project
+
+<p><b>1. Complete steps 1-5 and make absolutely sure that the ship can turn and move in two dimensions</b>
+
+<p>Make sure your program <a href="planetoids2d/planetoids.html">behaves exactly like it does at this link</a> to be sure you did steps 1-4 correctly
+
+<p><b>2. Add code to follow the path of the ship (Step 6)</b>
+
+<p>Just copy the code to the clipboard and paste it into the code editor.
+
+<p><b>2. Complete one of the challenges</b>
+
+<p>Most people choose the reverse thrusters, which is probably the easiest
+
+<p><b>3. Find the best combination of Fthrust and mass to survive!</b>
+
+<p>This requires modifying <a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/S1UesXHWZ" target="_blank">a version of the code that includes planetoids</a>
+
+<p><b>4. Submit your code before the deadline</b>
+
+<p>Talk to your teacher about where to submit the code
+
+<p><H1>Last step: Take a quiz!</H1>
+
+<H1>
+<mark><a href="assessments/planetoids/planetoidsquiz_post.html">PLEASE TAKE THE PLANETOIDS POST-SURVEY!!!!!!! Look at how big the font is for this link!!! Looks important! Please click here to take the Planetoids post-survey to tell us how the exercise went!</a></mark>
+</h1>
+-->
+</body>
+</html>

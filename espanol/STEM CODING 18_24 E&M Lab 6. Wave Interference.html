@@ -1,0 +1,170 @@
+<HTML>
+
+<title>Wave Interference Activity</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<H1>Physics 1251 Programming Lab: Wave Interference!</H1>
+
+<p>Este laboratorio de programación está diseñado para ilustrar la idea de interferencia de ondas. Esto sucede debido al principio de "superposición". Para las ondas sonoras, esta palabra de 20 dólares simplemente significa que si hay dos altavoces en una habitación grande o en un espacio abierto, la amplitud de las ondas sonoras en un punto particular de esa habitación es la suma de las ondas de los dos altavoces.
+
+<p>
+<center>
+<video controls  autoplay> <source  src="interference.mp4" type="video/mp4"> </video>
+</center>
+
+<p><H3>Paso 1. Explore la interferencia</H3>
+
+<p><mark>Make sure to set your speaker volume low before you press play!!!</mark>
+
+<!--
+<p><a href="http://alpha.editor.p5js.org/lmccart/sketches/rkpChD9px" target="_blank">Click here to open up the code in an editor</a>
+-->
+
+<!--
+<p><a href="https://alpha.editor.p5js.org/ChrisOrban/sketches/HJnOJx95x" target="_blank">Click here to open up the code in an editor</a>
+-->
+
+<p><a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/rkMi3KSQ-" target="_blank">Haga clic aquí para abrir el código en el editor.</a>
+
+
+
+
+<p> Si por alguna razón no puede abrirlo en el editor <a href="interference_v1/interference.html"> también puede probar el interactivo en este enlace </a>
+
+<p><a href="interference_noredline/interference.html">Aquí hay una versión sin la línea roja que se ejecuta más rápido (útil para Chromebooks)</a>
+
+
+<p><H3>Paso 2. Explore la interferencia</H3>
+
+
+<p><H4>Paso 2a. Mueva el pequeño micrófono para encontrar la interferencia constructiva y destructiva.</H4>
+
+<p>Mueva la orejita alrededor y escuche la amplitud del tono. Cuando coloca el pequeño micrófono en un lugar donde hay una interferencia destructiva, casi no debe haber sonido. Cuando lo coloca en un punto de interferencia constructiva, el tono debería ser mucho más fuerte.
+
+
+<p><H4>Paso 2b. Mueve los altavoces</H4>
+
+<p>Mueva los altavoces haciendo clic y arrastrándolos a una nueva ubicación en el eje x. <b>¿Cómo cambia el patrón de interferencia?</b>
+
+
+<p><H3>Paso 3. Piense en este diagrama:</H3>
+
+<center>
+<img src="SoundLab_diagram_fixed.png">
+</center>
+
+<p><H3>Paso 4. Piense en las matemáticas involucradas</H3>
+
+<p>Si solo hubiera el altavoz #1, la amplitud instantánea $S_1$ en (x,y) sería la siguiente:
+
+$$S_1 = A_1 \sin (k_1 r_1 - \omega_1 t)$$
+
+<p>donde $r_1$ es la distancia entre el hablante # 1 y el punto (x,y).
+
+<p>Del mismo modo, la amplitud instantánea en (x, y) del solo altavoz #2 sería la siguiente:
+
+$$S_2 = A_2 \sin (k_2 r_2 - \omega_2 t)$$
+
+<p>donde $r_2$ es la distancia entre el hablante #2 y el punto (x, y).
+
+<p>Si tiene ambos altavoces, la amplitud en un punto particular de la habitación sería la siguiente:
+
+$$S_1 + S_2 = A_1 \sin (k_1 r_1 - \omega_1 t) + A_2 \sin (k_2 r_2 - \omega_2 t)$$
+
+<p>Como se explica en la hoja de trabajo, la siguiente identidad de trigonometría es muy útil:
+
+$$\sin a + \sin b = 2 \cos \left(\frac{a-b}{2} \right) \sin \left( \frac{a+b}{2} \right)$$
+
+<p>Como se discutió en la hoja de trabajo, cuando asume $A_1= A_2$, $\omega_1 = \omega_2$, y $k_1 = k_2$ uno encuentra esto:
+
+$$S_1 + S_2 = 2 A_1 \cos \left(\frac{k (r_1-r_2)}{2} \right) \sin \left(\frac{k (r_1+ r_2)  - 2\omega t }{2}\right)$$
+
+<p>y la interferencia constructiva / destructiva depende de si el término coseno resulta ser igual a cero o uno.
+
+<H3>Paso 5. Mire el diagrama nuevamente y descubra r1 y r2</H3>
+
+<b>Mire el diagrama del paso 3 nuevamente. ¿Cómo escribirías $r_1$ y $r_2$ en términos de x, y y d?</b>
+
+<p><H3>Paso 6. Considere la interferencia destructiva</H3>
+
+<p>Utilice la ecuación anterior para explicar por qué la siguiente es la ecuación correcta para la interferencia destructiva:
+
+$$|r_1 - r_2| = \frac{n\lambda}{2}$$
+
+<b>¿Por qué solo se logra la interferencia destructiva si n = 1,3,5,7 ...?</b>
+
+<p><H3>Paso 7. ¡Aproximado!</H3>
+
+<p>Resulta difícil trabajar con la expresión anterior:
+
+$$|r_1 - r_2| = \frac{n\lambda}{2}$$
+
+$$\sqrt{(x+d)^2 + y^2} - \sqrt{(x-d)^2 + y^2} = \frac{n\lambda}{2}$$
+
+<p>Realmente nos gustaría poder resolver para y, pero no hay una forma sencilla de hacerlo. Si intenta cuadrar ambos lados, por ejemplo, esto no ayuda mucho para aislar yy x.
+
+<p>Cuando estás atascado así, a veces lo mejor que puedes hacer es aproximar. Observe el siguiente truco si $a \gg b$,
+
+$$\sqrt{a^2 + b^2 } = a \sqrt{1 + \frac{b^2}{a^2} } \approx a \left( 1 + \frac{1}{2} \frac{b^2}{a^2} \right)$$
+
+<p>Utilice este truco para demostrar que las líneas de interferencia deconstructiva siguen esta fórmula:
+
+$$ y = \pm \frac{4 d}{n \lambda} x $$
+
+<p><H3>Paso 8. ¡Trace las líneas!</H3>
+
+<p>Modifique el código para trazar las líneas en la actividad de programación. Muestre que las líneas para $n = 1$ coinciden bien con las franjas de interferencia. El resultado debería verse así:
+
+<p>
+<center>
+<video controls autoplay> <source  src="interference_redline.mp4" type="video/mp4"> </video>
+</center>
+
+<p><H3>Paso 9. ¡Mueva los altavoces!</H3>
+
+<p>Mueva los altavoces haciendo clic y arrastrándolos a una nueva ubicación en el eje x. <b>Acerque y separe los altavoces. ¿Sus líneas aún coinciden con el patrón de interferencia? ¡Ellos deberían!</b>
+
+<p><H3>Paso 10. (Crédito adicional :) Considere n= 3, 5, 7 ...</H3>
+
+<p>Trace las líneas de interferencia destructiva para n = 3, 5, 7 ... y compárelas con el patrón de onda simulado. Estas líneas no se compararán tan bien con la simulación como lo hace para n = 1. <mark>¿Por qué n> 1 se compara menos con las líneas de interferencia destructiva en la simulación? ¿Tiene alguna idea para mejorar la ubicación de las líneas?</mark> ¿Cómo podríamos mejorar la aproximación?
+
+<p><H3>Cómo obtener crédito completo en este laboratorio de programación</H3>
+
+<p><b>1. Describe en palabras lo que sucede cuando cambias la separación entre hablantes (Paso 2b)</b>
+
+<p>Haga clic y arrastre los altavoces más cerca y más lejos. Describe en palabras lo que sucede con el patrón de interferencia.
+
+<b>2. Utilice la identidad trigonométrica para producir la fórmula de interferencia (Paso 4)</b>
+
+<p>Suponga $A_1= A_2$, $\omega_1 = \omega_2$ ay obtenga la siguiente ecuación para la suma de dos ondas sinusoidales:
+
+$$S_1 + S_2 = 2 A_1 \cos \left(\frac{k (r_1-r_2)}{2} \right) \sin \left(\frac{k (r_1+ r_2)  - 2\omega_2 t }{2}\right)$$
+
+<p><b>3. Escribe r1 y r2 en términos de x, y y d (Paso 5)</b>
+
+<p>Consejo: observe de cerca el diagrama del Paso 3 y use el teorema de Pitágoras.
+
+<p><b>4. Explique por qué la interferencia destructiva solo ocurre para n = 1,3,5,7 ... (Paso 6)</b>
+
+<p>Esta es la tarea principal del paso 5. ¿Por qué $n = 2,4,6$ ... no daría una interferencia destructiva?
+
+<p><b>5. Derive $y = \pm \frac{4d }{ n \lambda }x$ aproximando la ecuación para la interferencia destructiva (Paso 7)</b>
+
+<p>Esto requerirá un par de pasos. Escriba estos pasos en una hoja de papel, tome una foto con su teléfono. Utilice un servicio de alojamiento de imágenes (por ejemplo: postimg.org, Google Drive o iCloud) para proporcionar un enlace a la imagen en el cuadro de comentarios o en los comentarios de su código.
+
+<p><b>6. Envíe su código con las líneas trazadas (Paso 8)</b>
+
+<p>Modifique su código hasta que las líneas se vean como el video que se muestra en el Paso 7. Envíe su código al cuadro desplegable de tareas en el lienzo.
+
+<p><b>(Opcional) Comente sobre n = 3, 5, 7 ...</b>
+
+<p>Para obtener crédito adicional, modifique su programa para mostrar las líneas de interferencia destructiva para n = 3, 5, 7 ... Explique por qué estas líneas no se comparan muy bien con la interferencia destructiva en el patrón de onda mientras que el resultado n = 1 sí . Comente cómo podría mejorar la solución . Para ser claros, hay más de una manera de mejorar esta solución.
+<p><b>8. Envíe todo antes de la fecha límite.</b>
+
+<p>¡Asegúrate de hacer esto también!

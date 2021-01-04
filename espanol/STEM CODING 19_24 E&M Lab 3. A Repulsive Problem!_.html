@@ -1,0 +1,104 @@
+<HTML>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<H1>Lab 3. A Repulsive Problem!</H1>
+
+<p>Desde que los científicos se dieron cuenta de que el sol funciona con reacciones de fusión nuclear, la gente ha estado pensando en hacer que estas reacciones ocurran en el laboratorio para crear una fuente de energía limpia y abundante. Durante al menos cinco décadas, este sueño se ha visto frustrado por un problema repulsivo. El problema es que la fusión implica acercar dos núcleos cargados positivamente entre sí. La fuerza entre dos cargas viene dada por esta ecuación:
+
+$$F_e = \frac{k q_1 q_2}{r^2}$$
+
+<p>De manera equivalente, el campo eléctrico de una carga puntual viene dado por:
+
+$$ E = \frac{k q_1}{r^2}$$
+
+donde la fuerza sobre una carga cercana es $F = qE$.
+
+<p>A medida que la distancia, $r$, entre las dos cargas se vuelve pequeña, el campo eléctrico se vuelve <i>dramáticamente</i> más grande. Esto crea una enorme fuerza repulsiva, que es la razón principal por la que aún no se han desarrollado las fuentes de energía de fusión.
+
+<p><b><mark>En este ejercicio, habrá dos cargos, pero uno de estos cargos se fijará en su lugar para que no se pueda mover. Esta carga se llama el "objetivo" porque estamos lanzando la otra partícula hacia él un poco como una flecha tratando de dar en el blanco.</mark></b>
+
+<p><img src="repulsion.png">
+
+<p><b>1. Abra el código de repulsión en un editor.</b>
+
+<p><a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/rJWaPwckz" target="_blank">Haga clic aquí para abrir el código de repulsión en un editor</a>
+
+<p> Cuando hagas clic en reproducir, notarás que <a href="repulsion_v0/repulsion.html"> las dos partículas se atraviesan sin interactuar </a>.
+
+  <p><b> <mark> ¡Importante! Cree una cuenta con el editor o inicie sesión en una cuenta existente. Luego haga clic en "Duplicar"
+  para que pueda tener su propia versión del código. </mark> </b>
+
+<p><b>2. ¡Complete los espacios en blanco! Ponga una fórmula para el campo eléctrico de una carga puntual</b>
+
+<p>Mire de cerca estas líneas de código:
+
+<pre>
+  r = abs(x - x_target);
+
+  if (x < x_target)
+  {
+    E = 0; // fix this!!
+  } else if (x > x_target) {
+    E = 0; // fix this!!
+  }
+
+  deltaVx = (q*E/mass)*dt;
+</pre>
+
+<p>La última línea <code>deltaVx = (q*E/mass)*dt</code> debería resultar familiar gracias al ejercicio del <a href="acclerator.html">acelerador.</a>
+
+<p>Utilice la fórmula para el campo eléctrico a partir de una carga puntual para corregir el enunciado if. (Y definitivamente necesitamos una declaración if aquí porque el campo eléctrico de una partícula positiva siempre apunta en sentido contrario. Por lo tanto, para x < x_target, el campo eléctrico debe apuntar hacia la izquierda, pero para x> x_target, el campo eléctrico debe apuntar hacia la derecha. . ¿+ X está a la derecha oa la izquierda?)
+
+<p>Si realiza estos cambios correctamente,  <a href="repulsion_v1/repulsion.html"> su código debería comportarse así.</a>
+
+<p><b>3. Calcule la distancia esperada de la aproximación más cercana</b>
+
+<p>Podemos usar la conservación de energía y la energía potencial para averiguar qué tan cerca se acercarán dos partículas entre sí:
+
+$$KE_i + PE_i = KE_f + PE_f = {\rm constant}$$
+
+<p>Imagine que hay una partícula con cierta velocidad inicial, vi, que se dirige directamente hacia otra partícula. Para simplificar, hagamos estacionaria la segunda partícula. La energía cinética de esta partícula entrante es simplemente esta:
+
+$$KE_i = \frac{1}{2} m v_i^2$$
+
+<p>Ignoraremos la energía cinética de la otra partícula porque se mantiene fija.
+
+<p>La energía potencial de dos cargas puntuales viene dada por:
+
+$$PE = \frac{k q_1 q_2}{r}$$
+
+<p>Esto significa que la energía potencial inicial es $PE_i = k q_1 q_2 / r_i$ y la energía potencial final es $PE_f = k q_1 q_2 / r_f$ donde $r_i$ es la distancia inicial entre las dos cargas y $r_f$ es la distancia final entre las dos cargas.
+
+<p>Queremos saber cuál es la distancia de la aproximación más cercana que hacen las dos partículas. Esta es la distancia a la que la partícula entrante gira y comienza a alejarse de la otra partícula. Entonces, cuando la partícula está más cerca, su velocidad será cero y, como resultado $KE_f = 0$. La ecuación de conservación de energía se simplifica a esto:
+
+$$KE_i  + PE_i = PE_f$$
+
+$$\frac{1}{2} m v_i^2 + \frac{k q_1 q_2}{r_i} = \frac{k q_1 q_2}{r_f}$$
+
+<p><b>Resuelva para $r_f$ en términos de $m$, $v_i$, $k$, $q_1$, $q_2$ y $r_i$. ¡Deje su respuesta simbólica por ahora!</b>
+
+<p><b>4. ¿Su medida de $r_f$ coincide con las expectativas? (Pista: ¡debería!)</b>
+
+<p><mark>Escriba su $r_f$ sperado y el $r_f$ medido en lo que envía para esta práctica de laboratorio.</mark> Estos números deben estar dentro del 10% entre sí o de lo contrario algo ha salido mal.
+
+<p>Tenga en cuenta que en este ejemplo <code>k = 100000;</code> en lugar del valor habitual de $9 \cdot 10^9$, que separaría las partículas más rápido de lo que sería agradable de ver.
+
+<p><b>5. ¿Qué tan rápido debe viajar la partícula entrante para acercarse tanto a la otra partícula que los bordes de las partículas comienzan a superponerse?</b> Cambie la línea <code>vx = 50.0;</code> a otra cosa.
+
+<p><b>6. ¿Ayuda si la carga de la partícula entrante es mayor o menor? ¿por qué?</b>
+
+<p><b>7. ¿Ayuda si la masa de la partícula entrante es mayor o menor? ¿por qué?</b>
+
+<p><b>8. ¿Ayuda si la carga de la partícula estacionaria es mayor o menor? ¿por qué?</b>
+
+<p><strong>Desafío #1:</strong>&nbsp;agregue algo divertido al programa que solo ocurre cuando las dos partículas están muy cerca una de la otra. Por ejemplo, escriba "Fusion!" a la pantalla.</p>
+<p><strong>Desafío #2:</strong> cambie la velocidad inicial de la partícula entrante a cero (vx = 0; vy = 0;) y cambie el valor x inicial para que comience muy cerca de la partícula objetivo (en lugar de x = 0). Ejecute el programa y observe cómo las partículas "entrantes" se repelen y aceleran a alta velocidad. Utilice las ecuaciones que utilizó anteriormente en este ejercicio para calcular la velocidad máxima a la que debe llegar la partícula una vez que esté lejos y la energía potencial ($\rm PE_f$) sea esencialmente cero.</p>
+<p><strong>Aparte</strong> esto se parece mucho a la fisión nuclear. Cuando un núcleo se divide en dos, el resultado son dos núcleos cargados positivamente que inicialmente están muy juntos, se repelen entre sí y alcanzan una gran velocidad. Si ocurren suficientes de estas reacciones, estas partículas de movimiento rápido pueden calentar el agua para producir vapor, que se puede usar para hacer girar turbinas. Esta es una explicación demasiado simplificada, pero entiendes la idea.</p>
+<p><strong>Desafío #3:</strong> use lo que ha aprendido en esta actividad de codificación para explicar por qué los neutrones (que tienen una carga de cero) son la partícula perfecta para usar si su objetivo es lograr que una partícula choque con un núcleo cargado positivamente. ¿Qué partes de esta actividad de codificación lo llevan a esta conclusión?</p>
+<p><strong>Desafío #4:</strong>&nbsp;Deje que ambas partículas se muevan en respuesta entre sí. Trate de calcular y medir la distancia más cercana que alcancen.</p>

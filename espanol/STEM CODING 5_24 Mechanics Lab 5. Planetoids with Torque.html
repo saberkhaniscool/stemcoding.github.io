@@ -1,0 +1,250 @@
+<HTML>
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "all" } }
+});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+<H1>Parte 5: Planetoides con torque!</H1>
+
+<p>En este laboratorio, haremos que el juego de los planetoides sea más realista al permitir que la nave espacial gire como lo haría si realmente estuviera viajando en el espacio. Entonces, además de un motor de cohete que puede impulsar la nave espacial hacia adelante, la nave tendrá propulsores en la parte delantera y trasera que pueden proporcionar torque para hacer girar la nave en sentido horario o antihorario.
+
+<p><h3>Paso 0. Abrir planetoides 2D en un editor</h3>
+
+<p>Para mayor comodidad, te he proporcionado una versión "antigua" del juego de planetoides para que puedas jugar y recordar la sensación del juego <b>sin</b> que la nave dé vueltas como loca.
+
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/QTNz7sNUH" target="_blank" > Haga clic aquí para abrir el código de planetoides</a> Esta versión es similar al juego de planetoides anterior, excepto que se cambia el nombre y en realidad tiene planetoides. También hay algunas variables nuevas que usaremos más adelante.
+
+<p><p><mark>Muy importante: ¡Inicie sesión en su cuenta! Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></p>
+
+<p>Esta versión es similar al juego de planetoides anterior, excepto que se cambia el nombre y en realidad tiene planetoides. También hay algunas variables nuevas que usaremos más adelante. El principal a mencionar ahora es este:
+
+<pre>
+can_planetoids_move = true;
+</pre>
+
+<p>Juega un rato con el juego, pero luego configura <code>can_planetoids_move = false;</code> para que podamos realizar algunas modificaciones en el comportamiento de la nave sin preocuparnos de que nos alcance un planetoide de inmediato.
+
+<p>En la esquina superior izquierda, presione <img src="https://www.asc.ohio-state.edu/orban.14/physics_coding/play_button.png"> y verá algo como esto:
+
+<center>
+<p><img height=700 width=752 src="torque_inital.png">
+</center>
+
+<p>Si presionas las flechas, notarás que el programa se comporta como el clásico juego de asteroides. ¡Vamos a agregar un nuevo giro a este juego!
+
+<p>Si presiona las cuatro teclas de flecha, notará que hay un par de objetivos que aún no se han completado:
+
+ <center>
+    <p><img width=974 height=254 src="torque_wrong.png">
+      </center>
+
+<p>Si el programa puede detectar que algo anda mal con su código, mostrará una <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/red_x.png"> roja junto a ese objetivo.
+
+<p>Si el programa puede detectar que ha completado el objetivo, mostrará una marca de verificación verde <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/check_mark.png"> junto a ese objetivo.
+
+<p>Pero el programa no es muy inteligente y si no puede decir si ha completado el objetivo, indicará un signo de interrogación como este <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/question_mark.png"> junto a ese objetivo.
+
+
+  <p>Al final de esta actividad, su objetivo es tener marcas de verificación verdes junto a todos los objetivos como este:
+
+ <div align="center">
+<p><img width=994 height=254 src="torque_finished.png">
+  </div>
+
+<p>¡Los pasos a continuación lo ayudarán a lograr todos estos objetivos!
+
+<h3>Paso 1. Piense en los propulsores y el giro (no se necesita codificación en este paso).</h3>
+
+<p>Imagine que estos propulsores funcionan a través de una ingeniería inteligente que desvía el empuje del motor principal de modo que la mitad de este empuje vaya al propulsor delantero y la otra mitad al propulsor en la parte trasera del barco.
+
+<center>
+<p><img src="./torque_files/torque.png" alt="" width="797" height="360"></p></center>
+
+<p>Podemos calcular el par neto en el barco suponiendo que el centro de masa está en el centro del barco (a mitad de camino desde cualquier extremo).
+
+<p>Para torque en sentido antihorario:
+
+$$\tau_{\rm net} = \sum_i \tau_i = +\left( \frac{F_{\rm thrust}}{2} \right) \cdot \left(\frac{L_{\rm ship}}{2}\right) + \left( \frac{F_{\rm thrust}}{2} \right) \cdot \left(\frac{L_{\rm ship}}{2}\right) = \frac{F_{\rm thrust} L_{\rm ship}}{2} $$
+
+<p>Para torque en sentido horario:
+
+$$\tau_{\rm net} = \sum_i \tau_i = -\left( \frac{F_{\rm thrust}}{2} \right) \cdot \left(\frac{L_{\rm ship}}{2}\right) - \left( \frac{F_{\rm thrust}}{2} \right) \cdot \left(\frac{L_{\rm ship}}{2}\right) = -\frac{F_{\rm thrust} L_{\rm ship}}{2} $$
+
+<p>No hay otras fuentes de torque en el juego de los planetoides. Esto significa que podemos usar las ecuaciones anteriores para calcular la aceleración angular ($\alpha$).
+
+<p>Aceleración angular:
+
+$$\alpha = \frac{\tau_{\rm net}}{I}$$
+
+<p>donde $I$ es el momento de inercia (a veces llamo a esto la inercia rotacional). Hablaremos de qué utilizar para el momento de inercia más adelante.
+
+<p>A partir de la aceleración angular ($\alpha$) podemos calcular la velocidad angular ($\omega$):
+
+$$\omega_f = \omega_i + \alpha \cdot \Delta t$$
+
+<p>Finalmente, a partir de la velocidad angular ($\omega$) podemos calcular el ángulo al que apunta el barco:
+
+$$\theta_f = \theta_i + \omega \cdot \Delta t   \label{eq:omega} $$
+
+<p>En lo que sigue, convertiremos estas ecuaciones en código.
+
+<p><h3>Paso 2. Especifique el par y el momento de inercia del barco.</h3>
+
+<p>Cerca del comienzo del código hay cuatro nuevas variables. Aquí están:
+
+<pre>
+ang_accel = 0;
+Lship = 100.0;
+Iship = 0;
+torque_thrusters = 0;
+</pre>
+
+<p>Actualmente, la mayoría de estas variables se establecen en cero, pero está a punto de cambiar eso. Siga la sintaxis de otras variables como <code> Fship, mass </code> y <code> dt </code>.
+
+<p>Considere los comentarios sobre el torque en el <b>Step. 1</b> y modifique <code> torque_thrusters </code> de esta manera:
+
+<pre>
+torque_thrusters = Fthrust*Lship/2;
+</pre>
+
+<p>¿Tiene sentido para usted la línea anterior? ¿Por qué hay un factor de 2? Si no es así, vea el <b>Paso 1</b>.
+
+<p>Ahora considere la variable <code> Iship </code>, que es el momento de inercia del barco. Busque la fórmula para el momento de inercia de una barra de longitud <code> Lship </code>. Siga la sintaxis de otras variables y use esta fórmula para determinar <code>Iship</code>. <b>Antes de hacer esto, lea estas sugerencias:
+</b>
+
+<p>Sugerencia #1: utilizar <code>Lship*Lship</code> en lugar de <code>Lship^2</code>.
+
+<p>Sugerencia #1: recuerde que en el código la masa del barco es solo el variable llamado <code>mass</code>.
+
+<p><h3>Paso 3. Realice cambios en el código para que el barco pueda girar.</h3>
+
+<p>Se le dará el código, pero depende de usted encontrar el lugar correcto en el código para colocarlo.
+
+<p>Primero, comente las líneas que cambian <code>theta</code> usando <code>//</code>
+
+<pre>
+if (keyIsDown(LEFT_ARROW)) {
+//  theta += 0.1;
+} else if (keyIsDown(RIGHT_ARROW)) {
+//  theta += -0.1;
+} else if (keyIsDown(UP_ARROW) ) {
+</pre>
+
+<p>A continuación, agregue el código para que al presionar la flecha izquierda se produzca una aceleración angular positiva como esta:
+
+<pre>
+ang_accel = torque_thrusters/Iship;
+</pre>
+
+<button class="btn" data-clipboard-text=" ang_accel = torque_thrusters/Iship;">
+    Copiar código al portapapeles
+</button>
+
+<p>y presionar la flecha derecha produce una aceleración angular negativa como esta:
+
+<pre>
+ang_accel = -torque_thrusters/Iship;
+</pre>
+
+<button class="btn" data-clipboard-text=" ang_accel = -torque_thrusters/Iship;">
+    Copiar código al portapapeles
+</button>
+
+<p>Ahora use esta aceleración angular para cambiar la velocidad angular (<code>omega</code>) como en la ecuación $\ref{eq:omega}$ agregando un código como este::
+
+<pre>
+omega = omega + ang_accel*dt;
+</pre>
+
+<button class="btn" data-clipboard-text=" omega = omega + ang_accel*dt;">
+  Copiar código al portapapeles
+
+</button>
+
+<p>En el código anterior, observe que el <code>omega</code> del lado derecho es el antiguo <code>omega</code> valor de($\theta_i$) y el <code>omega</code> de la izquierda es el nuevo valor de <code>omega</code> (que es $\theta_f$).
+
+<p>Finalmente, agregue una ecuación para que <code>theta</code> Finalmente, agregue una ecuación para que ($\theta_i$) y la velocidad angular ($\omega$).
+
+<pre>
+theta = theta + omega*dt;
+</pre>
+
+<button class="btn" data-clipboard-text=" theta = theta + omega*dt;">
+    Copiar código al portapapeles
+</button>
+
+<p>En lo anterior, he usado el mismo truco donde theta en el lado derecho es el valor anterior ($\theta_i$) y <code>theta</code> en el lado izquierdo es el nuevo valor ($\theta_f$).
+
+<p>También necesita agregar algo que evite que la nave gire fuera de control, similar a cómo hay algo para evitar que la nave acelera fuera de control en la dirección xey</p>
+
+<p>Si modifica todas estas líneas de código de la manera correcta, <a href="torque_files/v1/index.html">debería obtener este comportamiento
+</a>
+
+
+<p><h3>Paso 4. Agregue un temporizador y vea cuánto tiempo puede sobrevivir.</h3>
+
+<p>Justo después de <code>display();</code>, agregue esta línea:
+
+<pre>
+t += dt;
+drawText('time = ',0.8*width,0.9*height);
+drawText(t,0.9*width,0.9*height);
+</pre>
+
+<button class="btn" data-clipboard-text="t += dt;
+drawText('time = ',0.8*width,0.9*height);
+drawText(t,0.9*width,0.9*height);">
+    Copiar código al portapapeles
+</button>
+
+<p>Si realiza estos cambios, <a href="torque_files/v2/index.html">su código debería comportarse así.</a>
+
+<p><H3><mark>¡En este punto, debería tener todas las marcas de verificación verdes! ¡Hurra!</mark></H3>
+
+<p><h3>Paso 5. ¿Qué sucede cuando cambia <code>Lship</code>, <code>mass</code> y <code>Fthrust</code>?</h3>
+
+<p>Experimente con diferentes valores de <code>Lship</code>, <code>mass</code> y <code>Fthrust</code>.  En lo que entregue para el laboratorio, comente cómo el cambio de cada variable (mayor o menor) afecta la maniobrabilidad del barco. ¿Cuáles crees que son los mejores valores a utilizar para sobrevivir más tiempo en el juego?
+
+
+<p><b>Crédito adicional: agrega un proyectil al juego</b>
+
+<p>La opción # 3 en el laboratorio de programación de planetoides original era agregar un proyectil a la nave. Este proyectil viajará a velocidad constante en cualquier dirección que apunte la nave cuando presione la barra espaciadora. Reutilice el código que utilizó para agregar un proyectil al laboratorio anterior o desarrolle aquí por primera vez. En lo que entrega para este laboratorio, indique si reutilizó el código antiguo o desarrolló el código del proyectil por primera vez.
+
+<p><b>Puntos de bonificación:</b> si el proyectil golpea un planetoide, el planetoide debería reducir su tamaño o dividirse en dos.
+
+
+<p><H3><mark>¡Responda esta encuesta después de completar el ejercicio!</mark></h3>
+
+<p><b>1.Asegúrate de que el código funcione según lo previsto</b>
+
+<p>Asegúrese de que su nave, una vez que gire, continuará girando sin acelerar ni desacelerar. Mucha gente no logra hacer esto. Los problemas comunes son que el barco solo gira cuando presionas las teclas de flecha izquierda y derecha. O una vez que presiona las teclas de flecha izquierda o derecha, incluso si suelta estas teclas, la aceleración angular es constante y gira cada vez más rápido. Asegúrese de que su nave simplemente gire sin acelerar o desacelerar cuando no esté presionando las teclas de flecha izquierda y derecha. En otras palabras, asegúrese de que la nave. Si realiza estos cambios, <a href="torque_files/v2/index.html">su código debe comportarse así</a> y que obtenga todos los cheques verdes <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/check_mark.png"> y no <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/red_x.png">
+
+<p><b>2. Encuentre la mejor combinación de Lship, mass y Fthrust como se discutió en el Paso 5</b>
+
+<p>Asegúrese de incluir en el cuadro de comentarios cuando envíe su código los valores que crea que lo hacen más fácil de sobrevivir. Si olvida hacer esto, puede perder puntos.
+
+<p>
+
+</body>
+</html>

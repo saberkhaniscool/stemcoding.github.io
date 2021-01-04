@@ -1,0 +1,439 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+<H1>Night Sky Simulator!</H1>
+
+<center>
+<p><img width=250 height=250 src="canvas.png">
+</center>
+
+<p>La imagen de arriba no es una imagen real del cielo nocturno o un campo de estrellas real (¡quizás ya hayas notado que es falso!). Es un cielo nocturno generado aleatoriamente a partir de un programa de computadora que vamos a construir. Vamos a aprender un poco sobre las estrellas y luego vamos a pensar por qué algunas estrellas aparecen más brillantes en el cielo que otras y qué significa.
+
+<p>Algo interesante de esta actividad es que podrás descargar una hoja de cálculo con la lista de estrellas generadas aleatoriamente. En las instrucciones aquí, usaremos hojas de Google para analizar esos datos, pero puede usar cualquier programa de hoja de cálculo con el que se sienta cómodo (Excel, Libreoffice, Apple - Numbers)
+
+<p><H3>Paso 0. Abre un código simple</H3>
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/Wxxt3Czln" target="_blank">Haga clic en este enlace para abrir el código</a>
+
+<p><H4><mark>Muy importante: ¡Inicie sesión en su cuenta! Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></H4>
+
+<p>Presione reproducir allí para ejecutar el código.
+
+<p><a href="v0/index.html">Aquí hay un enlace sobre cómo debería comportarse el código; no se parece mucho a un cielo nocturno real, ¿verdad?</a>
+
+<p><H3>Paso 1. Mira el código</H3>
+
+<p>Aquí está el código que estamos usando:
+
+<pre>
+Nstars = 0;
+
+function draw() {
+   x = random(0,500); // position on screen
+   y = random(0,500); // position on screen
+   z = random(2,20); // = distance to star (in lightyears)
+
+   drawStar(x,y,10000.0); // x,y,brightness
+
+   Nstars += 1;
+   print('Generated '+ Nstars + ' stars');
+
+   if (Nstars >= 200) {
+     noLoop();  // stop generating stars
+     print("finished generating " + Nstars + " stars!");
+   }
+}
+</pre>
+
+<p><b><mark>¿Qué notas sobre este código? Aquí hay algunas preguntas para pensar:</mark></b>
+
+<p><b>¿Cómo le explicaría las diferentes 'secciones' del código a un amigo y qué hacen?</b>
+
+<p><b>¿Hay alguna variable que no usemos?</b>
+
+<p><H3>Paso 2. Tamaño de la estrella en el cielo</H3>
+
+<p>Hay una característica interesante del código que si cambia esto:
+
+<pre>
+drawStar(x,y,10000.0);
+ </pre>
+
+ a esto:
+
+<pre>
+drawStar(x,y,100000.0);
+</pre>
+
+<p>entonces el tamaño de los pequeños círculos será mayor <a href="v1/index.html">como en esta demostración.</a>.
+
+<p><b>Nota:</b> Puede hacer clic derecho en el campo de la estrella y hacer clic en "Guardar imagen como ..." para guardar el campo de la estrella como una imagen png. Si realmente te gustan las estrellas que generaste, puedes guardarlas.
+
+<!--
+<p><H3>Step 3. Angular size of things on the sky</H3>
+
+<p>We are interested in how big that stars appear on the night sky, but let's take a step back and think about how large the moon is on the night sky.
+
+<p>The moon has a diameter of about 3500 kilometers. The time delay for talking to astronauts visiting the moon is about 1.25 seconds, which is important because you can use that to get a distance to the moon (assuming $c = 3\cdot 10^8$m/s). Here is a formula for the angle ($\theta$) in degrees that is the width of the moon on the sky.
+
+$$ \theta = \frac{180^o}{\pi} \frac{D}{r} = \frac{180^o}{\pi} \cdot \frac{3,500\cdot 10^3 \, {\rm  m} }{ (1.25 \, {\rm s})\cdot 3 \cdot 10^8 {\rm m/s} } \approx 0.5 \, {\rm degrees} $$
+
+<p>So think in your mind:  <b>moon equals half of a degree on the sky</b>. A half of a degree may not sound like much, but the moon does appear fairly big in the sky.
+
+<p>Let's see how big a star would be. Let's imagine that the sun, which has a diameter of about 1 million kilometers, is placed about 5 light years away from us. That is still pretty close. The closest star system to us is Alpha Centuri and it is 4.3 light years away. It is important to start with a distance that is pretty close, because all the other stars are only going to be further away.
+
+<p>Calculate $\theta$ for the sun if it were 5 light years away (Hint: there are 365 days in a year).
+
+<p>What number do you get? Is it crazy small?
+-->
+
+<p><H3>Paso 3. El brillo determina el tamaño</H3>
+
+<p>Resulta que las estrellas están tan lejos de nosotros que el tamaño de la estrella no importa por lo grande que parezca. Incluso los telescopios más grandes de la tierra e incluso los mejores telescopios espaciales no pueden detectar el tamaño físico de una estrella con solo mirarla. Lo que <b>realmente</b> importa por el tamaño de la estrella en el cielo o en nuestros telescopios es lo brillante que es, cuánta luz nos llega desde esa estrella.
+
+<p>Aquí está la fórmula para el brillo (B) de una estrella que estamos observando desde la tierra:
+
+  $$B = \frac{L}{4 \pi d^2} $$
+
+<p>donde $L$ es la energía por segundo que emite la estrella. Otro nombre para la energía por segundo emitida por una estrella es "luminosidad". (Nota The $4 \pi d^2 $ es el área de una esfera)
+
+<p>En el código vamos a usar algo muy similar a esto. Aquí está el código:
+
+<pre>
+  luminosity = 1.0; // fraction of the luminosity of the sun
+  brightness = 1000000.0*luminosity/(4*3.141*z*z);
+  drawStar(x,y,brightness);
+</pre>
+
+<button class="btn" data-clipboard-text="   luminosity = 1.0; // fraction of the luminosity of the sun
+   brightness = 1000000.0*luminosity/(4*3.141*z*z);
+   drawStar(x,y,brightness);">
+    Copiar código al portapapeles
+</button>
+
+<p><b>Nota:</b> El factor de 1000000.0 en el código anterior está ahí para asegurarnos de que los números de brillo sean mayores que uno cuando lo analicemos más tarde.
+
+<p>Copie, pegue esto en su código y elimine <code>drawStar(x,y,100000.0);</code>. Cuando hagas esto, <a href="v2/index.html">tu código debería comportarse así.</a>.
+
+<p><b>¿Qué notas sobre este código? ¿Utiliza una variable no utilizada? ¿Qué suposiciones hace?</b>
+
+<!--
+  The only reason we did this was because spreadsheet programs aren't as easy to use with super big or super small numbers. So don't worry too much about the precise units of brightness here. Later the only thing that will matter is the brightness of one star compared to another.
+
+
+<p><b>Note:</b> The units of brightness in the program is not the typical $ {\rm Watts} / {\rm meter }^2 $ that it would be in the SI system.
+-->
+
+<p><H3>Paso 4. No todas las estrellas tienen la misma luminosidad</H3>
+
+<p>El sol es una estrella bastante promedio en la mayoría de los aspectos, y en el paso anterior asumimos que todas las estrellas en nuestro cielo nocturno artificial tienen la misma luminosidad que el sol. Podemos hacerlo mejor que esto. Algunas estrellas son más luminosas que el sol y otras estrellas son menos luminosas. Resulta que esto tiene que ver con la masa de la estrella.
+
+<p> Aquí está la fórmula para la luminosidad de una estrella para una masa particular:
+
+$$ L_{\rm star} = L_{\rm sun} \cdot \left(\frac{M_{\rm star}}{M_{\rm sun}}  \right)^4 $$
+
+<p>Resulta que las estrellas más masivas también son mucho más calientes. Las estrellas más calientes emiten más radiación.
+
+<p>Algo útil que puede hacer es reescribir esta ecuación de esta manera:
+
+  $$ \frac{L_{\rm star}}{ L_{\rm sun}} = \left(\frac{M_{\rm star}}{M_{\rm sun}}  \right)^4 $$
+
+<p>Otra cosa útil es definir $L$ como la relación entre la luminosidad y la luminosidad solar de esta manera:
+
+  $$ L = \frac{L_{\rm star}}{L_{\rm sun}} $$
+
+<p>Como puede ver, si la luminosidad de la estrella es la misma que la luminosidad del sol, entonces $L = 1$, que es esencialmente lo que nuestro programa ya hace.
+
+<p>Finalmente, otra cosa útil es definir la masa $M$ como la relación entre la masa de la estrella y la masa del sol:
+
+  $$ M = \frac{M_{\rm star}}{M_{\rm sun}} $$
+
+<p>Esto significa que si la masa de la estrella es la misma que la masa del sol, entonces $M=1$.
+
+<p>Combinando estas dos cosas, puedes escribir esto:
+
+  $$L = M^4 $$
+
+<p>Esto será útil para el código en el siguiente paso.
+
+<p><b>Pregunta:</b> Las estrellas que son dos veces más masivas que el sol son ____ veces más luminosas que el sol.
+
+  <!--
+<p>  Let's say that stars range in mass from 0.25 times the mass of the sun to twice the mass of the sun. How much more luminous is the most massive star compared to the least massive star? Are the luminosities similar or are they wildly different.
+  -->
+<!--
+<p><H3>Step. 5. Modify the code  </H3>
+
+<p>As discussed in the previous step, you should replace this:
+
+<pre>
+luminosity = 1.0; // fraction of the luminosity of the sun
+</pre>
+
+<p>with this:
+
+  <pre>
+luminosity = pow(M,4.0); // fraction of the luminosity of the sun
+  </pre>
+<button class="btn" data-clipboard-text="    luminosity = pow(M,4.0); // fraction of the luminosity of the sun">
+    Copy code to clipboard
+</button>
+
+<p><b>Note: This code will fail! M is not defined yet!</b>
+
+<p>Somewhere before this line of code in the spot where all the random stuff happens, add this line:
+
+  <pre>
+M = random(0.25,2); // = star mass (relative to the sun)
+  </pre>
+<button class="btn" data-clipboard-text="   M = random(0.25,2); // = star mass (relative to the sun)">
+    Copy code to clipboard
+</button>
+
+-->
+<p><H3>Paso. 5. Modifica el código  </H3>
+
+<p>Primero necesitamos generar una masa al azar.  Agregue <mark>el código resaltado</mark> para generar aleatoriamente un valor para M justo debajo de donde generamos aleatoriamente las coordenadas x, y, z:
+
+  <pre>
+   x = random(0,500); // position on screen
+   y = random(0,500); // position on screen
+   z = random(2,20); // = distance to star (in lightyears)
+   <mark>M = random(0.25,2); // = star mass (relative to the sun)</mark>
+</pre>
+
+<P>Aquí hay un botón de copiar código solo para el nuevo código:
+<pre>
+   M = random(0.25,2); // = star mass (relative to the sun)
+</pre>
+
+<button class="btn" data-clipboard-text="  M = random(0.25,2); // = star mass (relative to the sun)">
+    Copiar código al portapapeles
+</button>
+
+<p>Luego, como se discutió en el paso anterior, debe reemplazar esto:
+
+<pre>
+  luminosity = 1.0; // fraction of the luminosity of the sun
+</pre>
+
+<p>con:
+
+<pre>
+  luminosity = pow(M,4.0); // fraction of the luminosity of the sun
+</pre>
+<button class="btn" data-clipboard-text="  luminosity = pow(M,4.0); // fraction of the luminosity of the sun">
+    Copiar código al portapapeles
+</button>
+
+<p>Si realiza estos cambios, <a href="v3/index.html">su código debería comportarse así</a>
+
+<p><H3>Paso 6. Guarde los datos en un archivo de hoja de cálculo</H3>
+
+<p>Guardemos los datos en un archivo de hoja de cálculo llamado stars.csv
+
+<p>Agregue esta línea al programa en el medio:
+
+<pre>
+saveValues(brightness,luminosity,M,z,y,x);
+</pre>
+
+<button class="btn" data-clipboard-text="saveValues(brightness,luminosity,M,z,y,x);">
+    Copiar código al portapapeles
+</button>
+
+<p>Luego, dentro de la declaración if (que solo se ejecuta cuando el programa termina de generar estrellas) agregue este código:
+
+<pre>
+saveTable(table,'stars.csv');
+</pre>
+
+<button class="btn" data-clipboard-text="    saveTable(table,'stars.csv');">
+    Copiar código al portapapeles
+</button>
+
+<p>Entonces ahora su programa debería tener dos nuevas líneas como esta:
+
+  <pre>
+   <mark>saveValues(brightness,luminosity,M,z,y,x);</mark>
+   if (Nstars >= 200) {
+     <mark>saveTable(table,'stars.csv');</mark>
+     noLoop();  // stop generating stars
+     print("finished generating " + Nstars + " stars!");
+   }
+  </pre>
+
+<p><H3>Paso 7. Abra el archivo en un programa de hoja de cálculo.  </H3>
+
+<p>Abra stars.csv en un programa de hoja de cálculo (cualquier programa de hoja de cálculo).
+
+<p><H3>Paso 8. Ordene según la primera columna (brillo)</H3>
+
+<p>Coloque un cuadro alrededor de todo el conjunto de datos y haga clic en la pestaña Datos. Tu objetivo es ordenar las estrellas por los números de la primera columna, que es el brillo. De esta manera terminaremos con una lista de las estrellas de más brillante a más tenue.
+
+<p>En las hojas de Google, debe resaltar todo el conjunto de datos y hacer clic en “Datos -> Ordenar hoja por columna A, Z -> A”  (Data --> Sort Sheet by Column A, Z --> A)como en esta captura de pantalla:
+
+  <center>
+<p><img width=550 height=300 src="spreadsheet_diagram.png">
+</center>
+
+<p><b>Nota:</b> Si está utilizando algún otro programa de hoja de cálculo como Excel, no será exactamente así. Pero normalmente hay una pestaña de Datos en la parte superior y una opción "Ordenar".
+
+<p><H3>Paso 9. Observa la estrella más brillante</H3>
+
+Anote qué tan brillante es la estrella más brillante y anote su masa y su distancia (z). Solo por diversión, puede intentar averiguar en qué parte de la pantalla está la estrella más brillante a partir de sus coordenadas x, y. El origen (0,0) del campo de estrellas está en la parte inferior izquierda. La parte superior derecha sería x = 500, y = 500.
+
+<p><H3>Paso 10. Ordene según la cuarta columna (distancia)</H3>
+
+<p>Coloque un cuadro alrededor de todo el conjunto de datos y ordene las estrellas según la distancia (z). <b>¿Es la estrella más brillante también la estrella más cercana?</b> Si la estrella más brillante también es la estrella más cercana, ejecute el programa nuevamente para ver si esto siempre es cierto.
+
+<p><b>Nota:</b> Aquí hay <a href="https://en.wikipedia.org/wiki/List_of_nearest_stars_and_brown_dwarfs">una lista de los sistemas estelares más cercanos</a>. Sirio es la estrella más brillante del cielo. ¿También es el más cercano?
+
+<p><H3>Desafío #1: la masa de las estrellas</H3>
+
+<p><b>Paso 1. Verifique el valor máximo y mínimo de la masa</b>
+
+<p>En el programa estamos usando este código para generar un valor aleatorio para la masa de una estrella:
+
+<pre>
+M = random(0.25,2.0);
+</pre>
+
+<p>Como puede ver, esto generará un número aleatorio para la masa de la estrella con el valor más bajo posible de 0,25 (un cuarto de la masa del sol) y el valor más alto de 2,0 (el doble de la masa del sol).
+
+<p>La tercera columna de datos es la masa de la estrella. Ordene los datos de acuerdo con la tercera columna para averiguar la masa máxima y mínima de la estrella. ¿Los resultados para el máximo y el mínimo coinciden con lo que espera?
+
+<p><b>Paso 2. Verifique el valor promedio de la masa</b>
+
+<p>Vaya a C 202 y escriba esto:
+
+<pre>
+=AVERAGE(C2:C201)
+</pre>
+
+<p><b>¡No olvide escribir el signo igual!</b> El signo igual es importante porque si lo omite, el programa simplemente piensa que está tratando de escribir la palabra "Promedio" en la pantalla.
+
+
+
+<p><b>¿Qué valor obtienes por la masa promedio?</b> Dijimos antes que el sol es una estrella bastante normal. ¿La masa promedio se acerca a 1.0? Puede notar que la masa promedio no es exactamente igual a 1.0. ¿Puedes explicar eso?
+
+<p><b>Paso 3. Cambiar la forma en que se genera la masa de forma aleatoria</b>
+
+<p>Resulta que existen mejores modelos para generar aleatoriamente la masa de la estrella que el que estamos usando <code>M = random(0.25,2.0);</code> Puede cambiar a un modelo más realista eliminando ese código y agregando este código:
+
+<pre>
+M = salpeter_random_mass();
+</pre>
+
+<button class="btn" data-clipboard-text="M = salpeter_random_mass();">
+    Copiar código al portapapeles
+</button>
+
+<p>Podríamos decirle en qué se diferencia este modelo del que usamos anteriormente <code>M = random(0.25,2.0);</code> ¿Pero, dónde está la diversión en eso? Genere un campo de estrellas con este nuevo modelo y analice los datos como lo hizo con el modelo anterior.
+
+<p><b>Aquí hay algunas preguntas que debería intentar responder:</b>
+
+<p>¿Cuáles son los valores mínimo y máximo de la masa para este nuevo modelo? ¿Cuál es la masa promedio con el nuevo modelo? ¿Existe alguna diferencia visual notable entre los campos de estrellas que se generaron con este nuevo modelo y los campos de estrellas que se generaron con el modelo anterior?
+
+<p><b>Nota:</b> Este nuevo modelo se llama "Función de masa inicial de Salpeter" <a href="https://en.wikipedia.org/wiki/Initial_mass_function">"Salpeter Initial Mass Function"</a> si tienes curiosidad por buscar en Google para obtener más información al respecto.
+
+
+<p><H3>Desafío #2: compruebe si las estrellas son lo suficientemente brillantes para ver</H3>
+
+<p>Por una variedad de razones, limitamos la cantidad de estrellas que estamos generando a 200. Hacer más que esto toma más tiempo y crea más datos para analizar, lo cual es factible, pero puede ser un poco lento.
+
+<p>Resulta que si el brillo <code>brightness</code> está por debajo de 5000, entonces la estrella es tan pequeña que ni siquiera se puede ver un pequeño punto en el campo de estrellas.
+
+<p><b>Agregue una declaración if al programa para que solo dibuje la estrella si el brillo es superior a 5000</b>
+
+<p><b>Nota:</b> ¡Asegúrese de que su código aún dibuja 200 estrellas en la pantalla! ¡Solo aumente Nstars si la estrella es lo suficientemente brillante como para ser visible!
+
+<p>Si modifica su código correctamente, debería obtener un campo de estrella similar a esto:
+
+  <center>
+    <p><img width=250 height=250 src="dense_starfield.png">
+</center>
+
+<p><b>Nota #1:</b> su campo de estrellas se verá diferente porque usa un conjunto diferente de números aleatorios, pero en general, ¿se ve similar?
+
+<p><b>Nota #2:</b> La imagen de arriba asume <code>M = random(0.25,2.0);</code>   También puede usar <code>M = salpeter_random_mass();</code> como se discutió en el desafío n. ° 1 para ver cómo se ve.
+
+<p><b>¿Por qué es importante comprobar el brillo para generar un campo de estrellas realista??</b>
+
+<p><H3>Desafío # 3: Colores de las estrellas</H3>
+
+<p>No todas las estrellas son blancas. En astronomía hay una forma de graficar el brillo de las estrellas frente a su color que se llama <a href="https://en.wikipedia.org/wiki/Hertzsprung%E2%80%93Russell_diagram">Hertzsprung-Russell Diagram</a>. Hay muchos tipos diferentes de estrellas en el diagrama. La mayoría de las estrellas en el diagrama son estrellas de "secuencia principal". El sol es un ejemplo de estrella de secuencia principal.
+
+<p>Las estrellas de la secuencia principal de menor masa son más frías (temperatura más baja) y las estrellas de la secuencia principal de mayor masa son más calientes (temperatura más alta). Esto significa que las estrellas de menor masa emiten luz roja que las estrellas de mayor masa que emiten luz azul. El sol está en el medio de este rango y emite una luz amarilla que está en el medio del espectro de colores.
+
+<p>Nuestro programa tiene la opción de darle un color a la estrella usando RGB. Estos son tres números (rojo, verde, azul) que van de 0 a 255. Por ejemplo, si desea que las estrellas sean todas rojas, puede usar este código:
+
+<pre>
+drawStar(x,y,brightness,[255,0,0]);
+</pre>
+
+<button class="btn" data-clipboard-text="drawStar(x,y,brightness,[255,0,0]);">
+    Copiar código al portapapeles
+</button>
+
+<p>Aquí hay un enlace a una página donde puede <a href="https://www.google.com/search?q=color+picker">ver qué colores hacen los diferentes valores RGB
+</a>
+
+
+<p><b>¡Vea si puede modificar el código para hacer que las estrellas de menor masa sean rojas y las estrellas de mayor masa azules!</b>
+
+<!--
+
+
+
+<button class="btn" data-clipboard-text="x0 = 95;
+y0 = 25;
+
+  Npoints=1000;
+  for(i=1;i<=Npoints;i+=1)
+  {
+  t = (i-1)*dt;
+  xdraw = x0 + ?????;
+  ydraw = y0 + ?????;
+  drawPoint(xdraw,ydraw);
+  }">
+    Copy code to clipboard
+</button>
+
+
+<p><h3><mark>How to get full credit on this programming lab!!!</mark></h3>
+
+<p><b>1. </b>
+
+<p><b>2. </b>
+
+<p><b>3. </b>
+
+<p>If you want extra credit figure out how to make the spacebar only work the first time as discussed in the challenge. If you do not need extra credit then you can skip this if you want to.
+
+-->
+
+</body>
+</html>

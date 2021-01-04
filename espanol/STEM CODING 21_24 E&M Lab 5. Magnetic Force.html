@@ -1,0 +1,179 @@
+<HTML>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<H1>Physics 1251 Programming Lab!: Magnetic force (a.k.a. Mass Spectrometer)</H1>
+
+<p>Es posible que recuerde uno de los ejercicios de programación anteriores en el que se <a href="accelerator/accelerator.html">aceleraba un protón a través de dos placas cargadas.</a>. En este ejercicio, agregaremos un campo magnético al lado derecho de la simulación. La partícula solo experimenta este campo cuando pasa al lado derecho. Este ejemplo se basa libremente en la idea de un "espectrómetro de masas". Resulta que si vaporizas un poco de una muestra con algunas moléculas desconocidas, tiende a haber muchas moléculas que pierden UN electrón. Dado que la molécula ha perdido un electrón, tiene una carga de +1. La masa de la molécula es esencialmente la misma incluso si le falta un electrón porque los electrones constituyen una fracción muy, muy pequeña de la masa de los átomos. Como aprenderá en este laboratorio, la trayectoria de la partícula en el campo magnético nos dice algo sobre la masa de la partícula (si ya conocemos q, v y B, por ejemplo).
+
+<p><b>Consejo:</b> Por alguna razón, la simulación que produce esta actividad de codificación <b>se ve mejor en Chrome</b> que en Firefox u otros navegadores. <b>¡Todavía funciona bien en todos los navegadores!</b> pero puede notar que los signos + no están exactamente en el medio de la partícula. Lo siento.
+
+<p><b>Paso 1.</b> Haga clic aquí para abrir una <a href="bfield_v0/index.html">versión modificada del acelerador de partículas</a>. Como puede ver, hay un campo magnético que apunta a la página en el lado derecho. <b>La partícula cargada positivamente * no * reacciona a este campo magnético simplemente porque nadie le ha dicho al programa qué hacer cuando hay un campo magnético.</b> Su tarea será decirle al programa qué hacer en este caso.
+
+<p><b>Paso 2. Abre el código bfield en un editor</b>
+
+<p><a href="http://editor.p5js.org/ChrisOrban/sketches/HJ1UdD9yM" target="_blank">Haga clic en este enlace para abrir el código bfield en un editor p5.js</a>
+
+<p><mark><b>¡Importante! Cree una cuenta con el editor o inicie sesión en una cuenta existente. Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</b></mark>
+
+<p>Nota: asegúrese de no utilizar código de los laboratorios de programación anteriores cuando trabaje en este laboratorio, ya que los laboratorios anteriores no pueden dibujar el campo magnético y existen algunas otras diferencias menores de formato.
+
+<p><b>Paso 3. Considere la dirección de la fuerza magnética</b> Antes de realizar cualquier codificación, ¿cuál es la dirección de la fuerza magnética sobre la carga positiva cuando ingresa al campo magnético como se muestra a continuación? Usa la regla de la mano derecha para averiguarlo. (Sugerencia: el campo B está dentro <b><i>de la página</i></b> en lugar de fuera de la página como en el diagrama anterior).
+
+<center>
+<p><img height=500 width=750 src="no_deflect.png">
+</center>
+
+<p><b>Paso 4. Considere la trayectoria del protón.</b> ¿Qué sucede más adelante, después de que se haya desviado la carga? ¿Cómo debería ser la trayectoria general cualitativamente y por qué? <b>Escriba cuál es su expectativa en lo que entrega para este laboratorio.</b> Está bien si su expectativa resulta ser incorrecta. No perderás ningún punto.
+
+<p><b>Paso 5.</b> (Realmente no tiene que hacer nada para este paso excepto para tratar de entender la conclusión). En el lado derecho de la simulación, la única fuerza que siente la carga es la fuerza magnética. Dado que esta es la única fuerza, esto significa que si podemos calcular las componentes xey de la fuerza magnética, entonces podemos calcular la aceleración x e y:
+
+$$\sum F_x = F_{{\rm mag},x} = m a_x$$
+
+$$\sum F_y = F_{{\rm mag},y} = m a_y$$
+
+$$\vec{F}_{\rm mag} = q \, \vec{v} \times \vec{B}$$
+
+<p>En Física 1251 a menudo escribimos que la magnitud de la fuerza magnética es la siguiente:
+
+$$ F_{\rm mag} = | \vec{F}_{\rm mag}| = q |\vec{v}| \, |\vec{B}| \sin \theta = q v B \sin \theta$$
+
+donde $\theta$ es el ángulo entre la velocidad y el campo magnético. En este caso, el ángulo entre el vector de velocidad y el campo magnético es siempre de 90 grados (piense por qué esto es cierto), lo que significa que la magnitud de la fuerza magnética es simplemente la siguiente:
+ $$F_{\rm mag} = q v \, B = q \sqrt{v_x^2 + v_y^2} \, B $$
+
+<p>Esta ecuación es excelente, excepto que lo que realmente necesitamos es $F_{{\rm mag},x}$ y $F_{{\rm mag},y}$. En última instancia, descubriremos que lo siguiente es cierto:
+
+$$F_{{\rm mag},x} = q v_y B$$
+
+$$F_{{\rm mag},y} = -q v_x B$$
+
+<p>Por ejemplo, observe que $F_{\rm mag} = \sqrt{F_{{\rm mag},x}^2 + F_{{\rm mag},y}^2} = q \sqrt{(-v_x)^2 + v_y^2} \, B = q \sqrt{v_x^2 + v_y^2} \, B$ como se esperaba.
+
+<p><b>Aquí está la derivación formal de $F_{{\rm mag},x}$ y $F_{{\rm mag},y}$ :</b>
+
+<p>Si observa detenidamente la imagen, se dará cuenta de que $\vec{B} = B_o \hat{z}$. a velocidad es siempre $\vec{v} = v_x \hat{x} + v_y \hat{y}$.  El producto cruzado es, por tanto,
+
+$$\vec{v} \times \vec{B} = (v_x \hat{x} + v_y \hat{y}) \times (B_o \hat{z}) = v_x B_o (\hat{x} \times \hat{z}) + v_y B_o (\hat{y} \times \hat{z})$$
+
+<p>Según la regla de la mano derecha, $\hat{x} \times \hat{z} = -\hat{y}$ and $\hat{y} \times \hat{z} = \hat{x}$. TSignifica que $\vec{F}_{\rm mag}$ es
+
+$$\vec{F}_{\rm mag} = q \vec{v} \times \vec{B} = q v_x B_o (-\hat{y}) + q v_y B_o (\hat{x})$$
+
+Que es equivalente a
+
+$$F_{{\rm mag},x} = q v_y B_o$$
+
+$$F_{{\rm mag},y} = -q v_x B_o$$
+
+<br>
+
+<p><b>Paso 6. Encuentra las aceleraciones de la partícula.</b> Ahora que le he dado  $F_{{\rm mag},x}$ and $F_{{\rm mag},y}$ y puede resolver $a_x$ and $a_y$. <b>Continúe y resuelva estas aceleraciones y anote el resultado de ax y ay en lo que envía para el laboratorio.</b>
+
+<p>Ahora para la parte de codificación. Usando las aceleraciones que acaba de calcular, puede calcular el cambio en la velocidad durante el intervalo de tiempo $\Delta t$.
+
+$$\Delta v_x = a_x \Delta t$$
+
+$$\Delta v_y = a_y \Delta t$$
+
+<p>Utilice sus expresiones para $\Delta v_x$ y $\Delta v_y$ en bfield.js. Use estas expresiones dentro de la declaración if que tiene el código para cuando la partícula está dentro del campo magnético. Estoy hablando de esta sección del código:
+
+<pre>
+if ( x > x_plate_right )
+{
+  deltaVx = 0.0; // change in vx from magnetic field
+  deltaVy = 0.0; // change in vy from magnetic field
+}
+</pre>
+
+<p>Cuando termine,<a href="bfield_v1/bfield.html">su código debería comportarse así.</a>
+
+<p><b>Paso 7. El "gyroradius"</b>
+<p>Como vio en el Paso 5, las partículas que se mueven hacia un campo magnético forman una trayectoria circular. <span style="background-color: #ffff00;"><strong> El radio de la trayectoria circular se llama "radio de giro".</strong></span></p>
+<h4>Paso 7a. Mide el radio de giro de tu simulación</h4>
+<p>Utilice las posiciones inicial y final de la partícula para obtener un número para el radio de la trayectoria circular que hace la partícula en su simulación. Este radio a menudo se denomina "gyroradius".</p>
+<h4>Paso 7b. Encuentre una fórmula para el "gyroradius", calcule y compare con la simulación</h4>
+<p><strong>Existe una forma inteligente de pensar acerca de la fuerza magnética que nos permite llegar a una fórmula</strong> de cómo ese radio (también conocido como "gyroradius") depende de la velocidad, masa y carga de la partícula, así como de la fuerza de el campo magnético. Es probable que su libro de texto de física hable sobre la fórmula "gyroradius", así que no dude en buscarla. Aquí está la idea básica.</p>
+<p>En el paso 5 hablamos de $F_{{\rm mag},x}$ y $F_{{\rm mag},y}$ y que son las componentes xey de la fuerza magnética. Pero si todo lo que le importa es la magnitud de la fuerza magnética, las ecuaciones se vuelven mucho más simples. En el paso 5 teníamos esta fórmula:</p>
+<p style="text-align: left;">$$F_{\rm mag} = q vB$$</p>
+<p>donde $v$ es la velocidad de la partícula y $B$ es el <strong>valor absoluto</strong> del campo magnético (esto es importante porque el campo magnético en este caso es negativo, en la página, mientras que solo estamos calculando la magnitud del campo magnético, que o positivo o cero).</p>
+
+<p>En el Paso 6 aprendimos que la velocidad de la partícula es aproximadamente la misma incluso cuando la partícula cambia de dirección. Si disminuyó de 0.1 a valores cada vez más pequeños, encontrará que se acerca cada vez más a la velocidad inicial. ¡Esta es una señal de que en la vida real <em><strong>la velocidad no cambia </strong> <strong>en absoluto!</strong></em> Entonces $v$ = constante y dado que q y B son constantes, esto significa que $F_{\rm mag}$ = constante.</p>
+<p><strong>Aparte:</strong> puede ver en el programa que $F_{\rm mag}$ = constante porque la flecha de fuerza magnética cambia de dirección (siempre apuntando al centro del círculo) pero no se alarga ni se acorta, lo que indicaría un cambio en la magnitud de la fuerza magnética. fuerza.</p>
+<p>Una fuerza constante como esta moverá la partícula en un círculo con una aceleración constante&nbsp; $a_{\rm circ} = v^2 / r$ porque todo lo que se mueve en un círculo tiene esa aceleración.</p>
+<p>Poniendo todo esto junto obtenemos:</p>
+<p>$$F_{\rm mag} = m a_{\rm circ}$$</p>
+<p>$$q v B = m \frac{v^2}{r}$$</p>
+<p>Resuelva para r en la expresión anterior y <strong>recuerde que B es el valor absoluto del campo magnético</strong>, lo cual es importante para asegurarse de que r &gt; 0. Luego use su ecuación para calcular un valor para “r” y vea si coincide con el radio. del círculo en el programa. Este radio a menudo se denomina "gyroradius". <strong>¿Qué tan bien se compara su cálculo para el radio de giro con el radio de giro medido en la simulación?</strong> <a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/units.html">Recuerde que las unidades aquí están simplificadas aquí,</a> por lo que puede usar los valores conocidos de q, v, B ym en el programa para hacer este cálculo como lo hizo en el ejercicio del acelerador de partículas. Debería <strong>obtener una concordancia mejor que +/- 10%</strong> entre su cálculo y la medición del Paso 7a. (Nota: es posible que pueda lograr un mejor acuerdo con un valor de dt más pequeño).</p>
+
+<!--
+<p><b>Step 7.</b> When the charged particle swings back and hits the plate again it should have the same speed as when it started because a constant magnetic field can change the direction of the velocity but it can't change the magnitude of the velocity. Check to see if this is true of your simulation (diferences +/- 10% are ok). You may want to look at the <a href="bfield_v0/index.html">simulation without the magnetic deflection</a> to figure out the speed of the particle right as it leaves the plates.
+
+<p>Note: you might not see perfect agreement between these two numbers because of numerical errors (perhaps try making <code>dt</code> smaller to see if this helps).
+
+
+<p><b>Step 8.</b> Calculate the "gyroradius" (Sec. 29.2) and see if it matches up with the radius of the circle in the program. Notice that the gyroradius depends on the mass and that the particle in the simulation is actually a Deuteron (q = 1, mass = 2). <b>Write out your calculation and your result in what you submit for the lab. Also answer this question: Would hydrogen (q = 1, mass = 1) have a larger or smaller gyroradius than a Deuteron? Why?</b>
+-->
+
+<p><b>Paso 8. ¿Qué pasa con los protones?</b>
+<p>El programa asume que estamos acelerando un Deuterón (q = +1, masa = 2). ¿Un protón (q = +1, masa = 1) tendría un radio de giro mayor o menor que un Deuterón? ¿Por qué?</p>
+
+<p><b>Paso 9. Pruebe diferentes variables.</b> Cambie la carga de +1.0 a -1.0 y cambie el campo eléctrico de positivo a negativo y vea si la partícula se mueve en el campo magnético de la manera que espera (¿de qué manera espera?). Solo por diversión, edite bfield.js para que la imagen sea de una partícula cargada negativamente.
+
+<p>Haz esto cambiando
+
+<pre>positive(x,y);</pre>
+
+a:
+
+<pre>negative(x,y)</pre>
+
+<p>¡Y <mark><b>asegúrese de cambiar el campo eléctrico de positivo a negativo,</b></mark>, o de lo contrario la partícula cargada negativamente puede no pasar! ¡¿Lo que pasa?!
+
+<p><H3><mark>¡Cómo obtener todo el crédito en esta tarea!</mark></h3>
+
+<p><strong>1. Indique en qué dirección ejercerá la fuerza magnética sobre la partícula (Paso 2)</strong></p>
+<p>No es necesario ningún cálculo. Cuando la partícula entra en la región con el campo magnético, ¿la fuerza magnética sobre la partícula estará arriba, abajo, izquierda, derecha, dentro o fuera de la página? La dirección de la fuerza magnética debe ser correcta para que pueda obtener todo el crédito en esta pregunta.</p>
+<p><strong>2. Adivina cómo se verá la trayectoria de la partícula en el campo magnético (Paso 3)</strong></p>
+<p>No se necesitan cálculos. Simplemente adivine cualitativamente qué le pasará a la partícula cuando entre en el campo magnético. ¿Irá derecho, arriba, abajo, en círculo, etc.? Está bien si adivinas mal. Siempre que lo piense y dé su mejor suposición. Justifique su respuesta (con palabras) para obtener crédito completo</p>
+<p><strong>3. Escriba lo que debe usar para $a_x$ y $a_y$ en los comentarios que acompañan a su código (Paso 5)</strong></p>
+<p>Mire cuidadosamente al final del Paso 4 y use esta información para averiguar qué debe usar para $a_x$ y $a_y$ (pista: dividir por masa). Escriba $a_x$ y $a_y$ en los comentarios e implementarlo en el código (¡no olvide $\Delta t$!).</p>
+<p><strong>4. Verifique si la velocidad al final de la simulación es aproximadamente la misma que si no hubiera campo magnético (Paso 6)</strong></p>
+<p>En los comentarios del código, escriba la velocidad final de la partícula en la simulación con el campo magnético. Luego, establezca B = 0 o regrese a su simulación anterior y verifique que la velocidad final es y anótelo en sus comentarios. Está bien si estos están desactivados en +/- 10%. Más que eso podría indicar un problema.</p>
+<p><strong>5. Mida y calcule el radio de giro (paso 7)<br /></strong></p>
+<p>Escriba su radio de giro calculado y el radio de giro medido. Los dos deben ser consistentes dentro del 10-20%. Más que eso podría indicar un problema.</p>
+<p><strong>6. ¿Qué le pasaría a un protón en comparación con un Deuterón (Paso 8)</strong></p>
+<p><strong>7. ¿En qué dirección se movería una partícula cargada negativamente en el campo magnético? (Paso 9)<br /></strong></p>
+<p>Cambie la carga de +1 a -1, cambie el campo E a un valor negativo y vea qué sucede cuando la partícula ingresa al campo magnético. Escribe lo que pasó.</p>
+
+<!--
+
+<p><b>1. State which direction that the magnetic force will exert on the particle (Step 3)</b>
+
+<p>No calculation necessary. When the particle enters the region with the magnetic field, will the magnetic force on the particle be up, down, left, right, into or out of the page? The direction of the magnetic force needs to be correct for you to get full credit on this question
+
+<p><b>2. Guess what the trajectory of the particle will look like in the magnetic field (Step 4)</b>
+
+<p>No calculations necessary. Just guess qualitatively what will happen to the particle when it enters the magnetic field. Will it go straight, up, down, in a circle, etc.? It's ok if you guess wrong. As long as you think about it and give your best guess. Justify your answer (with words) for full credit
+
+<p><b>3. Write down what you should use for $a_x$ and $a_y$ in the the comments accompanying your code (Step 6)</b>
+
+<p>Look carefully at the end of Step 5 and use this information to figure out what you should use for $a_x$ and $a_y$ (hint: divide by mass). Write down $a_x$ and $a_y$ in the comments and implement this in the code (don't forget $\Delta t$!).
+
+<p><b>4. Check if the velocity at the end of the simulation is about the same as it would be if there were no magnetic field (Step 7)</b>
+
+<p>In the comments for the code write down the final velocity of the particle in the simulation with the magnetic field. Then either set B = 0 or go back to your earlier simulation and check the final velocity is and write this down in your comments. It's ok if these are off by 10-20%. More than that could indicate a problem.
+
+<p><b>5. Look through Section 29.2 and calculate the gyroradius. <mark>Then measure the gyroradius from the simulation!</mark></b>
+
+<p>Write down your calculated gyroradius and the measured gyroradius. The two should be consistent within 10-20%. More than that could indicate a problem.
+
+<p><b>6. Which direction would a negatively charged particle move in the magnetic field?</b>
+
+<p>Change the charge from +1 to -1, change the E field to a negative value and see what happens when the particle enters the magnetic field. Write down what happened.
+
+-->

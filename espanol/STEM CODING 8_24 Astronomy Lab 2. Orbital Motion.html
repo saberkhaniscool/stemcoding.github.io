@@ -1,0 +1,128 @@
+<HTML>
+<head>
+<title>Orbital Motion: Kepler's 2nd Law</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<h3>Movimiento orbital: Kepler's 2nd Law</h3>
+<p>Esta actividad implica tomar el código al final del ejercicio Slingshot with Gravity y hacer algunos experimentos con ese código para aprender más sobre las propiedades especiales de los objetos que experimentan la atracción gravitacional de un objeto central. Este objeto central puede ser una estrella o un agujero negro o una estrella de neutrones, etc. y el objeto en órbita puede ser un cometa o un asteroide o una cápsula espacial o incluso un planeta entero. Por lo general, este tema está relacionado con las discusiones sobre el movimiento de los planetas alrededor de una estrella.</p>
+<p>Kepler hizo varios descubrimientos importantes sobre el movimiento de los planetas en el sistema solar&nbsp; En la actividad Slingshot with Gravity creamos un código que demostró que las fuerzas $1/r^2$ como la gravedad producen naturalmente órbitas elípticas. Con suerte, has jugado con ese código para intentar ver si puedes hacer otras órbitas que no sean una elipse. Resulta que mientras el objeto no tenga suficiente energía cinética para escapar totalmente del campo gravitacional de la estrella, producirá algún tipo de órbita elíptica. No solo la trayectoria será una elipse, el objeto seguirá este mismo camino cada vez que se mueva alrededor de la estrella. Este resultado a menudo se conoce como la primera ley de Kepler. Kepler fue un astrónomo que observó de cerca las órbitas de planetas como Venus y Marte.</p>
+<p>En esta actividad consideraremos la segunda ley de Kepler. La segunda ley de Kepler tiene que ver con la rapidez con que se mueve el planeta en su órbita elíptica. Kepler demostró que el área que el planeta "barre" durante un intervalo de tiempo es la misma sin importar en qué parte de la órbita se encuentre el planeta. Si nunca has oído hablar de las leyes de Kepler, la frase que acabas de leer sobre planetas que barren cosas probablemente no tenga mucho sentido.&nbsp;<a href="https://www.youtube.com/watch?v=qd3dIGJqRDU" target="_blank" rel="noopener">Aquí hay un video para explicar las leyes de Kepler que tiene una bonita animación.</a></p>
+<p>¡Hagamos nuestra propia animación usando nuestro código! Haremos esto en dos pasos:</p>
+<h3>Paso 1. Mide el período del movimiento</h3>
+
+<!--
+<h3><a href="https://editor.p5js.org/ChrisOrban/sketches/PTOGTwMYl_" target="_blank"  >Click here to open the code from the end of Slingshot with Gravity</a></h3>
+-->
+<h3><a href="https://editor.p5js.org/ChrisOrban/sketches/ugz2ZhrdR" target="_blank"  >Haga clic aquí para abrir el código del final de Slingshot with Gravity</a></h3>
+
+
+<p>Lo primero que necesitamos para hacer una animación de la segunda ley de Kepler es medir el período del movimiento. Aquí hay un código que puede agregar dentro de la función de dibujo para mostrar el período:</p>
+<pre class="language-javascript" style="font-size: medium; word-spacing: 0px;"><code>    tcounter1 += dt;
+    drawText('counter time = ',0.01*width,0.7*height);
+    drawText(tcounter1,0.06*width,0.65*height);
+
+    // if the position of the object is near y = y_sun
+    if ((abs(y - y_sun) &lt; abs(vy)*dt) &amp; (tcounter1 &gt; dt) &amp; vy &gt; 0) {
+      tlasttime1 = tcounter1;
+      tcounter1 = 0; //Reset the clock
+    }
+
+    drawText('Period = ',0.01*width,0.6*height);
+    drawText(tlasttime1,0.06*width,0.55*height);</code></pre>
+
+<button class="btn" data-clipboard-text="    tcounter1 += dt;
+    drawText('counter time = ',0.01*width,0.7*height);
+    drawText(tcounter1,0.06*width,0.65*height);
+
+    // if the position of the object is near y = y_sun
+    if ((abs(y - y_sun) &lt; abs(vy)*dt) &amp; (tcounter1 &gt; dt) &amp; vy &gt; 0) {
+      tlasttime1 = tcounter1;
+      tcounter1 = 0; //Reset the clock
+    }
+
+    drawText('Period = ',0.01*width,0.6*height);
+    drawText(tlasttime1,0.06*width,0.55*height);">
+    Copiar código al portapapeles
+</button>
+
+<p>Asegúrese de poner esto hacia el final de la función draw () pero no después del último corchete que dice NO AÑADIR CÓDIGO DESPUÉS DE ESTA LÍNEA !!!&nbsp; La función display () borrará la pantalla, por lo que debe evitar colocar los comandos drawText antes de la función display ()</p>
+<p>Ejecute su programa y vea si escribe el punto en la pantalla.&nbsp;<strong>¿Cómo funciona el código que mide el período? ¿Puede entender lo que acabamos de agregar?&nbsp;</strong>Si no, está bien, pero si puedes descubrirlo, es genial. (Sugerencia: si completó los Planetoides con una actividad de primavera, es posible que observe algunas similitudes con el código que usamos para medir el tiempo de medio ciclo).</p>
+<h3>Paso 2. ¡Muestre las áreas!</h3>
+<p>Para el siguiente paso, todo lo que tiene que hacer es <strong>agregar este código cerca del comienzo de sketch.js</strong> donde se inicializan las variables:</p>
+<pre class="language-javascript" style="font-size: medium; word-spacing: 0px;"><code>showareas = true;</code></pre>
+
+<button class="btn" data-clipboard-text="showareas = true;">
+    Copiar código al portapapeles
+</button>
+
+<p>Dentro de functions.js hay un código que está diseñado para calcular y dibujar el área para cuando el objeto recorre 1/8 del período de la órbita. Hace esto dos veces por órbita y luego escribe el valor numérico de las dos áreas en la pantalla.</p>
+<p>Si pones esto en el lugar correcto, obtendrás algo que se ve en general similar a esto:</p>
+<div align="center">
+<p><img src="https://www.asc.ohio-state.edu/orban.14/kepler.png" alt="" width="750" height="500" /></p>
+</div>
+<h3>Paso 3. ¿Áreas iguales?</h3>
+<p>De acuerdo con la segunda ley de Kepler, las dos áreas&nbsp;<strong>deberían</strong>&nbsp;ser iguales porque es la misma cantidad de tiempo (1/8 del período orbital) que se dibujan. En nuestro programa encontrará que están bastante cerca pero no exactamente lo mismo. Es importante hacer un cálculo para obtener la diferencia porcentual. Normalmente haríamos algo como esto:</p>
+<p>$$ \%&nbsp; = 100 \cdot \frac{| \rm meas - true| }{\rm true} $$</p>
+<p>Pero aquí realmente no sabemos cuál se supone que es el área "verdadera" y tenemos dos medidas. ¿Cómo deberíamos modificar esta fórmula para obtener una diferencia porcentual para Área1 y Área2? (Sugerencia: Area1 es una estimación de "verdadero" tan buena como Area2).</p>
+<p>Juegue con el código y pruebe diferentes parámetros o haga clic y arrastre para lanzar el objeto en una órbita elíptica. Compare las dos áreas para al menos dos órbitas diferentes. ¿Qué número obtiene para la diferencia porcentual y parece que estamos bastante cerca  (&lt; 5%? &lt; 1%?) O estamos muy lejos? ¿Qué tipo de diferencia porcentual es típica?</p>
+
+<p><H3>Opcional: lanza el objeto con el mouse</H3>
+
+<p>Kepler descubrió que las dos áreas son iguales siempre que el objeto permanezca en una órbita limitada (sin alejarse hasta el infinito). Por lo tanto, debería encontrar que Área1 y Área2 están cerca de lo mismo. Hasta ahora hemos estado comprobando esto para la misma velocidad de lanzamiento (¡aburrido!). A continuación, se explica cómo explorar diferentes velocidades de lanzamiento:
+
+<p>De manera similar a la actividad Tirachinas con gravedad, puede hacer clic y arrastrar el mouse para lanzar el objeto, excepto que solo funciona en la actividad Movimiento orbital si agrega este código al comienzo de su programa:
+
+<pre>
+usemouse = true;
+</pre>
+
+<button class="btn" data-clipboard-text="usemouse = true;">
+    Copiar código al portapapeles
+</button>
+
+<p><b>Advertencia:</b> Si el objeto en órbita se acerca demasiado al sol, la velocidad y la aceleración se vuelven tan grandes que el código puede cometer demasiados errores para dar una solución precisa. Una advertencia que dice "¡demasiado cerca!" aparecerá si esto sucede.
+
+<p><b>Consejo:</b> establezca <code>usemouse = false;</code> en la siguiente parte para que no inicie accidentalmente el objeto con el mouse.
+
+
+<h3><strong>Paso 4. Disminuya el paso de tiempo</strong></h3>
+<p>Según Kepler, las dos áreas deberían ser&nbsp;<strong>exactamente</strong>&nbsp;iguales. En el paso anterior, encontró que Area1 y Area2 están cerca pero no son exactamente iguales. La razón de esto es que la computadora está dividiendo la órbita en varios pasos de tiempo finitos para calcular la velocidad, la aceleración y la posición en función del tiempo. Cada vez que ejecutamos la función draw (), el tiempo aumenta en dt. En el programa dt significa "tiempo delta" o en el mundo matemático $\Delta t$</p>
+<p>Entonces, si disminuimos dt de 0.1 a algo más pequeño, el objeto se moverá menos cada vez que ejecutemos la función draw () y el programa hará un mejor trabajo al calcular cómo cambia la velocidad, aceleración y posición con el tiempo. Si Kepler está en lo correcto, we&nbsp;<strong>deberíamos </strong>&nbsp;encontrar que las dos áreas están más cerca del mismo valor cuando disminuimos el paso de tiempo.&nbsp;<strong>En su programa, disminuya dt de 0.1 a 0.05 o menos para ver si las dos áreas están más cerca del mismo valor. </strong> La mala noticia es que el programa se ejecutará mucho más lentamente (¡así que tenga paciencia!), pero la respuesta será mucho más precisa. Por desgracia, la vida está llena de concesiones.
+</p>
+<p>¿Qué tan pequeño estableció dt y cuál fue la diferencia porcentual que encontró? ¿Se redujo la diferencia porcentual?
+</p>
+
+<p><h3>Desafío: tercera ley de Kepler</h3>
+
+<p>La tercera ley de Kepler es una relación entre el período de la órbita y la distancia a la que orbita el objeto. Las distancias más grandes tardan más en completar una órbita, por lo que los planetas como Júpiter tardan muchos años (terrestres) en orbitar el sol, mientras que la tierra, que está más cerca del sol que Júpiter, hace una órbita del sol cada 365 días.
+
+<p>La tercera ley de Kepler establece que el cuadrado del período de la órbita (como el período que estamos midiendo en nuestro código) está relacionado con el cubo del <a href = "https://en.wikipedia.org/wiki/ Semi-major_and_semi-minor_axes "> semi-eje mayor </a> para la órbita. El semieje mayor es esencialmente qué tan ancha es la elipse y luego se divide por dos.
+
+<p>Como desafío, vea si puede confirmar la relación entre el período de la órbita y el eje semi-mayor. Puede cambiar las variables al principio del código para darle al objeto una posición o velocidad diferente, o puede establecer <code> usemouse = true; </code> y probar diferentes posiciones y velocidades de esa manera.
+
+<p> <b> Consejo #1: </b> Si puede medir la distancia más cercana ($r_{\rm min}$) y la distancia más lejana ($r_{\rm max}$) del programa, entonces el semi-eje mayor sería $(r_{\rm max}+r_{\rm min})/2$
+
+<p> <b> Consejo #2: </b> Parte de lo que hace que esto sea un desafío es que si el objeto se acerca demasiado al sol, la velocidad y la aceleración se vuelven tan grandes que el código puede cometer demasiados errores para dar un solución precisa. Una advertencia que dice "¡demasiado cerca!" aparecerá si esto sucede.

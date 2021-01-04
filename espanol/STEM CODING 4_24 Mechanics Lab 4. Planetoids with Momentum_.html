@@ -1,0 +1,161 @@
+
+<HTML>
+
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "all" } }
+});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<H1>Laboratorio de Mecánica 4. Planetoides con Momentum</H1>
+
+<h2><a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/mechanics/4momentum/momentumpre.html" target="_blank">¡Responda esta encuesta previa antes de comenzar este ejercicio!</a></h2>
+<p>En un curso universitario típico de física, en algún momento se encontrará con la idea de la conservación del impulso. ¡La conservación del momento es muy importante! En situaciones en las que dos objetos chocan, a menudo no conocemos la fuerza o la aceleración en función del tiempo, pero sí conocemos las velocidades iniciales. Si conocemos el tipo de colisión que se produce, resulta que las velocidades iniciales y las masas de los objetos son todo lo que necesitamos para calcular las velocidades finales.</p>
+<h3>Paso 0. ¡Lea sobre el impulso!</h3>
+<p>Hay tres tipos de colisiones: colisiones elásticas, colisiones inelásticas y colisiones perfectamente inelásticas. Este laboratorio de programación se centra en colisiones perfectamente inelásticas, que es el tipo de colisión matemáticamente más simple. Pero para completar, revisemos los tres tipos diferentes de colisiones y para simplificar, supongamos colisiones unidimensionales (en lugar de 2D o 3D).</p>
+<p><strong>Colisiones elásticas en 1 dimensión: ¡Se conserva la energía cinética!</strong></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://i.imgur.com/aQciVGc.gif" alt="" width="600" height="113" /></p>
+
+<p>$$m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f}$$</p>
+<p>$$\frac{1}{2} m_1 v_{1i}^2 + \frac{1}{2} m_2 v_{2i}^2 = \frac{1}{2} m_1 v_{1f}^2 + \frac{1}{2} m_2 v_{2f}^2$$</p>
+<p>Comentarios: Si conoce las masas de ambos objetos ($m_1$ y $m_2$) y si conoce las velocidades iniciales de ambos objetos ($v_{1i}$ y $v_{2i}$) , entonces realmente puede calcular las velocidades finales ($v_{1f}$ y $v_{2f}$) a partir de la ecuación de conservación del momento (Eq. 1) y la ecuación de conservación de energía (Eq. 2). Se necesita una cantidad frustrante de álgebra para calcular  $v_{1f}$ y $v_{2f}$, pero si quieres estar demasiado preparado para las pruebas y las pruebas, sería una buena idea saber cómo hacerlo.</p>
+
+<p><strong>Colisiones inelásticas en 1 dimensión: ¡la energía cinética definitivamente no se conserva!</strong></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://i.imgur.com/SCAdTDB.gif" alt="" width="600" height="113" /></p>
+<p>La idea aquí es que hubo una colisión y se perdió una cantidad significativa de energía en forma de calor o sonido. Por tanto, la suma de las energías cinéticas iniciales es mayor que la suma de las energías cinéticas finales.
+</p>
+<p>$$m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f}$$</p>
+<p>$$\frac{1}{2} m_1 v_{1i}^2 + \frac{1}{2} m_2 v_{2i}^2 &gt; \frac{1}{2} m_1 v_{1f}^2 + \frac{1}{2} m_2 v_{2f}^2$$</p>
+<p>
+Comentarios: si todo lo que sabe son las masas ($m_1$ y $m_2$) y las velocidades iniciales ($v_{1i}$ y $v_{2i}$) entonces no puede calcular $v_{1f}$ y $v_{2f}$ sin más información. Resulta que la ecuación de conservación de energía (Eq. 4) es inútil. ¡Ni siquiera es una ecuación, es una desigualdad! En una situación como esta, necesitaría que alguien le dijera qué es $v_{1f}$ para que pueda calcular $v_{2f}$ a partir de la ecuación de conservación de la cantidad de movimiento (Ec. 3).</p>
+<p><strong>Colisiones perfectamente inelásticas en 1-Dimensión: la energía cinética definitivamente no se conserva, ¡pero los objetos se mantienen unidos!</strong></p>
+<p>Las colisiones perfectamente inelásticas son donde dos objetos chocan y se pegan entre sí para que viajen juntos después. Matemáticamente, esto significa que $v_{1f} = v_{2f} = v_f$.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://i.imgur.com/pjoFVZh.gif" alt="" width="600" height="113" /></p>
+<p>$$m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f} = (m_1 + m_2) v_f $$</p>
+<p>$$\frac{1}{2} m_1 v_{1i}^2 + \frac{1}{2} m_2 v_{2i}^2 &gt; \frac{1}{2} m_1 v_{1f}^2 + \frac{1}{2} m_2 v_{2f}^2$$</p>
+<p>Una vez más, la ecuación de conservación de energía (Ec. 6) es inútil y simplemente usamos la ecuación de conservación de momento (Ec. 5) para calcular la velocidad final del objeto combinado (también conocido como pegado).</p>
+<h3>Paso 1. Abra el código de Planetoides 1D</h3>
+<p><a href="http://editor.p5js.org/ChrisOrban/sketches/r1k7EV6rQ"  target="_blank">Haga clic aquí para abrir el código en el editor.</a>
+
+
+<h3>Paso 2. Mire el código y observe las nuevas variables.</h3>
+<p>Si observa el código, notará que hay algunas variables nuevas que no estaban en el programa original de planetoides (resaltadas a continuación en amarillo). Estas variables especifican la posición y la velocidad del "blob" que agregaremos al juego.</p>
+<pre>x = 187;<br />y = 250;<br /><br />vx = 0;<br />vy = 0;<br /><br />deltaVx = 0;<br />deltaVy = 0;<br /><br />theta = 0;<br /><br />Fthrust = 30.0;<br />mass = 3.0;<br />dt = 0.1;<br /><br /><span style="background-color: #ffff00;">x_blob = 475;</span><br /><span style="background-color: #ffff00;">y_blob = 250;</span><br /><span style="background-color: #ffff00;">mass_blob = 10;</span><br /><span style="background-color: #ffff00;">radius_blob = 50;</span><br /><br /><span style="background-color: #ffff00;">vx_blob = 0;</span><br /><span style="background-color: #ffff00;">vy_blob = 0;</span></pre>
+<p>El objetivo es hacer de esto una mancha pegajosa para que la nave y la mancha se peguen cuando chocan</p>
+<h3>Paso 3. ¡Dibuja la mancha!</h3>
+<p>Justo después de la función display (), use la función drawBlob para dibujar un círculo como este:</p>
+<pre>drawBlob(x_blob,y_blob,vx_blob,vy_blob,radius_blob);</pre>
+<button class="btn" data-clipboard-text="drawBlob(x_blob,y_blob,vx_blob,vy_blob,radius_blob);">
+    Copiar código al portapapeles
+</button>
+<p><a href="momentum_files/v1/index.html">En este punto, su programa debería comportarse así</a>.
+<h3>Paso 4. ¡Asegúrate de que haya una forma de que la gota se mueva!</h3>
+<p><strong>Agregue algo a la sección "Actualizar ubicación"</strong> que permita que la posición del blob $(x_blob)$ se mueva con una velocidad constante $(vx_blob)$. Se parecerá mucho al código de ubicación de actualización del cohete ($x + = vx * dt$;)</p>
+<p>Luego, cerca del  <strong>comienzo</strong> del código donde se inicializan las variables, establezca <span style="background-color: #ffff00;"><strong>vx_blob=10;</strong></span>&nbsp; y ejecute el código para ver que el blob se desplaza hacia la derecha.</p>
+<p><a href="momentum_files/v2/index.html">En este punto, su programa debería comportarse así</a>.
+<h3>Paso 5.Hazlo pegajoso</h3>
+<p><span style="background-color: #ffff00;"><strong>Establecer vx_blob = 0; entonces la mancha está en reposo pero cambia vx = 50; </strong></span> entonces el cohete se mueve hacia la derecha.</p>
+<p>El propósito de este laboratorio de programación es permitir que el cohete tenga una colisión perfectamente inelástica (también conocida como pegajosa) con la mancha. Para una computadora, una colisión es algo que ocurre cuando la posición del cohete está muy cerca de la posición de la burbuja. Necesitamos agregar una instrucción if después de <code>drawBlob</code> para que suceda algo especial cuando esto ocurra. Al final agregaremos algo como esto al programa:
+</p>
+<pre>    if (<span style="background-color: #ffff00;">some variable??</span> &lt; <span style="background-color: #ffff00;">some other variable??</span>) {<br />      vx_blob = vx;  // set the velocity of the blob equal to that of the ship<br />      vx = vx_blob;   // set the velocity of the ship equal to that of the blob<br />      drawText("Collision!",0.45*width,0.7*height);<br />    }</pre>
+
+<button class="btn" data-clipboard-text="if ( some variable? < some other variable??) {
+ vx_blob = vx;
+ vx = vx_blob;
+ drawText('Collision!',0.45*width,0.7*height);
+}">
+    Copiar código al portapapeles
+</button>
+
+<p>Lo que hay dentro de <code>if()</code> se llama "declaración condicional". En 1-Dimensión, lo que realmente queremos matemáticamente es esto:</p>
+<p>$$\Delta x_{\rm blob} = x - x_{\rm blob}$$</p>
+<p>$$|\Delta x_{\rm blob}| &lt; R_{\rm blob}$$</p>
+<p>Tenga en cuenta que las líneas verticales en la ecuación. 8 son un valor absoluto. Use las variables que hemos estado usando (y cree otras nuevas si es necesario) para convertir esta matemática en código.&nbsp;</p>
+<p><strong>Sugerencia:</strong> Use <code>abs()</code> para el valor absoluto.</p>
+<p><a href="momentum_files/v2a/index.html">En este punto, su programa debería comportarse así
+</a>.
+<h3>Paso 6. Añade física</h3>
+<p>Consideremos nuevamente la Ec. 5.</p>
+<p>$$m_1 v_{1i} + m_2 v_{2i} = (m_1 + m_2) v_f $$</p>
+<p>Recuerde que $v_f$ es la velocidad de ambos objetos después de que se pegan. Resolviendo para $v_f$ obtenemos:</p>
+<p>$$v_f = \frac{m_1 v_{1i} + m_2 v_{2i}}{m_1 + m_2}$$</p>
+<p>Así que reemplace esto:</p>
+<pre>vx_blob = vx;</pre>
+<p>con esto:</p>
+<pre>vx_blob = (mass*vx + mass_blob*vx_blob)/(mass + mass_blob);</pre>
+<p><a href="momentum_files/v3/index.html">Si realiza este paso correctamente, su programa debería comportarse así</a>.
+<h3>Paso 7. ¡Pruebe su programa!</h3>
+<p>Notará que la velocidad de la mancha va de cero antes del impacto a aproximadamente 11.54 después del impacto si la velocidad inicial del barco se establece en 50 (valor predeterminado) y la masa del barco es 3.0 (valor predeterminado) y la masa de el blob es 10.0 (valor predeterminado). Si el cohete es el objeto 1 y la mancha es el objeto 2, este resultado $v_f$=11.54 tiene sentido porque, de acuerdo con la Ec. 9,
+</p>
+<p>$$v_f = \frac{m_1 v_{1i} + m_2 v_{2i}}{m_1 + m_2} = \frac{3.0 \cdot 50 + 10.0 \cdot 0}{3.0 + 10.0} = 11.54$$</p>
+<p><span style="background-color: #ffff00;"><strong>Elija un conjunto diferente de velocidades y masas que los valores predeterminados,</strong></span>, run your program to see what the velocity of the blob is after the collision and confirm that your program gives you the same result as the formula above for your numbers. Write the values you chose in the comments to your code or the comments in your code submission!</p>
+<h3>Paso 8. Explique por qué debemos dejar vx = vx_blob;</h3>
+<p>En este punto, tendrá algo como esto:</p>
+<pre>if ( something &lt; something else){<br /><span style="background-color: #ffff00;">  vx_blob = (mass*vx + mass_blob*vx_blob)/(mass + mass_blob);</span><br /><span style="background-color: #ffff00;">  vx = vx_blob;</span><br />  drawText("Collision!",0.45*width,0.7*height);<br />}</pre>
+<p>solo por diversión, prueba esto en su lugar:</p>
+<pre>if ( something &lt; something else ){<br /><span style="background-color: #ffff00;">  vx_blob = (mass*vx + mass_blob*vx_blob)/(mass + mass_blob);</span><br /><span style="background-color: #ffff00;">  vx = (mass*vx + mass_blob*vx_blob)/(mass + mass_blob);</span><br />  drawText("Collision!",0.45*width,0.7*height);<br />}</pre>
+<p>¡Explique por qué el código anterior no funciona! ¿Por qué esto no da la respuesta correcta para la velocidad? ¿Qué pasa en su lugar?</p>
+<h4>Opcional: grafica el impulso total frente al tiempo</h4>
+<p>Agregue este código al programa para agregar un gráfico que muestre el impulso contra el tiempo:</p>
+<pre>&nbsp; graph1.addPoint(mass*vx);<br />&nbsp; graph1.display();&nbsp;&nbsp; // forest green<br />&nbsp; <br />&nbsp; graph2.addPoint(mass_blob*vx_blob);<br />&nbsp; graph2.display(); // bright green<br /><br />&nbsp; graph3.addPoint(mass*vx+mass_blob*vx_blob);<br />&nbsp; graph3.display();&nbsp;&nbsp; // gray</pre>
+
+<button class="btn" data-clipboard-text="  graph1.addPoint(mass*vx);
+  graph1.display();   // forest green
+
+  graph2.addPoint(mass_blob*vx_blob);
+  graph2.display(); // bright green
+
+  graph3.addPoint(mass*vx+mass_blob*vx_blob);
+  graph3.display();   // gray">
+    Copy code to clipboard
+</button>
+
+<p>El impulso total se muestra con una línea gris. Use este gráfico para explicar por qué el código resaltado anteriormente <strong>NO</strong> conserva el impulso total mientras usa vx = vx_blob; hace.
+</p>
+<h3>Paso 9. ¡Hazlo bidimensional!</h3>
+<p><span style="background-color: #ffff00;"><strong>Continúe y cambie el código de colisión de nuevo a vx = vx_blob;</strong></span> para que las colisiones se produzcan correctamente. El paso anterior fue solo un pequeño experimento sobre lo que no se debe hacer.
+</p>
+<p>En este paso modificarías el código hasta que funcione en dos dimensiones, incluida la colisión.</p>
+<p>En 2 dimensiones, terminamos con dos ecuaciones para la conservación del momento en lugar de solo una. Esto es cierto para los tres tipos de colisiones, pero las ecuaciones siguientes resaltaron cómo se ve esto para colisiones perfectamente inelásticas. En este caso, tenemos una ecuación para la conservación del momento en la dirección x que se ve así:</p>
+<p>$$m_1 v_{1xi} + m_2 v_{2xi} = (m_1 + m_2) v_{xf} $$</p>
+<p>y tenemos una ecuación para la conservación del momento en la dirección y que se ve más o menos igual,</p>
+<p>$$m_1 v_{1yi} + m_2 v_{2yi} = (m_1 + m_2) v_{yf} $$</p>
+<p><span style="background-color: #ffff00;"><strong>Revise el programa y modifícalo para permitir que el cohete se mueve en dos dimensiones.</strong></span> (No dude en consultar la guía de planetoides anterior si es necesario). Luego, modifique el código y permita que la gota se mueva en dos dimensiones. Luego modifique el código donde ocurre la colisión para asegurarse de que la colisión sea correcta en 2-D (Sugerencia: use el teorema de Pitágoras para determinar la distancia entre el cohete y la mancha).&nbsp;Finalmente, solo para hacerlo divertido, dale al blob una velocidad aleatoria reemplazando este código:</p>
+<pre id="line1">function setup(){&#x000A;<span id="line122"></span>    createCanvas(750, 500);&#x000A;    this.focus();<span id="line123"></span>&#x000A;<span id="line125"></span>}</pre>
+<p>con este código: </p>
+<pre id="line1">function setup(){&#x000A;<span id="line132"></span>    createCanvas(750, 500);&#x000A;    this.focus();<span id="line133"></span>&#x000A;<span id="line135"></span><span style="background-color: #ffff00;">    vx_blob = random(-20,20);&#x000A;<span id="line136"></span>    vy_blob = random(-20,20);</span>&#x000A;<span id="line137"></span>}</pre>
+<p><a href="momentum_files/v5/index.html">Al final, su programa debería comportarse así</a>
+<h3>Crédito adicional:</h3>
+<p>¡Haz que la mancha sea infinitamente pegajosa para que el barco nunca pueda escapar!</p>
+<p><a href="http://www.asc.ohio-state.edu/orban.14/physics_coding/mechanics/4momentum/momentumpost.html" target="_blank">¡Responda esta encuesta después de completar el ejercicio!</a></p>
+<h3><span style="background-color: #ffff00;"><strong>¡Cómo obtener el crédito completo por este laboratorio de programación!</strong></span></h3>
+<p><strong>1. Realmente debe hacer que el código funcione como se describe en los pasos 1-9.</strong></p>
+<p><strong>2. Realmente necesita comprobar que su colisión conserva el impulso.</strong></p>
+<p>Esto significa asegurarse de obtener $v_f$=11.54 cuando la mancha está en reposo y la nave choca con ella en $v_x$ = 50. Y debe verificar que algún otro conjunto de números le brinde la respuesta que espera de una colisión perfectamente inelástica. . En algunos casos, su velocidad final será significativamente mayor o menor de lo esperado. Esto significa que hiciste algo mal en la codificación (probablemente cuando cambiaste las velocidades porque la nave y la mancha chocaron). Su código realmente necesita obtener la respuesta correcta aquí para que pueda obtener el crédito completo.
+</p>
+<p><strong>3. Asegúrate de poder volar tu nave alrededor de la mancha sin chocar.</strong></p>
+<p>Mucha gente no se da cuenta de que no pueden volar la nave alrededor de la mancha sin chocar con ella. En otras palabras, su código cree que hay una colisión siempre que las posiciones x de la mancha y la nave sean las mismas e incluso si las posiciones y son totalmente diferentes. Intente volar alrededor del blob en su código para ver si esto sucede. Si choca cuando no se supone que debe hacerlo, debe asegurarse de modificar la declaración if que determina si ha ocurrido una colisión. Esto debe funcionar correctamente para que pueda obtener todo el crédito en este laboratorio de programación.</p>
+</div>
+</div>

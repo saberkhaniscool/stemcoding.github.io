@@ -1,0 +1,101 @@
+<HTML>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<H1>Lab 1. Particle Accelerator</H1>
+
+<p>En este ejercicio haremos una simulación de una partícula que se acelera entre dos placas.
+
+<p>TLas ecuaciones relevantes en este caso son las siguientes:
+
+$$v_{xf} = v_{xi} + a_x t$$
+
+$$v_{xf}^2 = v_{xi}^2 + 2 a_x \Delta x$$
+
+$$F_x = m a_x$$
+
+$$F_x = q E $$
+
+<p>Esto debería resultarle bastante familiar en este punto del curso. Usaremos algunas unidades de <a href="units.html">campo eléctrico y fuerza inusuales </a> en este ejercicio, pero otras cosas deberían ser más familiares.
+
+<p>Un protón (mass = 1.0, charge = +1) e acelera entre dos placas con un campo eléctrico con una fuerza de +5. La unidad del campo eléctrico <b><i>no</i></b> on los Newtons habituales por Coulomb. En cambio, el campo eléctrico se define de modo que un campo de 1.0 acelerará un protón a $1 \, m/s^2$. Realmente no es más complicado que eso, <a href="units.html">pero puede leer la discusión de las unidades</a> si esto le parece algo extraño.
+
+<p><b>Pase 1.</b> Mira esta bonita animación de un <a href="accelerator/accelerator.html">protón acelerado a través de dos placas cargadas</a>.  En la animación, observe que la velocidad x inicial ($v_{xi}$) <b><i>no</i></b> es cero.
+
+<p><b>Paso 2. Pruebe el código acelerador en un editor/b>
+
+<p><a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/SJXOX6YyM" target="_blank">Haga clic aquí para abrir el código del acelerador de partículas.</a>
+
+<p> Presione reproducir allí para ejecutar el código. Debería ser lo mismo que hizo con el <a href="accelerator/accelerator.html"> enlace que le dieron en el paso 1. </a>
+
+<p><b> <mark> ¡Importante! Cree una cuenta con el editor o inicie sesión en su cuenta. Luego, haga clic en "Duplicar" para que pueda tener su propia versión del código. </mark> </b>
+
+<p><b>Paso 3.</b> Intenta entender el código detrás de la animación. Piense especialmente en esta sección:
+
+<pre>
+if ( ( x > x_plate_left) & (x < x_plate_right))
+{
+  deltaVx = (q*E/mass)*dt;
+  t += dt;
+}
+</pre>
+
+<p>Este es el cambio en la velocidad en cada paso de tiempo (<code>deltaVx</code>) cuando la partícula está entre las dos placas. La cantidad entre paréntesis <code>(q*E/mass)</code> es la aceleración.
+
+<p><b>Pase 4.</b> La velocidad final al final de la animación es de 55,5 metros por segundo. (Ok, realmente son píxeles por segundo, pero pensemos en metros por segundo. El ancho de la pantalla sería de 750 metros). La partícula pasa t = 9.1 segundos en un campo eléctrico. Si podemos calcular la aceleración, deberíamos poder usar esta fórmula para relacionar la velocidad inicial con la velocidad final:
+
+$$ v_{xf} = v_{xi} + a_x t $$
+
+<p>¿Qué deberíamos usar para  en este caso? Utilice q = 1, E = 5 y m = 1 para averiguarlo. Debería poder llegar a 55,5 metros por segundo para $v_{xf}$ con el valor correcto para $a_x$.
+
+<p><b><mark>¡No use simplemente el resultado de 55,5 metros por segundo para averiguar cuál fue la aceleración! ¡Estamos comprobando la coherencia del código! ¡La consistencia es clave!</mark></b>
+
+<p><b>Paso 5.</b> En un entorno de laboratorio, a menudo es difícil calcular exactamente cuánto tiempo pasa una partícula en el campo eléctrico. Pero aún conocemos la velocidad inicial, la fuerza del campo eléctrico, la masa de la partícula y la separación  ($\Delta x$) entre las dos placas que en este caso es $\Delta x = 500 - 200 = 300$.
+
+<p><b>Paso 6.</b>Vea qué sucede si se duplica la carga de la partícula. Establezca <code>q = 2.0</code> en lugar de <code>1.0</code>. Cambie la carga de la partícula de nuevo a 1.0 para que la simulación sea como acelerar un Deuterón en lugar de un protón.
+
+<p><b>Paso 7.</b> Vea qué sucede si la masa de la partícula es <code>2.0</code> en lugar de <code>1.0</code>. Cambie la carga de la partícula de nuevo a 1.0 para que la simulación sea como acelerar un Deuterón en lugar de un protón.
+
+<p>Nota:  Los deuterones tienen aproximadamente el doble de masa que los protones porque un Deuterón es un protón y un neutrón que están unidos por fuerzas nucleares. Los protones y los neutrones tienen aproximadamente la misma masa, por lo que la masa total de un Deuterón es aproximadamente el doble que la del protón. La carga neta del Deuterón es la misma que la del protón porque los neutrones son partículas eléctricamente neutras (sin carga).
+
+<p><b>¡Predice la velocidad final del Deuteron y comprueba si tus expectativas son correctas!</b> Muestre su cálculo, predicción y medición en lo que entrega para este laboratorio.
+
+<p><b>Paso 8.</b> ¿Qué sucede si cambia el campo eléctrico de 5 (el valor predeterminado) a -5? Observe que la dirección de las líneas de campo cambia cuando hace esto. ¿Qué tan rápido debe viajar un Deuteron para atravesar la placa? Determine la velocidad mínima para que el Deuteron pase. <b>¡Calcula por qué tiene que ser tan rápido!</b>
+
+<p><b>Opcional: Paso 9.</b> (Crédito adicional) Modifique el programa de alguna manera (elija uno o más)
+
+<p>Sugerencias / inspiración para modificar el programa:
+<ul>
+<li>Agregue un componente de la velocidad inicial en la dirección y y prediga la velocidad final.
+<li>Copie y pegue el código del propulsor del cohete de los planetoides para que la carga pueda volar y ser acelerada por las placas.
+<li>Haga que el código sea lo suficientemente inteligente como para usar negativo (x, y) si la carga es menor que cero y positivo (x, y) si la carga es mayor que cero.
+</ul>
+
+<p><h3><mark>¡Cómo obtener el crédito completo para este laboratorio de programación!</mark></h3>
+
+<p>En la <b> sección de comentarios del dropbox sobre carmen </b>, debe responder las preguntas que se hacen en este laboratorio de programación:
+
+<p><b>1.Asegúrate de explicar por qué la velocidad final resultó ser de 55,5 metros por segundo (Pasos 4 y 5).</b>
+
+<p>Lo mejor que puede escribir son las ecuaciones que utilizó para calcular su número y anotar el número que obtuvo. Puede que no obtenga exactamente 55,5, pero está bien. Trate de estar dentro del 10% de ese número.
+
+<p><b>2. Diga con palabras si aumentar la carga de la partícula de 1.0 a 2.0 afecta la velocidad final (Paso 6)</b>
+
+<p>Solo escribe una oración. Di si la velocidad final aumenta, disminuye o permanece igual. No es necesario ningún cálculo.
+
+<p><b>3. Cambie la masa a 2.0 y la carga de nuevo a 1.0 para que la partícula sea un Deuterón. Predecir la velocidad final y medirla (Paso 7)</b>
+
+<p>Asegúrese de que su cálculo coincida con el resultado medido al 10%.
+
+<p><b>4. Describe qué sucede cuando el campo eléctrico es negativo y averigua qué tan rápido debe viajar el Deuterón (Paso 8)</b>
+
+<p>Simplemente cambie la velocidad inicial del <b><i>Deuteron</i></b> hasta que pase. Luego calcula por qué tenía que ser así. Anote el número de qué tan rápido debería ir. Puede que no coincida exactamente con su resultado empírico, pero debería estar de acuerdo con quizás el 10%
+
+<p><b>5. El crédito adicional es realmente opcional</b>
+
+<p>Aún puede obtener crédito completo sin hacer el crédito adicional siempre que haya hecho todo lo demás correctamente.

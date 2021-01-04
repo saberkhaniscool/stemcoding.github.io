@@ -1,0 +1,401 @@
+<HTML>
+<head>
+<title>Slingshot with Gravity!</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<H1>
+
+  <!--
+  Planetoids pre-survey!
+<p>
+<mark><a href="assessments/planetoids/planetoidsquiz_pre.html">PLEASE TAKE THE PLANETOIDS PRE-SURVEY!!!!!!! Look at how big the font is for this link!!! Looks important! Please click here to take the Planetoids pre-survey!</a></mark>
+</h1>
+-->
+
+<H1>Slingshot with Gravity!</H1>
+
+<p>Cuando estamos en la superficie de la tierra, la gravedad es una fuerza constante, que produce una aceleración de 9.8 $\rm {m/s}^2$ hacia el suelo. Las actividades de codificación <a href="../lunardescent.html">Lunar Descent</a> and <a href="../bellicosebirds.html">Bellicose Birds</a> exploran esta situación. En general, la gravedad es una fuerza que depende de la distancia entre los objetos. Aquí está la fórmula:
+
+$$F_{grav} = \frac{G M m }{r^2}$$
+
+<p>donde $M$ es la masa de un objeto (generalmente el objeto más grande), $m$ es la masa de otro objeto (generalmente el objeto más pequeño), $r$ es la distancia entre los centros de esos objetos y $G$ es una constante relacionada con la fuerza de la fuerza gravitacional (no confundir con $g = 9.8 \, \rm{m/s}^2$ que es una g minúscula $g$)
+
+<p>Cuando estamos en la superficie de la tierra, incluso si subimos a la cima de una montaña, la distancia entre nosotros y el centro de la tierra cambia en una cantidad pequeña en comparación con el radio de la tierra misma. Como resultado, una medición de la gravedad en la cima de esa montaña daría algo muy parecido a 9.8 $\rm{m/s}^2$.
+
+<p>Siendo este el caso, podría preguntarse cómo nos dimos cuenta de que la fuerza de gravedad se debilita según el cuadrado de la distancia entre los objetos (como en la ecuación de $F_{grav}$ anterior). Esta actividad de codificación ayudará a explicar cómo llegamos a ese conocimiento.
+
+<p><b>Descargo de responsabilidad:</b><mark><b> debe haber terminado <a href="../acceleratetheblob.html">Accelerate the Blob</a> para trabajar en este ejercicio.</b></mark>.También es bueno si ha terminado la actividad de codificación de <a href="../planetoids.html">Planetoids</a>. También puede consultar el código de <a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/B1YtNTb2-">Force the Blob</a> que es como acelerar el blob pero con las teclas de flecha controlando la fuerza en lugar de la aceleración.
+
+<p><H3>Paso 1. El primer paso para comprender la gravedad es no comprender la gravedad.</H3>
+
+<p><H4><a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/SkhqcMKVG"  target="_blank">Haga clic aquí para abrir el código de la honda de gravedad cero</a></H4>
+
+<p><a href="slingshot_v0/index.html">Si por alguna razón el enlace no funciona, puede hacer clic aquí para usar el interactivo</a>
+
+<p>Juega con él. Haga clic y arrastre el mouse para lanzar el objeto en varias direcciones.
+
+<p><H3>Paso 2. ¡Mira el código!</H3>
+
+<p>Aquí está la función de dibujo para el tirachinas interactivo de gravedad cero (también conocido como fuerza cero):
+
+<pre>
+function draw(){
+    // Update velocities
+    vx += deltaVx;
+    vy += deltaVy;
+
+    // Update location
+    x += vx*dt;
+    y += vy*dt;
+
+    // velocity is unchanged if there are no forces
+    deltaVx = 0;
+    deltaVy = 0;
+
+    // This will clear the screen and re-draw it
+    display();
+
+    // Add more graphics here before the end of draw()
+    drawBlob(x,y,vx,vy,0,0);
+
+} // end draw()
+</pre>
+
+<p>As you know, the draw function is always where we put the physics of the problem. We put the graphics in subroutines like <code>display();</code> and <code>drawBlob</code>.
+
+<p>Where is the physics here? What is the physics? Are there any forces? Acceleration? How does this compare to the <a href="../planetoids.html">Planetoids code</a>? Or the code from <a href="../acceleratetheblob.html">Accelerate the blob</a>?
+
+<p><H3>Paso 3. Observe de cerca el interactivo</H3>
+
+<p><a href="slingshot_v0/index.html">Juega con el tirachinas interactivo de gravedad cero</a> Mire de cerca la trayectoria del objeto. <b><mark>¿Hay alguna forma de hacer que la trayectoria sea curva simplemente haciendo clic y arrastrando el mouse?</mark></b>
+
+<p>Completa esta oración:
+
+<p><b>Un objeto en movimiento continuará moviéndose en un  __________  si no hay fuerzas actuando sobre él</b>
+
+<p><H3>Paso 4. ¡Simplemente agregue gravedad en seis sencillos pasos secundarios!</H3>
+
+<p>Vamos a modelar un objeto (cometa, planeta, asteroide, etc.) en el sistema solar, lo que significa que vamos a necesitar un sol. Una vez que tenemos un sol podemos agregar gravedad.
+
+<p><b>Paso 4a. Agrega la posición del sol</b>
+
+<p>Antes de que podamos agregar el sol, necesitamos <b><mark>agregar variables al comienzo del código</mark></b> que especifican dónde estará el sol. Resulta que la mitad del boceto está en (350,250), así que pondremos el sol allí:
+
+<pre>
+x_sun = 375;
+y_sun = 250;
+</pre>
+
+<button class="btn" data-clipboard-text="x_sun = 375;
+y_sun = 250;">
+    Copiar código al portapapeles
+</button>
+
+<p><b><mark>¡Agregue esto al principio del código!</mark></b> ¡No lo pongas en la función de dibujo o no funcionará!
+
+<p><b>Paso 4b. ¡Agrega un círculo amarillo para el sol!</b>
+
+<p>Luego agregue el <code>drawSun</code> comando para poner un círculo amarillo tonto en el centro del boceto.
+
+<p><b><mark>Pon esto después del <code>display();</code> función</b></mark> pero antes del final del <code>draw()</code> función:
+
+<pre>
+drawSun(x_sun,y_sun,0,0,0,0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawSun(x_sun,y_sun,0,0,0,0);">
+    Copiar código al portapapeles
+</button>
+
+<p>En este punto <a href="slingshot_v1/index.html">tu código debería comportarse así</a>
+
+<p><b>Paso 4c. Suma variables para la masa del sol y la constante gravitacional</b>
+
+<p>Ahora agregue variables para la masa del sol y la fuerza de la fuerza gravitacional hasta cerca del comienzo del programa (en cualquier lugar antes de la función de dibujo)
+
+<pre>
+M = 1000;
+G = 100;
+</pre>
+
+<button class="btn" data-clipboard-text="M = 1000;
+G = 100;
+">
+    Copiar código al portapapeles
+</button>
+
+<p>Es posible que haya notado que estos no son los valores correctos para la masa del sol o la fuerza de la gravedad en la vida real, y eso es cierto. Si prefiere usar los valores correctos y esperar un año a que la simulación deje que la tierra se mueva alrededor del sol, puede hacerlo (en realidad, no lo haga, un año es demasiado tiempo para esperar a que se realice una simulación. ¡terminar!).
+
+<p><b>Paso 4d. Calcule la distancia y el ángulo entre el objeto y el sol.</b>
+
+<p>Para calcular la fuerza de la fuerza gravitacional, necesitamos conocer la distancia entre el objeto en ($x,y$) y el sol en ($x_{\rm sun}, y_{\rm sun}$). Aquí hay una imagen de cómo pensar en esto:
+
+<center>
+<p><img width=827 height=625  src="triangle_final.png">
+</center>
+
+<p>Si imagina que la línea entre el sol en ($x_{\rm sun},y_{\rm sun}$) y el objeto en ($x,y$) es la hipotenusa de un triángulo rectángulo, concluiría que la distancia entre ellos está este:
+
+$$r = \sqrt{(x - x_{\rm sun})^2 + (y - y_{\rm sun})^2}$$
+
+<p>En el mundo de la informática tenemos que escribir esto de una manera divertida porque <code>^2</code> en realidad no toma el cuadrado del número. Así es como se ve esta expresión en el mundo de la informática:
+
+<pre>
+r = sqrt((x - x_sun)*(x - x_sun) + (y - y_sun)*(y - y_sun));
+</pre>
+
+<p><button class="btn" data-clipboard-text="r = sqrt((x - x_sun)*(x - x_sun) + (y - y_sun)*(y - y_sun));
+">
+    Copiar código al portapapeles
+</button>
+
+<p>También necesitamos averiguar el ángulo que forma la línea entre los objetos con la $x$ eje. Podemos resolver esto con una tangente inversa:
+
+$$\theta = \tan^{-1} \left( \frac{y - y_{\rm sun} }{x - x_{\rm sun}}\right)$$
+
+<p>Esto funciona muy bien, excepto que podría dar una respuesta incorrecta cuando $y - y_{\rm sun} < 0$ y $x - x_{\rm sun} < 0$, en cuyo caso el objeto estaría debajo y a la izquierda del sol (en lugar de arriba y a la derecha como en la figura de arriba). Para dar cuenta de esto usamos el<code>atan2</code> función que se ve así:
+
+<pre>
+theta = atan2(y - y_sun, x - x_sun);
+</pre>
+
+<p><button class="btn" data-clipboard-text="theta = atan2(y - y_sun, x - x_sun);
+">
+    Copiar código al portapapeles
+</button>
+
+
+<p>Como puede ver, hay dos argumentos para esta función. Si $y - y_{\rm sun} > 0$ y $x - x_{\rm sun} > 0$ el código anterior dará el mismo resultado que <code>theta = atan((y - y_sun)/(x - x_sun));</code> pero en general querrás usar el <code>atan2</code> función.
+
+<p><b><mark>Pegue este código en el medio de la función de dibujo pero antes de la <code>display</code> función.</mark></b>
+
+<p><b>Paso 4e. Calcule la magnitud y los componentes de la fuerza gravitacional.</b>
+
+<p>Como se mencionó anteriormente, la magnitud de la fuerza gravitacional es la siguiente:
+
+$$F_{grav} = \frac{G M m}{r^2}$$
+
+<p>Necesitamos poner esto en el código. Esta es la forma correcta de poner esto en el código:
+
+<pre>
+    Fgrav = G*M*mass/(r*r);
+</pre>
+
+<p><button class="btn" data-clipboard-text="Fgrav = G*M*mass/(r*r);
+">
+    Copiar código al portapapeles
+</button>
+
+<p>Note que hemos usado <code>r*r</code> en vez de <code>r^2</code> porque, por razones que solo conocen los informáticos, <code>^2</code> en realidad, no cuadra nada como cabría esperar.
+
+<p>Ahora tenemos que averiguar los componentes de la fuerza <a href="https://www.youtube.com/watch?v=GpuyWy-OP9Q">Como la tuvimos que hacer para el juego de planetoides</a> Aquí hay un diagrama que debería ayudar:
+
+<center>
+<p><img width=827 height=625  src="force_final.png">
+</center>
+
+<p>TLo interesante de este diagrama es que se parece mucho a <a href="https://www.youtube.com/watch?v=GpuyWy-OP9Q">el diagrama que dibujamos para la nave en Planetoides</a> si el barco estaba en la ubicación del sol y apuntando en ángulo $\theta$ sobre el $x$ eje. En ese caso, teníamos esto para los componentes:
+
+$$F_x = F_{\rm thrust} \cos \theta $$
+$$F_y = F_{\rm thrust} \sin \theta $$
+
+<p>dónde $F_{\rm thrust}$ es la magnitud de la fuerza. Aquí tenemos una situación similar, excepto que la fuerza actúa sobre el objeto en ($x,y$) y la fuerza empuja en la dirección <b><i>opuesta</i></b> a la línea en ángulo $\theta$ con el $x$ axis (que se parece mucho a los propulsores inversos de los planetoides, que aplican una fuerza opuesta a la dirección en la que apunta el barco; acabamos de añadir signos negativos a los componentes para invertir la dirección del empuje).
+
+<p>Si combina estas ideas, obtiene esto para los componentes de la fuerza sobre el objeto:
+
+$$F_x = -F_{\rm grav} \cos \theta$$
+$$F_y = -F_{\rm grav} \sin \theta$$
+
+<p>En el mundo de la informática, esto es solo:
+
+<pre>
+Fx = -Fgrav*cos(theta);
+Fy = -Fgrav*sin(theta);
+</pre>
+
+<p><button class="btn" data-clipboard-text="Fx = -Fgrav*cos(theta);
+Fy = -Fgrav*sin(theta);
+">
+    Copiar código al portapapeles
+</button>
+
+<p>¡Es bueno que algo se vea igual en el mundo de las computadoras que en el mundo de las matemáticas!
+
+<p>Asegúrese de poner las líneas de código en este paso <b><mark>después</mark></b> la expresión para <code>r</code> y <code>theta</code> del Paso 4d.
+
+<p><b>Paso 4f. Calcule la aceleración y el cambio de velocidad.</b>
+
+<p>¡Última parte del paso 4! Ahora que conocemos la fuerza, podemos calcular la aceleración en las direcciones xey:
+
+$$a_x = \frac{F_x}{m}$$
+$$a_y = \frac{F_y}{m}$$
+
+<p>Con esto podemos calcular cuánto son las velocidades en las direcciones xey ($v_x, v_y$) han cambiado durante el intervalo de tiempo ($\Delta t$ <code>= dt</code>)
+
+$$\Delta v_x = a_x \Delta t$$
+$$\Delta v_y = a_y \Delta t$$
+
+<p>Podemos combinar estos junto con este código:
+<pre>
+  deltaVx = (Fx/mass)*dt; // = ax*dt;
+  deltaVy = (Fy/mass)*dt; // = ay*dt;
+</pre>
+
+<p><button class="btn" data-clipboard-text="  deltaVx = (Fx/mass)*dt; // = ax*dt;
+  deltaVy = (Fy/mass)*dt; // = ay*dt;">
+    Copiar código al portapapeles
+</button>
+
+
+<p>La <code>// = ax*dt;</code> es solo un comentario que no afecta el funcionamiento del código. Puede copiar el código haciendo clic en este botón:
+
+
+<p>Pega esto en el código <b><i>después</i></b> el código del Paso 4e. Una vez que haces esto <a href="slingshot_v2/index.html">tu código debería comportarse así</a>
+
+<p><b>Opcional:</b> Si lo desea, puede eliminar estas líneas de código de forma segura:
+
+<pre>
+    // velocity is unchanged if there are no forces
+    deltaVx = 0;
+    deltaVy = 0;
+</pre>
+
+<p>Estas líneas de código son innecesarias ahora porque <code>deltaVx</code> y <code>deltaVy</code> se determinan a partir de la fuerza de gravedad. Puede dejarlos o eliminarlos. No debería influir en el funcionamiento del programa.
+
+<p><h3>Paso 6. ¡Agregue el vector de fuerza al objeto!</h3>
+
+<p>Ahora que tiene la gravedad en su código, puede mostrar el vector de fuerza cambiando el <code>drawBlob(x,y,vx,vy,0,0);</code> comando a esto:
+
+<pre>
+drawBlob(x,y,vx,vy,Fx,Fy);
+</pre>
+
+<p>Una vez que haces esto <a href="slingshot_v3/index.html">tu código debería comportarse así</a>
+
+<p><h3>(Opcional) Paso 7. ¡Una fuerza igual y opuesta!</h3>
+
+<p>La Tierra (o Júpiter o cualquier objeto del sistema solar) ejerce una fuerza sobre el sol, es solo que el sol es tan masivo que apenas se mueve en respuesta. Para mostrar la fuerza sobre el sol del objeto, puede modificar el código que muestra el sol a esto:
+
+<pre>
+drawSun(x_sun,y_sun,0,0,-Fx,-Fy);
+</pre>
+
+<p><button class="btn" data-clipboard-text="drawSun(x_sun,y_sun,0,0,-Fx,-Fy);">
+    Copiar código al portapapeles
+</button>
+
+<p>Puede apreciar que los signos menos significan que la fuerza es la misma que la fuerza que ejerce el sol sobre el objeto, pero en la dirección opuesta. Lo anterior es lo que piensa una computadora sobre la tercera ley del movimiento de Newton. Si haces este cambio <a href="slingshot_v4/index.html">tu código debería comportarse así</a>
+
+<p>Más adelante, si desea incluir el movimiento del sol, hay un desafío para hacerlo. Por ahora, supongamos que no se mueve y enfóquese en el movimiento del objeto.
+
+<p><H3>Paso 7. ¡Juega con el código!</H3>
+
+<p>Juega con el código, lanzando el objeto en diferentes ángulos y diferentes velocidades. <b><mark>¡Juega, pero trata de evitar que el objeto se acerque demasiado al sol!</mark></b>
+
+<p>Esta es la pregunta: <b><mark>¿La trayectoria del objeto sigue típicamente el mismo camino órbita tras órbita?</mark></b> ¿O toma un camino diferente cada vez? Nuevamente, trate de evitar acercar el objeto demasiado al sol. Aparecerá una pequeña advertencia si te acercas demasiado.
+
+
+<p><H3>Paso 8. ¡Cambie la fuerza de gravedad!</H3>
+
+<p>En la época en que Sir Issac Newton comenzó su trabajo, en general se sabía que los planetas seguían órbitas elípticas (gracias a las observaciones de Kepler), pero si había una fuerza de gravedad, la gente no estaba segura de cómo su fuerza dependía de la distancia entre los objetos .
+
+<p>Imaginemos una ley de gravedad diferente:
+
+$$F_{\rm grav} = \frac{G M m}{r^n}$$
+
+<p>Donde $n$ es algo de poder. Todos sabemos que la respuesta correcta es $n = 2$ pero <b><mark>qué sucede cuando $n$ es algún otro valor $n = 1.5$ o $n = 2.5$?</b></mark>
+
+<p>Agreguemos una variable al comienzo del código:
+
+<pre>
+npower = 2.0;
+</pre>
+
+<p>Entonces cambiemos la ley de fuerza a esto:
+
+<pre>
+Fgrav = G*M*mass/pow(r,npower);
+</pre>
+
+<p><button class="btn" data-clipboard-text="Fgrav = G*M*mass/pow(r,npower);
+">
+    Copiar código al portapapeles
+</button>
+
+<p>¿Que pasa ahora? ¿Las trayectorias siguen un camino cerrado o hacen todo tipo de formas interesantes?
+
+<p><b>Consejo:</B> Puede usar la honda para lanzar el objeto en varias direcciones o velocidades o simplemente puede configurar <code>vx = 0;</code> y <code>vy = 20;</code> y cambio <code>npower</code> de 1.5 a 2.5 para ver el efecto de cambiar la potencia.
+
+
+
+<p><H3>Resumen:</H3>
+
+<p>En el siglo XVII, Sir Issac Newton inventó el cálculo para demostrar que las órbitas elípticas de los planetas podían explicarse por una fuerza que se debilitaba según $1/r^2$. El resultado complicado pero elegante que llenaría algunas pizarras con ecuaciones es uno de los momentos más heroicos en matemáticas y física.
+
+<p>¡Si Newton tuviera una computadora, nunca habría necesitado inventar el cálculo! Pudo haber pensado en la geometría y la trigonometría del problema y dejar que la computadora se diera cuenta de que solo se obtienen órbitas elípticas cuando $ n = 2 $. ¡Esta es la gran parte de las computadoras! No es necesario ser Sir Issac Newton para descubrir cosas útiles.
+
+<p><H3>Investigación actual:</H3>
+
+<p>Los investigadores de hoy todavía intentan probar si la fuerza de gravedad de $1/r^2$ sigue siendo válida tanto en escalas muy pequeñas como muy grandes. Si resulta que la gravedad no obedece a $1/r^2$ en alguna escala, esto es una señal de que hay múltiples dimensiones más allá de las tres dimensiones espaciales con las que estamos familiarizados (lo que podría decirnos algo realmente emocionante sobre la teoría de cuerdas o la cosmología !). Los hombres y mujeres que realizan esta investigación hacen cosas muy similares a la actividad de codificación que acaba de hacer. Realizan simulaciones de lo que sucedería si la fuerza de gravedad fuera diferente y la comparan con una simulación en la que la fuerza de gravedad es el habitual $1/r^2$. ¡Quizás algún día esta sea la investigación que hagas!
+<p><h3>Desafío opcional: ¡Deja que el sol se mueva!</h3>
+
+<p>Agregue variables para la velocidad del sol (<code>vx_sun</code>, <code>vy_sun</code>) y el cambio en la velocidad del sol (<code>deltaVx_sun</code>, <code>deltaVy_sun</code>). Modifique el código para que haya una actualización de velocidad y una actualización de ubicación para el sol. Modele esto después de la actualización de velocidad y de ubicación para el objeto y modele el código que determina <code>deltaVx_sun</code> y <code>deltaVy_sun</code> después de la parte del código que determina esos valores a partir de la fuerza de gravedad sobre el objeto.
+
+<!--
+<p><h3><mark>How to get full credit on this assignment!!!</mark></h3>
+
+<p><b>0. Take the pre-survey</b>
+
+<p>Make sure you take the <a href="assessments/planetoids/planetoidsquiz_pre.html">pre-survey at the beginning of the activity</a> in order to tell us about yourself and whether you'd like your responses to be used in the research project
+
+<p><b>1. Complete steps 1-5 and make absolutely sure that the ship can turn and move in two dimensions</b>
+
+<p>Make sure your program <a href="planetoids2d/planetoids.html">behaves exactly like it does at this link</a> to be sure you did steps 1-4 correctly
+
+<p><b>2. Add code to follow the path of the ship (Step 6)</b>
+
+<p>Just copy the code to the clipboard and paste it into the code editor.
+
+<p><b>2. Complete one of the challenges</b>
+
+<p>Most people choose the reverse thrusters, which is probably the easiest
+
+<p><b>3. Find the best combination of Fthrust and mass to survive!</b>
+
+<p>This requires modifying <a href="http://alpha.editor.p5js.org/ChrisOrban/sketches/S1UesXHWZ" target="_blank">a version of the code that includes planetoids</a>
+
+<p><b>4. Submit your code before the deadline</b>
+
+<p>Talk to your teacher about where to submit the code
+
+<p><H1>Last step: Take a quiz!</H1>
+
+<H1>
+<mark><a href="assessments/planetoids/planetoidsquiz_post.html">PLEASE TAKE THE PLANETOIDS POST-SURVEY!!!!!!! Look at how big the font is for this link!!! Looks important! Please click here to take the Planetoids post-survey to tell us how the exercise went!</a></mark>
+</h1>
+-->
+</body>
+</html>

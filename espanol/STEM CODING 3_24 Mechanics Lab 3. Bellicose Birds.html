@@ -1,0 +1,263 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+<H1>Parte 3: ¡Pájaros belicosos!</H1>
+
+<h7>Si esta es su primera actividad de codificación STEM, realice esta encuesta previa sobre sus antecedentes
+Realice esta encuesta previa antes de comenzar este ejercicio. </h7>
+
+<p>Si has terminado de jugar con el <a href="../lunardescent/lunardescent.html">laboratorio de descenso </a> lunar puedes continuar con este laboratorio donde configuraremos el juego para disparar un proyectil con forma de pájaro. A este juego lo llamamos pájaros <a href="http://dictionary.reference.com/browse/bellicose?s=t">belicosos</a>.
+
+<p>Desde una perspectiva física, las aves belicosas son esencialmente lo mismo que el descenso lunar, excepto que no hay empuje de cohetes. Más adelante en este ejercicio será útil recordar las ecuaciones para:
+
+$$ x(t) = x_0 + v_{x0}t    $$
+
+$$ y(t) = y_0 + v_{y0}t + \frac{1}{2} g t^2  $$
+
+<p>donde $g = -9.8$. en lugar de $−1.63$ porque estaremos en la tierra en lugar de en la luna. Recuerde que no hay aceleración en la dirección $ x $, por lo que la ecuación para $ x (t) $ es un poco más simple que la ecuación para $ y (t)$
+
+<p><H3>Paso 0. Abre Lunar Descent en un editor</H3>
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/t5_TvTMIv" target="_blank">Haga clic en este enlace para abrir el código de descenso lunar</a>
+
+<p>Presione reproducir allí para ejecutar el código. Debería tener el mismo aspecto que tenía <a href="../lunardescent/lunardescent.html">al final del ejercicio de descenso lunar.</a>
+
+<p><H4><mark>Muy importante: ¡Inicie sesión en su cuenta! Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></H4>
+
+<p>Luego haga clic en <img src="https://www.asc.ohio-state.edu/orban.14/physics_coding/play_button.png"> "Editar" (Edit) para abrir el código en el editor de código. Luego presiona "Ejecutar" (Run) y tu pantalla debería verse así:
+
+  <center>
+<p><img height=700 width=700  src="bellicosebirds_initial.png">
+  </center>
+
+
+<p>Si el programa puede detectar que algo anda mal con su código, mostrará una roja <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/red_x.png"> junto a ese objetivo.
+
+<p>Si el programa puede detectar que ha completado el objetivo, mostrará una marca de verificación verde <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/check_mark.png"> junto a ese objetivo.
+
+
+<p>Pero el programa no es muy inteligente y si no puede decir si ha completado el objetivo, indicará un signo de interrogación como este <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/question_mark.png">  junto a ese objetivo.
+
+<p>Al final de esta actividad, su objetivo es tener marcas de verificación verdes junto a todos los objetivos como este:
+
+<center>
+<p><img width=585  height=173 src="bellicosebirds_final.png">
+</center>
+
+<p>¡Los pasos a continuación lo ayudarán a lograr todos estos objetivos!
+
+<p><H3>Paso 1. Cambiar el punto de partida</h3>
+
+<p>Después de hacer <b><mark>clic en Duplicar</mark></b>, En lugar de comenzar la posición del barco en el medio de la pantalla, querrá configurarlo para que comience en la parte inferior izquierda. Edite el código para cambiar esta posición inicial de esto:
+
+<pre>
+x = 375;
+y = 250;
+</pre>
+
+<p>a esto:
+
+<pre>
+x = 100;
+y = 25;
+</pre>
+
+<p>El barco ahora debería comenzar en la parte inferior de la pantalla. Verifique que esto funcione.
+
+<p><H3>Paso 2. Configura el juego para que la gravedad se apague hasta que pulses la barra espaciadora</H3>
+
+<p>La forma más sencilla de hacer esto es establecer $g = 0$  cerca del comienzo del código donde se inicializan todas las variables. Luego, establezca $ g = -9.8 $ dentro de la instrucción if para la barra espaciadora.
+
+<p>Finalmente, para evitar que el cohete se pegue al suelo, <b><mark>elimine esta declaración</mark></b>:
+
+<pre>
+  if ( abs(y - 0.03*height)  < 0.1) {
+    deltaVx = 0;
+    deltaVy = 0;
+    vx = 0;
+    vy = 0;
+    theta = 3.141/2;
+  }
+</pre>
+
+Una vez que hagas esto, <a href="bellicosebirds_v1/bellicosebirds.html">el juego debería comportarse así.</a>.
+
+<p><h3>Paso 3. Dale al cohete una velocidad inicial.</h3>
+
+<p>Agregue una variable para la velocidad inicial cerca del comienzo del código
+<pre>
+vinit = 65;
+</pre>
+
+<p>Luego agregue dos líneas después de $ g = -9.8 $ para establecer la velocidad inicial:
+
+<pre>
+
+   if (keyIsPressed && key == ' ') { // spacebar
+      g = -9.8;
+      vx = <mark>?????</mark>;
+      vy = <mark>?????</mark>;
+    }
+</pre>
+
+<p>Depende de usted averiguar qué va en los signos de interrogación (piense: trigonometría). Cuando termine, <a href="bellicosebirds_v2/bellicosebirds.html">su programa debería comportarse así.</a>
+
+<p>Nota: Para una experiencia de aves belicosas más auténtica, puede apagar los propulsores configurando Fthrust = 0.0; en la parte superior de la página
+
+
+<p><H3>Paso 5: muestra la trayectoria esperada</H3>
+
+<p>Debería poder calcular la trayectoria del cohete a partir de las ecuaciones cinemáticas que usamos al comienzo del curso. En este paso, calculará esta trayectoria y la dibujara en la pantalla usando drawPoint (xdraw, ydraw); Puede reconocer esto como la misma función que usamos para hacer el proyectil en el laboratorio de planetoides.
+
+<p>Justo después de drawLine(0,0,width,0); agregue este código que dibujara una serie de puntos para la posición del objeto:
+
+<pre>
+x0 = 100;
+y0 = 25;
+</pre>
+
+<p>Inmediatamente después de esto, escriba:
+
+<pre>
+  Npoints=1000;
+  for(i=1;i<=Npoints;i+=1)
+  {
+  t = (i-1)*dt;
+  xdraw = x0 + <mark>?????</mark>;
+  ydraw = y0 + <mark>?????</mark>;
+  drawPoint(xdraw,ydraw);
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="x0 = 100;
+y0 = 25;
+
+  Npoints=1000;
+  for(i=1;i<=Npoints;i+=1)
+  {
+  t = (i-1)*dt;
+  xdraw = x0 + ?????;
+  ydraw = y0 + ?????;
+  drawPoint(xdraw,ydraw);
+  }">
+    Copiar código al portapapeles
+</button>
+
+
+<p>Complete el ???? con los términos que dan la trayectoria correcta. ¡Las dos ecuaciones al comienzo de este ejercicio deberían ser de gran ayuda! El principal problema es cómo poner esto en el código y qué usar para $v_{x0}$ y $v_{y0}$.
+
+<p><b>Consejo #1:</b> Expresiones como $t ^ 2$ no funcionarán en este caso (o en la mayoría de los otros lenguajes de programación). En su lugar, use $t * t$ para
+
+<p><b>Consejo #2:</b> No use $vx$ o $vy$ aquí porque esas variables cambiarán después de que se inicie el objeto.
+<
+p><b>Consejo #3:</b> Recuerda que la velocidad inicial es $v0$
+
+<p><b>Consejo #4:</b> es posible que desee utilizar algunas funciones trigonométricas como $cos (theta)$ y $sin (theta)$. Es importante que su trayectoria sea correcta para diferentes valores de theta.
+
+<p>En última instancia, <a href="bellicosebirds_v3/bellicosebirds.html">su código debería comportarse así.</a>
+
+<p><H3>Paso 5. Comprueba que 45 grados dan la distancia más larga. </H3>
+
+<p>Agregue estas líneas en algún lugar después de display () pero no dentro de ninguna de las declaraciones if:
+
+<pre>
+drawText(theta,width/2,height/2 + 40);
+drawText(x,width/2,height/2 + 20);
+</pre>
+
+<button class="btn" data-clipboard-text="drawText(theta,width/2,height/2 + 40);
+drawText(x,width/2,height/2 + 20);">
+    Copiar código al portapapeles
+</button>
+
+
+<p>La primera línea te dice el valor x donde aterrizó el cohete. La segunda línea da el ángulo en radianes.
+
+<p><b><mark>Modifica el código para escribir el ángulo en grados en lugar de radianes. </mark></b> Luego, verifique que 45 grados sea la distancia más lejana. (Sugerencia útil: cambie la línea donde cambia el ángulo del barco para que no gire tanto cada vez que presione la flecha).
+
+<p>Cuando termine, <a href="bellicosebirds_v4/bellicosebirds.html">el juego debería comportarse así.</a>
+
+<p><H3>Último paso</H3>
+
+<p>Elige una o ambas de estas dos opciones: (1) Reemplazar el barco con un pájaro belicoso, o (2) configurar el juego para que presionar la barra espaciadora solo funcione la primera vez.
+
+<p>Tenga en cuenta que la opción 1 es más fácil porque hay una guía paso a paso.
+
+<p><H3>Cómo reemplazar el barco con un pájaro belicoso</H3>
+
+<p>Haz que el laboratorio sea más divertido reemplazando el cohete con un pájaro belicoso. La forma más sencilla de hacer esto es con una elipse roja. Después de display();Agrega esto:
+
+<pre>
+drawEllipse(x,y,27,20,vx,vy,deltaVx/dt,deltaVy/dt);
+</pre>
+
+<button class="btn" data-clipboard-text="drawEllipse(x,y,27,20,vx,vy,deltaVx/dt,deltaVy/dt);">
+    Copiar código al portapapeles
+</button>
+
+
+<p>El problema es que el óvalo se dibuja en la parte superior del barco. Podemos arreglar esto haciendo que el tamaño del barco sea cero. Mire el comienzo del archivo functions.js y cambie esto:
+
+<pre>
+//Size of the ship
+r = 12;
+</pre>
+
+a esto:
+<pre>
+//Size of the ship
+r = 0;
+</pre>
+
+<p>Una vez que haya realizado estos cambios, <a href="bellicosebirds_v5/bellicosebirds.html">tu juego debería comportarse así</a>. ¡Asegúrate de tocar la barra espaciadora tan brevemente como puedas!
+
+<p><H3>Desafío: Paso 6: Encuentra una manera de que presionar la barra espaciadora solo funcione la primera vez</H3>
+
+<p>Puede notar que el cohete / pájaro solo sigue la trayectoria si toca la barra espaciadora lo más brevemente posible. Configura el juego para que presionar la barra espaciadora solo funcione la primera vez.
+
+<p>Una vez que haya realizado este cambio, <a href="bellicosebirds_v6/bellicosebirds.html">su programa debería comportarse así.</a>
+
+<p><h3><mark>¡Cómo obtener todo el crédito en este laboratorio de programación!</mark></h3>
+
+<p><b>1.Asegúrese de que el pájaro vuele por el aire como lo haría un proyectil (Pasos 1-3)</b>
+
+<p><b>2.Asegúrese de que la trayectoria dibujada (línea de puntos) siga la trayectoria del pájaro (Paso 4)</b>
+
+<p>No es necesario que sea perfecto, pero debería estar bastante (<a href="bellicosebirds_v3/bellicosebirds.html">cerca</a>).
+
+<p><b>3.Asegúrese de que 45 grados sea la distancia más larga (paso 5)</b>
+
+<p>Asegúrese de modificar el código para que escriba el ángulo <b><i>en grados</i></b> en la pantalla en lugar de radianes
+
+<p>En los comentarios, después de hacer clic en "enviar", escriba el ángulo exacto (por ejemplo, 45.1274) y la distancia que el ave viajó antes de tocar el suelo. Diga algo como "esta fue la distancia más lejana que viajó el pájaro en cualquier ángulo".
+
+<p><b>4.Asegúrese de reemplazar el barco con una imagen de un pájaro belicoso (Paso final)</b>
+
+<p>Hay instrucciones paso a paso sobre cómo hacer esto. Simplemente copie y pegue en su código.
+
+<p><b>5. Si desea crédito adicional, averigüe cómo hacer que la barra espaciadora solo funcione la primera vez, como se explica en el paso 6.</b>
+
+</body>
+</html>

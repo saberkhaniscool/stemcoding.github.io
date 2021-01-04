@@ -1,0 +1,303 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<H1>Laboratorio de Mecánica 2. Descenso lunar</H1>
+
+<p>Si esta es su primera actividad de codificación STEM, complete esta encuesta previa sobre sus antecedentes
+
+Haga clic aquí para completar la evaluación previa de este ejercicio.</p>
+
+<p>Si ha terminado de jugar con el <a href="../planetoids/planetoids.html">laboratorio de planetoides</a> puede continuar con este laboratorio donde <b>ahora agregaremos gravedad al juego</b> Tienes un pequeño barco que debes volar y aterrizar de forma segura en la luna. Si te acercas al aterrizaje demasiado rápido, estrellarás el barco.
+
+<p>Este ejemplo utilizará un lenguaje de programación que es prácticamente indistinguible de la programación C y C ++. (Nota: si está familiarizado con C o C ++, la principal diferencia que verá es que no hay una función main () y, en cambio, la función draw () cumple esta función).
+
+<p>El código está diseñado para resolver las ecuaciones cinemáticas relevantes para este caso.
+
+$$\sum F_{\rm{net},x} = F_{\rm thrust} \cos \theta = m \, a_x$$
+
+$$\sum F_{\rm{net},y} = F_{\rm thrust} \sin \theta - m g = m \, a_y$$
+
+$$ \Delta v_x = a_x \Delta t$$
+
+$$ \Delta v_y = a_y \Delta t$$
+
+$$ v_x = v_{x0} + \Delta v_x$$
+
+$$ v_y = v_{y0} + \Delta v_y$$
+
+$$ x = x_0 + v_x \cdot \Delta t $$
+
+$$ y = y_0 + v_y \cdot \Delta t $$
+
+<p>El programa de computadora con el que trabajaremos aquí calcula estas ecuaciones una y otra vez, actualizando $v_x$, $v_y$, $x$ y $y$ dependiendo de si el empuje está activado o desactivado. Si el empuje se apaga, entonces $a_x = 0$ y $\Delta v_x = 0$ y el barco simplemente continúa con la misma velocidad $v_x$. Con el empuje fuera de la velocidad vy continuará cambiando con el tiempo debido a la gravedad, $\Delta v_y = g \, \Delta t$.
+
+
+<p><H3>Paso 0. Abra planetoides 2D en un editor</H3>
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/icUuKKmI7" target="_blank">Haga clic en este enlace para abrir el código de Planetoides 2D</a>
+
+<p>Luego haga clic en "Editar"(Edit) para abrir el código en el editor. Cuando presione  <a href="../planetoids/planetoids.html">"Ejecutar"(Run), debería ver algo como esto:</a>
+
+<p><H4><mark>
+Muy importante: ¡Inicie sesión en su cuenta! Luego haga clic en "Duplicar" para que pueda tener su propia versión del código.</mark></H4>
+
+<p>
+En la esquina superior izquierda, presione <img src="https://www.asc.ohio-state.edu/orban.14/physics_coding/play_button.png">
+y verá algo como esto:
+
+<center>
+<p><img height=700 width=700 src="lunardescent_initial.png">
+</center>
+
+<p>Si el programa puede detectar que algo anda mal con su código, mostrará una <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/red_x.png"> roja junto a ese objetivo.
+
+<p>Si el programa puede detectar que ha completado el objetivo, mostrará una marca de verificación verde <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/check_mark.png"> junto a ese objetivo.
+
+<p>Pero el programa no es muy inteligente y si no puede decir si ha completado el objetivo, indicará un signo de interrogación <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/question_mark.png"> como este junto a ese objetivo.
+
+<p>Al final de esta actividad, su objetivo es tener marcas de verificación verdes junto a todos los objetivos como este:
+
+<center>
+<p><img width=680 height=254 src="lunardescent_final.png">
+</center>
+
+<p>¡Los pasos a continuación lo ayudarán a lograr todos estos objetivos!
+
+<p><H3>Paso 1. Agrega gravedad a los planetoides</h3>
+
+<p>
+¡Después de hacer <b><mark>clic en duplicar!</mark></b> edite el comienzo del código, agregue la constante gravitacional para la luna. La gravedad de la luna es 1/6 de la de la tierra, por lo que g = -9.8/6 = -1.63 m/s<sup>2</sup>
+
+<p>Agregue esta línea cerca del comienzo de su código:
+
+<pre>
+g = -1.63;
+</pre>
+
+<button class="btn" data-clipboard-text="g = -1.63;">
+
+Copiar código al portapapeles
+</button>
+
+<p>Justo <b>antes</b> de la <code>display();</code> función, agregue esta línea:
+
+<pre>
+deltaVy += g*dt;
+</pre>
+
+<button class="btn" data-clipboard-text="deltaVy += g*dt;">
+    Copiar código al portapapeles
+</button>
+
+<p>Tenga en cuenta que la gravedad apunta en la dirección −y, por lo que necesitamos un signo menos en el código anterior para asegurarnos de que down sea negativo (y dado que g> 0).
+
+<p>¡Has añadido gravedad a nuestro sencillo juego de “panetoides”! Ahora ejecute el programa haciendo clic en <img src="https://processing.org/reference/environment/images/play.gif">. <a href="lunardescent_v1/lunardescent.html">El programa debería comportarse así</a>.
+
+<p><h3>Paso 2. ¡Agrega el juego terminado!</H3>
+
+<p>Edite su código para que se acabe el juego si cae al final de la página. Dado que abajo es positivo, esto sucede si el valor de y se vuelve mayor que la altura de la pantalla.
+
+<p>Justo <b>después</b> display(); agregue esta línea:
+
+<pre>
+  if (y < 0) {
+  drawText('Game Over!',width/2,height/2);
+  exit();
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="if (y < 0) {
+  drawText('Game Over!',width/2,height/2);
+  exit();
+  }">
+    Copiar código al portapapeles
+</button>
+
+<p>¡Genial, ahora hay una manera de perder el juego! <a href="lunardescent_v2/lunardescent.html">El programa debería comportarse así</a>.
+
+<p><H3>Paso 3. ¡Agrega una forma de ganar el juego!</H3>
+
+<p>Necesitamos agregar una forma para que la nave aterrice en la superficie de la luna.
+
+<p>Agregue este código justo después de la display(); función para dibujar una línea en la parte inferior de la página:
+
+<pre>
+drawLine(0,0,width,0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawLine(0,0,width,0);">
+    Copiar código al portapapeles
+</button>
+
+<p>Si juegas ahora, debería haber una línea negra en la parte inferior de la pantalla. Debería probarlo para ver si funcionó.
+
+<p>Ahora necesitamos una forma para que la nave se asiente en la superficie de la luna. En la vida real, la superficie de la luna solo proporciona la fuerza normal para sostener la nave. Podríamos intentar codificar la fuerza normal, pero una cosa más sencilla sería hacer que si el barco se acerca mucho al fondo, la aceleración y la velocidad sean cero tanto en la dirección x como en la y. El barco se quedará ahí para siempre.
+
+<p>Agregue estas líneas <b>antes</b> de la declaración if que verifica el fin del juego:
+
+<pre>
+ if ( abs(y - 0.03*height)  < 0.1) {
+  deltaVx = 0;
+  deltaVy = 0;
+  vx = 0;
+  vy = 0;
+  theta = 3.141/2;
+  drawText('You Win!',width/2,height/2);
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="
+ if ( abs(y - 0.03*height)  < 0.1) {
+  deltaVx = 0;
+  deltaVy = 0;
+  vx = 0;
+  vy = 0;
+  theta = 3.141/2;
+  drawText('You Win!',width/2,height/2);
+  }
+">
+    Copiar código al portapapeles
+</button>
+
+<p>Entre otras cosas, el código anterior cambiará el ángulo del barco de 0 a π / 2 radianes. Si convierte de radianes, esto sería 90 grados.
+
+<p>Tenga en cuenta que el cambio de velocidad (deltaVx y deltaVy) se establece en cero, la velocidad (vx y vy) se establece en cero y el ángulo del cohete apunta hacia arriba.
+
+<p>Si ha codificado todo correctamente, <a href="lunardescent_v3/lunardescent.html">el resultado final debería comportarse así</a>.
+
+
+<p><H3>Paso 4. ¡Cambie el ángulo inicial!</H3>
+
+<p>
+Hay varias opciones diferentes para personalizar el juego. Puede cambiar la dirección inicial del barco de horizontal a vertical cambiando una línea de su código.
+
+<p>Cerca del comienzo de su código, cambie esta línea:
+
+<pre>
+theta = 0;
+</pre>
+A esto:
+<pre>
+theta = 3.141/2;
+</pre>
+
+<p> El código anterior cambiará el ángulo del barco de 0 a $\pi/2$ radianes. Si convierte de radianes, esto sería 90 grados.
+
+
+<!--
+<p>You may also want to have the ship start out higher up so it has further to fall. You can do this by changing initial y position in the <code>setup()</code> function. Change this from
+<pre>
+y = height/2;
+</pre>
+to
+<pre>
+y = height;
+</pre>
+
+<p>There are plenty of other ways to modify the game. Maybe have a limited amount of fuel, or a limited amount of time. Perhaps add mountains. Projectiles? Enable reverse thrusters? Perhaps display the numerical value of the velocity and height on screen. Something else?
+-->
+
+<p><b>Paso 5. ¡Deja que el barco caiga al suelo! Calcule el tiempo de caída libre</b>
+
+<p>Si <b>no</b> dispara los propulsores, la nave caerá al suelo. Midamos cuánto tiempo lleva esto en el programa y luego usamos nuestro conocimiento de física para ver si el tiempo medido tiene sentido.
+<p><b>Paso 5a. ¡Agrega un temporizador!</b>
+
+<p>Agreguemos un código para realizar un seguimiento de cuánto tiempo ha transcurrido. Al comienzo del código donde se inicializan todas las variables agregue esta línea:
+
+<pre>
+t = 0;
+</pre>
+
+<p>En algún lugar después de la función display () agregue estas líneas:
+
+<pre>
+t += dt;
+drawText('time = ',0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);
+</pre>
+
+<button class="btn" data-clipboard-text="t += dt;
+drawText('time = ',0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);">
+    Copiar código al portapapeles
+</button>
+
+<p>Ahora ejecuta el código y deja que el barco caiga al suelo. ¿Cuánto tiempo se tarda?
+
+<p><b>Paso 5b. Utilice sus conocimientos de física para comprobar si el tiempo de caída libre es correcto</b>
+
+<p>Siempre es un buen ejercicio comprobar que su código le está dando la misma respuesta que espera. Analice algunos números para ver si el tiempo de caída libre es correcto. Probablemente querrá usar esta ecuación:
+$$y(t) = y_i + v_{yi}t + \frac{1}{2} g t^2$$
+
+<p>donde $y_i$ es la altura inicial, $v_{yi}$ es la rapidez inicial y $g$ es la aceleración gravitacional.
+
+<p><b>Descargo de responsabilidad n. ° 1:</b> ¡no olvide que el barco aterriza en la luna! Utilice g = -1.63 en lugar de g = -9.8
+
+<p><b>Descargo de responsabilidad n. ° 2:</b> a menos que haya modificado el código, el barco partirá desde y = altura / 2 = 500/2 = 250 y tocará el suelo en y = 0.
+
+<p><b>Paso 6. Solo por diversión, dale al barco una velocidad inicial aleatoria</b>
+
+<p>Puede darle al barco una velocidad aleatoria cambiando vx y vy al comienzo del programa a partir de esto:
+
+<pre>
+  vx = 0;
+  vy = 0;
+</pre>
+
+A esto:
+
+<pre>
+  vx = random(-5,5);
+  vy = 0;
+</pre>
+
+Continúe y <b>cambie este código para hacer que el juego sea más divertido</b> (5 es bastante arbitrario, ¿cuál sería una opción más divertida? ¿Qué tal si le damos una velocidad aleatoria?). ¿A qué cambió esta parte del código?
+<p><H4>Desafíos opcionales: ¡aterrizaje de SpaceX!</H4>
+
+<p><b>Desafío # 1.</b> Simplemente por diversión, cambie g de nuevo a -9,8 (en lugar de -1,67) para que el cohete intente aterrizar en la tierra en lugar de en la luna. Puede aumentar el valor de Fthrust si es necesario. Esta situación es con la que tiene que lidiar SpaceX cuando aterrizan sus cohetes en una plataforma de aterrizaje. ¿Puedes aterrizar el barco incluso en esta situación?
+
+<p><b>Desafío # 2.</b> ¿Puedes modificar el código para que el cohete dispare los propulsores automáticamente para que aterrice solo sin ninguna guía humana? Esto es lo que tienen que hacer las computadoras de los cohetes spaceX.
+
+<p><h3><mark>¡Cómo obtener crédito completo en este laboratorio de programación!</mark></h3>
+
+<p><b>1.Asegúrate de que puedes perder el juego y ganarlo.</b>
+
+<p>Como se describe en los pasos 2 y 3
+
+<p><b>2.Asegúrate de cambiar el ángulo inicial</b>
+
+<p>Asegúrese de cambiar el ángulo inicial a 3,141 / 2 como se describe en el paso 4.
+
+<p><b>3.Asegúrese de que su cálculo del tiempo de caída libre concuerde con la simulación.</b>
+
+<p>En el paso 5, utilizará sus conocimientos de física para calcular cuál debería ser el tiempo de caída libre y compararlo con el tiempo de caída libre de la simulación. Por una variedad de razones, no esperamos que las simulaciones por computadora sean perfectamente precisas, pero en este caso los dos números deberían coincidir en mejor que el 1%.
+
+<p><b>4. Dale al barco una velocidad aleatoria</b>
+
+<p>Cambie el comienzo del código para darle al barco una velocidad aleatoria como se describe en el Paso 6.
+
+</body>
+</html>
